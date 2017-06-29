@@ -621,7 +621,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
             taskInfo.setLeft("紧急联系人1手机");
             taskInfo.setLeftColor(R.color.mt9c9c9c);
             taskInfo.setRight(custInfo.getUrgencyTel());
-            taskInfo.setRightColor(R.color.mtBlue);
+            taskInfo.setRightColor(R.color.colorPrimary);
             taskInfoList.add(taskInfo);
 
             taskInfo = new TaskDetailData.TaskSection.TaskInfo();
@@ -649,7 +649,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
             taskInfo.setLeft("紧急联系人2手机");
             taskInfo.setLeftColor(R.color.mt9c9c9c);
             taskInfo.setRight(custInfo.getUrgency2Tel());
-            taskInfo.setRightColor(R.color.mtBlue);
+            taskInfo.setRightColor(R.color.colorPrimary);
             taskInfoList.add(taskInfo);
 
             taskInfo = new TaskDetailData.TaskSection.TaskInfo();
@@ -677,7 +677,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
             taskInfo.setLeft("紧急联系人3手机");
             taskInfo.setLeftColor(R.color.mt9c9c9c);
             taskInfo.setRight(custInfo.getUrgency3Tel());
-            taskInfo.setRightColor(R.color.mtBlue);
+            taskInfo.setRightColor(R.color.colorPrimary);
             taskInfoList.add(taskInfo);
 
             taskInfo = new TaskDetailData.TaskSection.TaskInfo();
