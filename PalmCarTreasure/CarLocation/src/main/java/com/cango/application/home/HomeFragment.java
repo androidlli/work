@@ -181,7 +181,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Eas
         showInfoIndicator(false);
         openPermissions();
         setUpMapIfNeeded();
-        etImei.setText("1696000141");
+//        etImei.setText("1696000141");
         etImei.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

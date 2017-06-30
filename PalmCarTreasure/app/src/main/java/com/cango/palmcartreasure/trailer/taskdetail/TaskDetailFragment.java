@@ -242,13 +242,9 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                         mProvince = aMapLocation.getProvince();
                     }
                     if (!CommUtil.checkIsNull(aMapLocation.getLatitude())) {
-//                        BigDecimal latBD = new BigDecimal(String.valueOf(aMapLocation.getLatitude()));
-//                        mLat = latBD.floatValue();
                         mLat = aMapLocation.getLatitude();
                     }
                     if (!CommUtil.checkIsNull(aMapLocation.getLongitude())) {
-//                        BigDecimal lonBD = new BigDecimal(String.valueOf(aMapLocation.getLongitude()));
-//                        mLon = lonBD.floatValue();
                         mLon = aMapLocation.getLongitude();
                     }
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -415,11 +411,11 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                 //导航
                 rlIcon1.setImageDrawable(getResources().getDrawable(R.drawable.trailer_navigation));
                 //分配
-                rlIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_tag_faces_black_48dp));
+                rlIcon2.setImageDrawable(getResources().getDrawable(R.drawable.fenpei));
                 //抽回
                 rlIcon3.setImageDrawable(getResources().getDrawable(R.drawable.map_nav));
                 //写标注
-                rlIcon4.setImageDrawable(getResources().getDrawable(R.drawable.renwu_icon));
+                rlIcon4.setImageDrawable(getResources().getDrawable(R.drawable.biji));
 
                 FrameLayout.LayoutParams subParams = new FrameLayout.LayoutParams(SizeUtil.dp2px(mActivity, 50), SizeUtil.dp2px(mActivity, 50));
                 subActionButton1 = rLSubBuilder.setContentView(rlIcon1).setLayoutParams(subParams).build();
@@ -440,7 +436,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                 } else {
                     rightLowerMenu = new FloatingActionMenu.Builder(mActivity)
                             .addSubActionView(subActionButton1)
-                            .addSubActionView(subActionButton3)
+//                            .addSubActionView(subActionButton3)
                             .addSubActionView(subActionButton4)
 //                        .setStartAngle(180 + 20)
 //                        .setEndAngle(270 - 20)
@@ -534,7 +530,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                 //导航
                 rlIcon1.setImageDrawable(getResources().getDrawable(R.drawable.trailer_navigation));
                 //分配
-                rlIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_tag_faces_black_48dp));
+                rlIcon2.setImageDrawable(getResources().getDrawable(R.drawable.fenpei));
                 //抽回
                 rlIcon3.setImageDrawable(getResources().getDrawable(R.drawable.map_nav));
                 //写标注
@@ -613,7 +609,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                             isStartTask = true;
                             openPermissions();
                         } else {
-                            ToastUtils.showLong("不能开始任务了！");
+                            ToastUtils.showLong("不能开始任务了");
                         }
                     }
                 }
@@ -638,7 +634,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                             isCheckPoint = true;
                             openPermissions();
                         } else {
-                            ToastUtils.showLong("请先开始任务！");
+                            ToastUtils.showLong("请先开始任务");
                         }
                     }
                 }
@@ -654,7 +650,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                             sendCarLibraryIntent.putExtra(TrailerMapFragment.TASKLISTBEAN, mTaskListBean);
                             mActivity.mSwipeBackHelper.forward(sendCarLibraryIntent);
                         } else {
-                            ToastUtils.showLong("请先拖车打点！");
+                            ToastUtils.showLong("请先拖车完成");
                         }
                     }
                 }

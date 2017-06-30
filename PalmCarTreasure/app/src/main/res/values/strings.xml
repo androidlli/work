@@ -37,7 +37,8 @@
     <string name="load_failed_tip">点我再试试？</string>
     <string name="start_task">开始任务</string>
     <string name="traialer_navigation">拖车导航</string>
-    <string name="trailer_dot">拖车打点</string>
+    <!--<string name="trailer_dot">拖车打点</string>  所有拖车打点文字修改为：拖车成功 -->
+    <string name="trailer_dot">拖车成功</string>
     <string name="trailer_over">拖车完成</string>
     <string name="send_car_library">送车入库</string>
     <string name="vehicle_localization">车辆定位</string>
@@ -136,8 +137,8 @@
     <string name="fifth_question">5.拖车后用车人有何反应</string>
     <string name="sixth_question">6.选择库点</string>
 
-    <string name="camera_permission_confirmation">This app demonstrates the usage of CameraView. In order to do that, it needs permission to access camera.</string>
-    <string name="camera_permission_not_granted">Camera app cannot do anything without camera permission.</string>
+    <string name="camera_permission_confirmation">需要打开使用摄像头权限</string>
+    <string name="camera_permission_not_granted">需要设备拥有摄像头</string>
     <string name="picture_taken">Picture taken</string>
     <string name="aspect_ratio">Aspect ratio</string>
     <string name="switch_flash">Switch flash</string>

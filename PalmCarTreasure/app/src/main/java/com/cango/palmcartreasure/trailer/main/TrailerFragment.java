@@ -133,7 +133,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                     if (currentBean.getIsStart().equals("T"))
                         showCalendarDialog();
                     else {
-                        ToastUtils.showShort("不能开始任务了！");
+                        ToastUtils.showShort("不能开始任务");
                     }
                 }
                 break;
@@ -154,7 +154,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                         openCamera();
 //                        startActivity(new Intent(mActivity,CameraActivity.class));
                     else {
-                        ToastUtils.showShort("请先开始任务！");
+                        ToastUtils.showShort("请先开始任务");
                     }
                 }
                 break;
@@ -166,7 +166,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                         sendCarLibraryIntent.putExtra(TrailerMapFragment.TASKLISTBEAN, currentBean);
                         mActivity.mSwipeBackHelper.forward(sendCarLibraryIntent);
                     } else {
-                        ToastUtils.showShort("请先拖车打点！");
+                        ToastUtils.showShort("请先拖车成功");
                     }
                 }
                 break;

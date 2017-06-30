@@ -72,7 +72,7 @@
             android:id="@+id/tv_car_name"
             style="@style/baseTvStyle"
             android:textColor="@android:color/white"
-            android:layout_marginLeft="35px"
+            android:layout_marginLeft="10px"
             android:textSize="42px" />
     </com.zhy.autolayout.AutoLinearLayout>
 

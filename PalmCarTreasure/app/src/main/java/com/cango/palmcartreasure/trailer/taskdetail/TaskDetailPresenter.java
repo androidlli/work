@@ -779,12 +779,12 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
             taskInfo.setRightColor(R.color.colorPrimary);
             taskInfoList.add(taskInfo);
 
-            taskInfo = new TaskDetailData.TaskSection.TaskInfo();
-            taskInfo.setLeft("供应商反馈标示");
-            taskInfo.setLeftColor(R.color.mt9c9c9c);
-            taskInfo.setRight("");
-            taskInfo.setRightColor(R.color.colorPrimary);
-            taskInfoList.add(taskInfo);
+//            taskInfo = new TaskDetailData.TaskSection.TaskInfo();
+//            taskInfo.setLeft("供应商反馈标示");
+//            taskInfo.setLeftColor(R.color.mt9c9c9c);
+//            taskInfo.setRight("");
+//            taskInfo.setRightColor(R.color.colorPrimary);
+//            taskInfoList.add(taskInfo);
 
             taskInfo = new TaskDetailData.TaskSection.TaskInfo();
             taskInfo.setLeft("反馈收回时间");
@@ -793,26 +793,26 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
             taskInfo.setRightColor(R.color.colorPrimary);
             taskInfoList.add(taskInfo);
 
-            taskInfo = new TaskDetailData.TaskSection.TaskInfo();
-            taskInfo.setLeft("反馈库点城市");
-            taskInfo.setLeftColor(R.color.mt9c9c9c);
-            taskInfo.setRight("");
-            taskInfo.setRightColor(R.color.colorPrimary);
-            taskInfoList.add(taskInfo);
+//            taskInfo = new TaskDetailData.TaskSection.TaskInfo();
+//            taskInfo.setLeft("反馈库点城市");
+//            taskInfo.setLeftColor(R.color.mt9c9c9c);
+//            taskInfo.setRight("");
+//            taskInfo.setRightColor(R.color.colorPrimary);
+//            taskInfoList.add(taskInfo);
+//
+//            taskInfo = new TaskDetailData.TaskSection.TaskInfo();
+//            taskInfo.setLeft("拖回城市");
+//            taskInfo.setLeftColor(R.color.mt9c9c9c);
+//            taskInfo.setRight("");
+//            taskInfo.setRightColor(R.color.colorPrimary);
+//            taskInfoList.add(taskInfo);
 
-            taskInfo = new TaskDetailData.TaskSection.TaskInfo();
-            taskInfo.setLeft("拖回城市");
-            taskInfo.setLeftColor(R.color.mt9c9c9c);
-            taskInfo.setRight("");
-            taskInfo.setRightColor(R.color.colorPrimary);
-            taskInfoList.add(taskInfo);
-
-            taskInfo = new TaskDetailData.TaskSection.TaskInfo();
-            taskInfo.setLeft("供应商反馈备注");
-            taskInfo.setLeftColor(R.color.mt9c9c9c);
-            taskInfo.setRight("");
-            taskInfo.setRightColor(R.color.colorPrimary);
-            taskInfoList.add(taskInfo);
+//            taskInfo = new TaskDetailData.TaskSection.TaskInfo();
+//            taskInfo.setLeft("供应商反馈备注");
+//            taskInfo.setLeftColor(R.color.mt9c9c9c);
+//            taskInfo.setRight("");
+//            taskInfo.setRightColor(R.color.colorPrimary);
+//            taskInfoList.add(taskInfo);
 
             taskInfo = new TaskDetailData.TaskSection.TaskInfo();
             taskInfo.setLeft("外包拖车审批备注");

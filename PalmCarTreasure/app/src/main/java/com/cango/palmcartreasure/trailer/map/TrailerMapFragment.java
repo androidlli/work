@@ -27,6 +27,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.SupportMapFragment;
 import com.amap.api.maps.UiSettings;
@@ -121,6 +122,8 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
     TextView tvCarNum;
     @BindView(R.id.tv_time_status)
     TextView tvTimeStatus;
+    @BindView(R.id.tv_last_address)
+    TextView tvLastAddress;
     @BindView(R.id.ll_date)
     LinearLayout llDate;
     @BindView(R.id.tv_one_speed)
@@ -371,6 +374,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                                         } else {
                                             tvCarNum.setText("车牌号码："+mTaskListBean.getCarPlateNO());
                                             tvTimeStatus.setText("最后定位时间："+o.getData().getCACHETIME() + "(" + o.getData().getConnectflag() + ")");
+                                            tvLastAddress.setText("最后定位位置："+o.getData().getResultAddress());
                                             rlMapBottom.setVisibility(View.VISIBLE);
                                             ivLocation.setVisibility(View.VISIBLE);
                                             rlFragment.setVisibility(View.VISIBLE);
@@ -615,8 +619,10 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fg_map);
             mMap = supportMapFragment.getMap();
             UiSettings uiSettings = mMap.getUiSettings();
-            //设置不显示+-符号
-            uiSettings.setZoomControlsEnabled(false);
+            uiSettings.setScaleControlsEnabled(true);
+            uiSettings.setCompassEnabled(true);
+            uiSettings
+                    .setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
 //            setLocationBluePoint();
             setCarGPSLocationPoint();
         }
@@ -627,6 +633,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         mMap.clear();
         MarkerOptions carMarker = new MarkerOptions()
                 .position(carGPSLatLng)
+//                .title("库点位置")
 //                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.landmark));
         mMap.addMarker(carMarker);

@@ -62,6 +62,7 @@
         android:id="@+id/rl_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/rl_map_bottom"
         android:layout_below="@+id/toolbar_trailer_map">
 
         <fragment
@@ -219,6 +220,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/iv_map_nav"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="40px"
             android:orientation="vertical">
@@ -235,6 +238,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16px"
+                android:textColor="@color/mt9c9c9c"
+                android:textSize="37px" />
+            <TextView
+                android:id="@+id/tv_last_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10px"
                 android:textColor="@color/mt9c9c9c"
                 android:textSize="37px" />
         </LinearLayout>

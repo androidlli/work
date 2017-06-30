@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
@@ -84,6 +85,8 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
     RadioButton rbSixthThree;
     @BindView(R.id.rg_seventh)
     RadioGroup rgSeventh;
+    @BindView(R.id.tv_complete_confirm)
+    TextView tvConfirm;
     @BindView(R.id.avl_login_indicator)
     AVLoadingIndicatorView mLoadView;
 
@@ -140,6 +143,7 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
         }
         mActivity.setSupportActionBar(mToolbar);
         showIndicator(false);
+        tvConfirm.setVisibility(View.GONE);
         llSixth.setVisibility(View.GONE);
         mPresenter.wareHouse(true, mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(), mLat, mLon, mProvince);
 
@@ -153,11 +157,13 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
             radioButton.setTextSize(13);
             radioButton.setText(" 我是第" + (i + 1) + "一个");
             radioButton.setLayoutParams(layoutParams);
+            final int finalI = i;
             radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        mTmpReason = radioButton.getText().toString().trim();
+//                        mTmpReason = radioButton.getText().toString().trim();
+                        mTmpReason = "QN01,5;"+ (finalI+1);
                     }
                 }
             });
@@ -337,6 +343,7 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
 
     @Override
     public void showWareHouseSuccess(WareHouse wareHouse) {
+        tvConfirm.setVisibility(View.VISIBLE);
         mWareHouseList = wareHouse.getData();
         if (mWareHouseList.size() > 3) {
         } else {
@@ -370,12 +377,14 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
     public void showWareHouseError(String msg) {
         llSixth.setVisibility(View.GONE);
         rgSixth.setVisibility(View.GONE);
+        tvConfirm.setVisibility(View.GONE);
     }
 
     @Override
     public void showWareHouseNoData() {
         llSixth.setVisibility(View.GONE);
         rgSixth.setVisibility(View.GONE);
+        tvConfirm.setVisibility(View.GONE);
     }
 
     @Override

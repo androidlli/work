@@ -64,6 +64,17 @@ public class NavigationCar {
         private String CACHETIME;
         private double resultLAT;
         private double resultLON;
+        private String resultAddress;
+
+        public String getResultAddress() {
+            return resultAddress;
+        }
+
+        public void setResultAddress(String resultAddress) {
+            if (CommUtil.checkIsNull(resultAddress))
+                resultAddress="";
+            this.resultAddress = resultAddress;
+        }
 
         public String getConnectflag() {
             return connectflag;

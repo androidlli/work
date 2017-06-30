@@ -24,7 +24,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 
 public class NetManager {
-    private static final int DEFAULT_TIMEOUT = 30;
+    private static final int DEFAULT_TIMEOUT = 120;
     private static NetManager mNetManager;
 
     private NetManager() {

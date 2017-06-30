@@ -105,37 +105,12 @@ public class AdminFragment extends BaseFragment {
     protected void initView() {
         mActivity= (AdminActivity) getActivity();
         mActivity.setSupportActionBar(mToolbar);
-//        mToolbar.setOverflowIcon(getResources().getDrawable(R.drawable.more));
         mMenuPW = getPopupWindow(mActivity, R.layout.admin_menu_pw);
     }
 
     @Override
     protected void initData() {
-//        setHasOptionsMenu(true);
     }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.admin_home,menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()){
-//            case R.id.download:
-//                mActivity.mSwipeBackHelper.forward(DownloadActivity.class);
-//                break;
-//            case R.id.exit:
-//                MtApplication.mSPUtils.clear();
-//                MtApplication.mSPUtils.put(Api.ISSHOWSTARTOVER,true);
-//                Intent loginIntent = new Intent(mActivity, LoginActivity.class);
-//                loginIntent.putExtra("isFromLogout", true);
-//                mActivity.mSwipeBackHelper.forward(loginIntent);
-//                break;
-//        }
-//        return true;
-//    }
 
     public PopupWindow getPopupWindow(Context context, final int layoutId) {
         final PopupWindow popupWindow = new PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

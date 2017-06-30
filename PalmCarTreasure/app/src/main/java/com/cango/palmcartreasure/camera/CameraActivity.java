@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.trailer.main.TrailerActivity;
 import com.google.android.cameraview.CameraView;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -80,7 +81,7 @@ public class CameraActivity extends AppCompatActivity implements
     private Handler mBackgroundHandler;
 
     //UI handler
-    private Handler mHandler=new Handler();
+    private Handler mHandler = new Handler();
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -282,9 +283,7 @@ public class CameraActivity extends AppCompatActivity implements
 
         @Override
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
-            Log.d(TAG, "onPictureTaken " + data.length);
-            Toast.makeText(cameraView.getContext(), R.string.picture_taken, Toast.LENGTH_SHORT)
-                    .show();
+            Logger.d(TAG, "onPictureTaken " + data.length);
             getBackgroundHandler().post(new Runnable() {
                 @Override
                 public void run() {
