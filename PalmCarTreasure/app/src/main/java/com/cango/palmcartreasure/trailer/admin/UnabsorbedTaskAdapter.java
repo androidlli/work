@@ -108,7 +108,7 @@ public class UnabsorbedTaskAdapter extends BaseAdapter<TaskManageList.DataBean.T
         if ("0".equals(data.getRedueAmount()) || TextUtils.isEmpty(data.getRedueAmount())) {
             tvAgencyAmount.setText("");
         } else {
-            tvAgencyAmount.setText(data.getRedueAmount() + "元");
+            tvAgencyAmount.setText("预估："+data.getRedueAmount() + "元");
         }
 
     }

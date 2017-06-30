@@ -228,8 +228,8 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                 mLon = 0;
             } else {
                 if (aMapLocation.getErrorCode() == 0) {
-                    if (!CommUtil.checkIsNull(aMapLocation.getProvince())){
-                        mProvince=aMapLocation.getProvince();
+                    if (!CommUtil.checkIsNull(aMapLocation.getProvince())) {
+                        mProvince = aMapLocation.getProvince();
                     }
                     if (!CommUtil.checkIsNull(aMapLocation.getLatitude())) {
 //                        BigDecimal latBD = new BigDecimal(String.valueOf(aMapLocation.getLatitude()));
@@ -314,9 +314,9 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                 }
 
                 //首页只有进行中的任务，所以如果不能大点了，那么一定是大点完成了
-                if ("F".equals(currentBean.getIsCheckPoint())){
+                if ("F".equals(currentBean.getIsCheckPoint())) {
                     llDotTrailer.setVisibility(View.GONE);
-                }else {
+                } else {
                     llDotTrailer.setVisibility(View.VISIBLE);
                 }
 
@@ -381,15 +381,15 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             pointLat = mLat;
             pointLon = mLon;
-            pointProvince=mProvince;
+            pointProvince = mProvince;
             mCurrentPhotoPath = data.getStringExtra("path");
-            Intent completeIntent =new Intent(mActivity,TrailerCompleteActivity.class);
-            completeIntent.putExtra(TrailerCompleteFragment.TYPE,"0");
-            completeIntent.putExtra(TrailerCompleteFragment.IMG_PATH,mCurrentPhotoPath);
-            completeIntent.putExtra(TrailerCompleteFragment.LAT,pointLat);
-            completeIntent.putExtra(TrailerCompleteFragment.LON,pointLon);
-            completeIntent.putExtra(TrailerCompleteFragment.PROVINCE,pointProvince);
-            completeIntent.putExtra(TrailerCompleteFragment.TASKLISTBEAN,currentBean);
+            Intent completeIntent = new Intent(mActivity, TrailerCompleteActivity.class);
+            completeIntent.putExtra(TrailerCompleteFragment.TYPE, "0");
+            completeIntent.putExtra(TrailerCompleteFragment.IMG_PATH, mCurrentPhotoPath);
+            completeIntent.putExtra(TrailerCompleteFragment.LAT, pointLat);
+            completeIntent.putExtra(TrailerCompleteFragment.LON, pointLon);
+            completeIntent.putExtra(TrailerCompleteFragment.PROVINCE, pointProvince);
+            completeIntent.putExtra(TrailerCompleteFragment.TASKLISTBEAN, currentBean);
             mActivity.mSwipeBackHelper.forward(completeIntent);
 //            showDotDialog();
         }
@@ -421,6 +421,30 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                                         mViewPager.setVisibility(View.INVISIBLE);
                                         rlNoData.setVisibility(View.VISIBLE);
                                     } else {
+
+                                        badge1 = null;
+                                        badge2 = null;
+                                        if (o.getData().getTotalCount()>0){
+                                            badge1 = new QBadgeView(getActivity())
+                                                    .setBadgeBackgroundColor(getResources().getColor(R.color.mtffe0b9))
+                                                    .setShowShadow(false)
+                                                    .setBadgeTextColor(getResources().getColor(R.color.mt757575))
+                                                    .bindTarget(llForTask)
+                                                    .setBadgeNumber(o.getData().getTotalCount())
+                                                    .setBadgeGravity(Gravity.TOP | Gravity.END)
+                                                    .setGravityOffset(SizeUtil.px2dp(getContext(), 28), true);
+                                        }
+                                        if (o.getData().getNewTaskCount()>0){
+                                            badge2 = new QBadgeView(getActivity())
+                                                    .setBadgeBackgroundColor(Color.WHITE)
+                                                    .setShowShadow(false)
+                                                    .setBadgeTextColor(getResources().getColor(R.color.mt757575))
+                                                    .bindTarget(llNewTask)
+                                                    .setBadgeNumber(o.getData().getNewTaskCount())
+                                                    .setBadgeGravity(Gravity.TOP | Gravity.END)
+                                                    .setGravityOffset(SizeUtil.px2dp(getContext(), 28), true);
+                                        }
+
                                         if (!CommUtil.checkIsNull(o.getData().getTaskList()) && o.getData().getTaskList().size() > 0) {
                                             mLoadView.smoothToHide();
                                             updateView(0, o);
@@ -544,7 +568,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
 
     //拖车大点成功,刷新数据
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCheckPointOkToHomeEvent(CheckPointOkToHomeEvent event){
+    public void onCheckPointOkToHomeEvent(CheckPointOkToHomeEvent event) {
         mLoadView.smoothToShow();
         isShowPosition = true;
 
@@ -636,27 +660,6 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
         ivVp.setVisibility(View.INVISIBLE);
         rlNoData.setVisibility(View.GONE);
         mViewPager.setVisibility(View.VISIBLE);
-        badge1 = null;
-        badge2 = null;
-//        if (type == 0) {
-        badge1 = new QBadgeView(getActivity())
-                .setBadgeBackgroundColor(getResources().getColor(R.color.mtffe0b9))
-                .setShowShadow(false)
-                .setBadgeTextColor(getResources().getColor(R.color.mt757575))
-                .bindTarget(llForTask)
-                .setBadgeNumber(o.getData().getTotalCount())
-                .setBadgeGravity(Gravity.TOP | Gravity.END)
-                .setGravityOffset(SizeUtil.px2dp(getContext(), 28), true);
-//        } else if (type == 1) {
-        badge2 = new QBadgeView(getActivity())
-                .setBadgeBackgroundColor(Color.WHITE)
-                .setShowShadow(false)
-                .setBadgeTextColor(getResources().getColor(R.color.mt757575))
-                .bindTarget(llNewTask)
-                .setBadgeNumber(o.getData().getNewTaskCount())
-                .setBadgeGravity(Gravity.TOP | Gravity.END)
-                .setGravityOffset(SizeUtil.px2dp(getContext(), 28), true);
-//        }
 
         for (final TypeTaskData.DataBean.TaskListBean bean : o.getData().getTaskList()) {
             taskListBeanList.add(bean);
@@ -694,18 +697,18 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
         currentBean = taskListBeanList.get(0);
         mPageAdapter.notifyDataSetChanged();
         //首页只有进行中的任务，所以如果不能大点了，那么一定是大点完成了
-        if ("F".equals(currentBean.getIsCheckPoint())){
+        if ("F".equals(currentBean.getIsCheckPoint())) {
             llDotTrailer.setVisibility(View.GONE);
-        }else {
+        } else {
             llDotTrailer.setVisibility(View.VISIBLE);
         }
         if (isShowPosition) {
             mViewPager.setCurrentItem(currentPosition);
-            if (currentPosition<taskListBeanList.size()){
-                currentBean=taskListBeanList.get(currentPosition);
-                if ("F".equals(taskListBeanList.get(currentPosition).getIsCheckPoint())){
+            if (currentPosition < taskListBeanList.size()) {
+                currentBean = taskListBeanList.get(currentPosition);
+                if ("F".equals(taskListBeanList.get(currentPosition).getIsCheckPoint())) {
                     llDotTrailer.setVisibility(View.GONE);
-                }else {
+                } else {
                     llDotTrailer.setVisibility(View.VISIBLE);
                 }
             }

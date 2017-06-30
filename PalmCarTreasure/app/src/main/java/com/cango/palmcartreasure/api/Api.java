@@ -5,12 +5,12 @@ package com.cango.palmcartreasure.api;
  */
 
 public class Api {
-    public static final String BASE_URL="http://192.168.150.112:89/api/";
+//    public static final String BASE_URL="http://192.168.150.112:89/api/";
 
 //    public static final String BASE_URL="http://192.168.110.234:8091/api/";
 
     //http://testgps.cangoonline.com/tcapi
-//    public static final String BASE_URL="http://testgps.cangoonline.com:82/tcapi/api/";
+    public static final String BASE_URL="http://testgps.cangoonline.com:82/tcapi/api/";
 
     public static final String DEVICE_TYPE="2";
     public static final String ISSHOWSTARTOVER="isShowStartOver";

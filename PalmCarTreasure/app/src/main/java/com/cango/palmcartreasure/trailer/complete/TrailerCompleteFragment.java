@@ -105,6 +105,7 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
 
     //0:首页进入；1：详情页面进入
     private String mType,mImgPath, mProvince;
+    private String[] sevenResults=new String[]{"车辆故障","库管暂时无法接车","集中派送","其他"};
     private double mLat, mLon;
     private TrailerCompleteActivity mActivity;
     private TrailerCompleteContract.Presenter mPresenter;
@@ -149,13 +150,13 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
 
         final List<RadioButton> radioButtons = new ArrayList<>();
         RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             final RadioButton radioButton = new RadioButton(mActivity);
             radioButton.setButtonDrawable(getResources().getDrawable(R.drawable.radio_button_selector));
             radioButton.setPadding(0, SizeUtil.dp2px(mActivity, 5), 0, SizeUtil.dp2px(mActivity, 5));
             radioButton.setTextColor(getResources().getColor(R.color.mt9c9c9c));
             radioButton.setTextSize(13);
-            radioButton.setText(" 我是第" + (i + 1) + "一个");
+            radioButton.setText(sevenResults[i]);
             radioButton.setLayoutParams(layoutParams);
             final int finalI = i;
             radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

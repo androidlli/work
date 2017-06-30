@@ -391,7 +391,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
             taskInfoList.add(taskInfo);
 
             taskInfo = new TaskDetailData.TaskSection.TaskInfo();
-            taskInfo.setLeft("上牌抵押信息");
+            taskInfo.setLeft("抵押信息");
             taskInfo.setLeftColor(R.color.mt9c9c9c);
             taskInfo.setRight(dataBean.getHasCarletterPass());
             taskInfo.setRightColor(R.color.colorPrimary);

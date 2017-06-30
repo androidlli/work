@@ -97,7 +97,7 @@ public class AdminGroupAdapter extends BaseAdapter<GroupTaskQuery.DataBean.TaskL
         if ("0".equals(data.getRedueAmount())||TextUtils.isEmpty(data.getRedueAmount())){
             tvAgencyAmount.setText("");
         }else {
-            tvAgencyAmount.setText(data.getRedueAmount()+"元");
+            tvAgencyAmount.setText("预估："+data.getRedueAmount()+"元");
         }
     }
 

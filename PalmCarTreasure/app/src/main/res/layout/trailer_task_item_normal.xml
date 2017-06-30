@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_task_item_id"
             android:layout_marginLeft="40px"
-            android:layout_marginTop="12px"
+            android:layout_marginTop="5px"
             android:textColor="@color/mtd27d00"
             android:textSize="42px" />
 
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_task_item_type"
             android:layout_marginLeft="40px"
-            android:layout_marginTop="8px"
+            android:layout_marginTop="3px"
             android:textSize="42px" />
 
         <TextView
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_task_item_type"
             android:layout_toRightOf="@+id/tv_task_item_name"
-            android:layout_marginTop="8px"
+            android:layout_marginTop="3px"
             android:layout_marginLeft="60px"
             android:textSize="42px" />
 
@@ -92,7 +92,7 @@
             android:textColor="@color/mtbcbcbc"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="40px"
-            android:paddingBottom="10px"
+            android:paddingBottom="5px"
             android:textSize="36px" />
         <!--<TextView-->
             <!--android:id="@+id/tv_task_item_type"-->

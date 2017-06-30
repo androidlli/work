@@ -101,12 +101,16 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
             }
             RequestBody mAnswerList = RequestBody.create(null, jsonArray.toString());
             RequestBody mRealSPID = RequestBody.create(null, realSPID + "");
+            if (CommUtil.checkIsNull(tmpReason)){
+                tmpReason="";
+            }else {
+            }
             RequestBody mTmpReason = RequestBody.create(null, tmpReason);
             RequestBody photoBody = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), photoBody);
+
             mService.checkPiontSubmit(mUserId, mLat, mLon, mAgencyID, mCaseID, notifyCustImm, mAnswerList,
-                    mRealSPID, mTmpReason, part)
-                    .subscribeOn(Schedulers.io())
+                    mRealSPID, mTmpReason, part).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<TaskAbandon>() {
                         @Override
@@ -114,10 +118,10 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
                             if (mView.isActive()) {
                                 mView.showIndicator(false);
                                 deleteImageFile(file);
-                                boolean isSuccess = o.getCode()==0;
-                                if (isSuccess){
+                                boolean isSuccess = o.getCode() == 0;
+                                if (isSuccess) {
                                     mView.showComfirmSuccess(o.getMsg());
-                                }else {
+                                } else {
                                     mView.showError(o.getMsg());
                                 }
                             }
