@@ -94,7 +94,10 @@ public class MtApplication extends Application {
             }
         };
         mPushAgent.setMessageHandler(messageHandler);
-
+//        默认情况下，同一台设备在1分钟内收到同一个应用的多条通知时，不会重复提醒，同时在通知栏里新的通知会替换掉旧的通知。可以通过如下方法来设置冷却时间：
+        mPushAgent.setMuteDurationSeconds(0);
+        //参数number可以设置为0~10之间任意整数。当参数为0时，表示不合并通知。
+        mPushAgent.setDisplayNotificationNumber(0);
         //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
 
