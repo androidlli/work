@@ -33,7 +33,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
-                android:hint="请输入IMEI号进行查询"
+                android:hint="请输入IMEI号/申请编号/车牌号"
                 android:inputType="number"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
