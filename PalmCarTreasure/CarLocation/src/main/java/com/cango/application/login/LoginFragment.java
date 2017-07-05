@@ -5,6 +5,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -163,7 +164,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
     public void showLoginSuccess(boolean isSuccess, String message) {
         showLoginIndicator(false);
         if (!isSuccess) {
-            if (!CommUtil.checkIsNull(message))
+            if (!TextUtils.isEmpty(message))
                 ToastUtils.showShort(message);
         }else {
             openOtherUi();

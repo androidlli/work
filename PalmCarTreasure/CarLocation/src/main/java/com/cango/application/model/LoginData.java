@@ -1,5 +1,7 @@
 package com.cango.application.model;
 
+import com.cango.application.util.CommUtil;
+
 /**
  * Created by cango on 2017/4/18.
  */
@@ -47,6 +49,8 @@ public class LoginData {
     }
 
     public void setMsg(String Msg) {
+        if (CommUtil.checkIsNull(Msg))
+            Msg="";
         this.Msg = Msg;
     }
 
@@ -66,6 +70,8 @@ public class LoginData {
         }
 
         public void setToken(String token) {
+            if (CommUtil.checkIsNull(token))
+                token="";
             this.token = token;
         }
 
@@ -74,6 +80,8 @@ public class LoginData {
         }
 
         public void setUserid(String userid) {
+            if (CommUtil.checkIsNull(userid))
+                userid="";
             this.userid = userid;
         }
 
@@ -82,6 +90,8 @@ public class LoginData {
         }
 
         public void setRole(String role) {
+            if (CommUtil.checkIsNull(role))
+                role="";
             this.role = role;
         }
     }
