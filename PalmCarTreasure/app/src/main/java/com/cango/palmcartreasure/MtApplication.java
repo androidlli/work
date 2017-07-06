@@ -57,7 +57,7 @@ public class MtApplication extends Application {
                         MessageFragment fragment = (MessageFragment) lastActvity.getSupportFragmentManager().findFragmentById(R.id.fl_message_contains);
                         if (!CommUtil.checkIsNull(fragment))
                             fragment.onRefresh();
-                    }else {
+                    } else {
                         Intent startTaobao = new Intent(context, MessageActivity.class);
                         startTaobao.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(startTaobao);
@@ -86,7 +86,7 @@ public class MtApplication extends Application {
 
                 //推送消息关联主页
                 boolean hasTrailerActivity = isHasTrailerActivity();
-                if (hasTrailerActivity){
+                if (hasTrailerActivity) {
                     EventBus.getDefault().post(new TrailerEvent("ok"));
                 }
 
@@ -136,13 +136,14 @@ public class MtApplication extends Application {
         }
     }
 
-    public static void clearLastActivity(){
+    public static void clearLastActivity() {
         if (activityList == null || activityList.size() == 0) {
 
         } else {
-          activityList.remove(activityList.size()-1);
+            activityList.remove(activityList.size() - 1);
         }
     }
+
     public static void clearExceptLastActivitys() {
         if (activityList == null || activityList.size() == 0) {
 
@@ -165,15 +166,16 @@ public class MtApplication extends Application {
             return activityList.get(activityList.size() - 1);
         }
     }
-    private static boolean isHasTrailerActivity(){
+
+    private static boolean isHasTrailerActivity() {
         boolean isHas = false;
         if (activityList == null || activityList.size() == 0) {
-            isHas=false;
+            isHas = false;
         } else {
             for (int i = 0; i < activityList.size(); i++) {
                 AppCompatActivity activity = activityList.get(i);
-                if (activity instanceof TrailerActivity){
-                    isHas=true;
+                if (activity instanceof TrailerActivity) {
+                    isHas = true;
                     break;
                 }
             }
