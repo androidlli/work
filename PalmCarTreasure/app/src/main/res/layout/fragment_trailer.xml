@@ -95,14 +95,20 @@
             android:visibility="gone"
             android:id="@+id/rl_top_no_data"
             android:layout_width="match_parent"
-            android:layout_height="735px"
-            android:paddingTop="16px">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:src="@drawable/index_no_data"
-                android:scaleType="centerCrop"/>
+            android:layout_height="719px"
+            android:layout_marginLeft="16px"
+            android:layout_marginTop="16px"
+            android:layout_marginRight="16px"
+            android:background="@drawable/index_no_data">
+            <!--<ImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginLeft="16px"-->
+                <!--android:layout_marginTop="16px"-->
+                <!--android:layout_marginRight="16px"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:src="@drawable/index_no_data"-->
+                <!--android:scaleType="fitXY"/>-->
         </RelativeLayout>
 
         <com.cango.palmcartreasure.customview.AutoCardView

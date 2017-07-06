@@ -200,7 +200,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     }
                     if (mLat > 0 && mLon > 0) {
                         if (isShouldFirstAddData) {
-                            showLoadingView(false);
+//                            showLoadingView(false);
                             isShouldFirstAddData = false;
                             getFirstData();
                         }
@@ -641,7 +641,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         if (EasyPermissions.hasPermissions(getContext(), perms)) {
             mLocationClient.startLocation();
 //            getFirstData();
-            showLoadingView(true);
+//            showLoadingView(true);
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.location_group_and_storage), REQUEST_LOCATION_GROUP_AND_STORAGE_GROUP, perms);
         }

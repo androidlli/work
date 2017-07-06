@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.cango.palmcartreasure.R;
+import com.cango.palmcartreasure.api.Api;
 import com.cango.palmcartreasure.base.BaseFragment;
 import com.cango.palmcartreasure.util.BarUtil;
 import com.cango.palmcartreasure.util.CommUtil;
@@ -115,6 +116,6 @@ public class DocFragment extends BaseFragment {
                 settings.setBlockNetworkImage(false);
             }
         });
-        mWebView.loadUrl("https://www.baidu.com/");
+        mWebView.loadUrl(Api.ABOUT_URL+"signup/index.html");
     }
 }
