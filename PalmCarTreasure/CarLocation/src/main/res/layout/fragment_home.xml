@@ -34,7 +34,6 @@
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
                 android:hint="输入IMEI号/申请编号/车牌号"
-                android:inputType="number"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
                 android:textColorHint="@color/mt9c9c9c"
