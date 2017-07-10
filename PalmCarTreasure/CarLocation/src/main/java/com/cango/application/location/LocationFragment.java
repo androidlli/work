@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -446,7 +447,11 @@ public class LocationFragment extends BaseFragment implements LocationContract.V
                 .position(carGPSLatLng)
 //                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.car));
-        mMap.addMarker(carMarker);
+        if (carGPSLatLng.latitude==0&&carGPSLatLng.longitude==0){
+            ToastUtils.showShort(R.string.no_get_last_gps);
+        }else {
+            mMap.addMarker(carMarker);
+        }
     }
 
     private void setLocationBluePoint() {
