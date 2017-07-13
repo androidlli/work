@@ -2,6 +2,8 @@ package com.cango.palmcartreasure.net;
 
 import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.api.Api;
+import com.cango.palmcartreasure.update.ProgressListener;
+import com.cango.palmcartreasure.update.ProgressResponseBody;
 import com.cango.palmcartreasure.util.CommUtil;
 import com.umeng.message.PushAgent;
 
@@ -87,6 +89,36 @@ public class NetManager {
                         .addHeader("DEVICETOKEN",deviceToken)
                         .build();
                 return chain.proceed(request);
+            }
+        });
+        return builder.build();
+    }
+
+    public <T> T createUpdate(Class<T> service,ProgressListener progressListener) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(updateOkhttpClient(progressListener))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(getBaseUrl(service))
+                .build();
+        return retrofit.create(service);
+    }
+    public OkHttpClient updateOkhttpClient(final ProgressListener progressListener){
+        OkHttpClient.Builder builder=new OkHttpClient.Builder()
+                .connectTimeout(DEFAULT_TIMEOUT,TimeUnit.SECONDS)
+                .writeTimeout(DEFAULT_TIMEOUT,TimeUnit.SECONDS)
+                .readTimeout(DEFAULT_TIMEOUT,TimeUnit.SECONDS);
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        builder.addInterceptor(loggingInterceptor);
+        builder.addNetworkInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Response originalResponse  = chain.proceed(chain.request());
+                return originalResponse.newBuilder().body(new ProgressResponseBody(originalResponse.body(),progressListener))
+                        .build();
             }
         });
         return builder.build();

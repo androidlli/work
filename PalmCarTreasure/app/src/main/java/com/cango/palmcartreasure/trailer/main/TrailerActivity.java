@@ -4,18 +4,12 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.view.View;
 
 import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseActivity;
-import com.cango.palmcartreasure.model.TaskDrawEvent;
-import com.cango.palmcartreasure.util.BarUtil;
 import com.cango.palmcartreasure.util.CommUtil;
-import com.cango.palmcartreasure.util.ScreenUtil;
-import com.orhanobut.logger.Logger;
-import com.zhy.autolayout.AutoLayoutActivity;
 
 public class TrailerActivity extends BaseActivity {
 
@@ -33,21 +27,21 @@ public class TrailerActivity extends BaseActivity {
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
             decorView.setSystemUiVisibility(option);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }else {
+        } else {
         }
         setContentView(R.layout.activity_trailer);
 
         TrailerFragment trailerFragment = (TrailerFragment) getSupportFragmentManager().findFragmentById(R.id.fl_trailer_contains);
         boolean isFromSMS = false;
-        if (getIntent()!=null){
-            if (getIntent().hasExtra("isFromSMS")){
-                isFromSMS = getIntent().getBooleanExtra("isFromSMS",false);
+        if (getIntent() != null) {
+            if (getIntent().hasExtra("isFromSMS")) {
+                isFromSMS = getIntent().getBooleanExtra("isFromSMS", false);
             }
         }
         if (CommUtil.checkIsNull(trailerFragment)) {
-            if (isFromSMS){
-                trailerFragment=trailerFragment.newInstance(isFromSMS);
-            }else {
+            if (isFromSMS) {
+                trailerFragment = trailerFragment.newInstance(isFromSMS);
+            } else {
                 trailerFragment = TrailerFragment.newInstance();
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

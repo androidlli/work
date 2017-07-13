@@ -36,7 +36,10 @@ import com.cango.palmcartreasure.base.BaseFragment;
 import com.cango.palmcartreasure.camera.CameraActivity;
 import com.cango.palmcartreasure.customview.CalendarDialogFragment;
 import com.cango.palmcartreasure.customview.DotTrailerDialogFragment;
+import com.cango.palmcartreasure.customview.MessageItemDialogFragment;
+import com.cango.palmcartreasure.customview.UpdateFragment;
 import com.cango.palmcartreasure.model.CheckPointOkToHomeEvent;
+import com.cango.palmcartreasure.model.MessageList;
 import com.cango.palmcartreasure.model.TaskAbandon;
 import com.cango.palmcartreasure.model.TrailerEvent;
 import com.cango.palmcartreasure.model.TypeTaskData;
@@ -51,6 +54,7 @@ import com.cango.palmcartreasure.trailer.task.TrailerTasksActivity;
 import com.cango.palmcartreasure.trailer.task.TrailerTasksFragment;
 import com.cango.palmcartreasure.trailer.taskdetail.TaskDetailActivity;
 import com.cango.palmcartreasure.trailer.taskdetail.TaskDetailFragment;
+import com.cango.palmcartreasure.update.UpdatePresenter;
 import com.cango.palmcartreasure.util.BarUtil;
 import com.cango.palmcartreasure.util.CommUtil;
 import com.cango.palmcartreasure.util.SizeUtil;
@@ -338,6 +342,29 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
         mViewPager.setVisibility(View.INVISIBLE);
 
 //        openPermissions();
+//        showUpdateDialog();
+    }
+
+    private UpdateFragment mUpdateDialog;
+    private void showUpdateDialog() {
+        if (CommUtil.checkIsNull(mUpdateDialog)) {
+            mUpdateDialog = new UpdateFragment();
+        }
+        if (mUpdateDialog.isVisible()) {
+
+        } else {
+            mUpdateDialog.show(getFragmentManager(), "UpdateDialog");
+        }
+    }
+
+    private void closeUpdateDialog() {
+        if (CommUtil.checkIsNull(mUpdateDialog)) {
+
+        } else {
+            if (mUpdateDialog.isVisible()) {
+                mUpdateDialog.dismiss();
+            }
+        }
     }
 
     @Override

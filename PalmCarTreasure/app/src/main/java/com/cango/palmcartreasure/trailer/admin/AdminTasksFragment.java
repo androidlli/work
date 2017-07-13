@@ -469,6 +469,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
             llSorry.setVisibility(View.VISIBLE);
             llUnabsorbed.setVisibility(View.GONE);
             tvBottom.setVisibility(View.GONE);
+            tvRight.setVisibility(View.GONE);
         }
     }
 
@@ -479,6 +480,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
      */
     @Override
     public void showAdminTasks(List<GroupTaskCount.DataBean.TaskCountListBean> tasks) {
+        tvRight.setVisibility(View.VISIBLE);
         llSorry.setVisibility(View.GONE);
         llNoData.setVisibility(View.GONE);
         if (ADMIN_UNABSORBED.equals(mType)) {
@@ -504,6 +506,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
     @Override
     public void showAdminGroupTasks(List<GroupTaskQuery.DataBean.TaskListBean> tasks) {
+        tvRight.setVisibility(View.VISIBLE);
         llSorry.setVisibility(View.GONE);
         llNoData.setVisibility(View.GONE);
         if (ADMIN_UNABSORBED.equals(mType)) {
@@ -541,6 +544,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
     @Override
     public void showAdminUnabsorbedTasks(List<TaskManageList.DataBean.TaskListBean> tasks) {
+        tvRight.setVisibility(View.VISIBLE);
         llSorry.setVisibility(View.GONE);
         llNoData.setVisibility(View.GONE);
         if (ADMIN_UNABSORBED.equals(mType)) {
@@ -589,6 +593,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
             llNoData.setVisibility(View.VISIBLE);
             llUnabsorbed.setVisibility(View.GONE);
             tvBottom.setVisibility(View.GONE);
+            tvRight.setVisibility(View.GONE);
         }
     }
 
