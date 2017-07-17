@@ -88,6 +88,7 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import top.zibin.luban.Luban;
@@ -209,6 +210,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
     private int isHavePointDot;
     private TrailerActivity mActivity;
     private TrailerTaskService mService;
+    private Subscription subscription1,subscription2;
     private List<View> viewList = new ArrayList<>();
     private MainPageOtherAdapter mPageAdapter;
     private List<TypeTaskData.DataBean.TaskListBean> taskListBeanList = new ArrayList<>();
@@ -430,7 +432,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
 
     private void addData() {
         if (mLat > 0 && mLon > 0) {
-            mService.getTaskInprogressList(MtApplication.mSPUtils.getInt(Api.USERID), mLat,
+            subscription1 = mService.getTaskInprogressList(MtApplication.mSPUtils.getInt(Api.USERID), mLat,
                     mLon, 1, 5)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -629,6 +631,10 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
             mLocationClient.unRegisterLocationListener(mLoactionListener);
             mLocationClient.onDestroy();
         }
+        if (!CommUtil.checkIsNull(subscription1))
+            subscription1.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription2))
+            subscription2.unsubscribe();
     }
 
     private void doNewTask() {
@@ -884,7 +890,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                         objectMap.put("planDonetime", dateString);
                         objectMap.put("LAT", mLat);
                         objectMap.put("LON", mLon);
-                        mService.startTaskSubmit(objectMap)
+                        subscription2 = mService.startTaskSubmit(objectMap)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(new RxSubscriber<TaskAbandon>() {

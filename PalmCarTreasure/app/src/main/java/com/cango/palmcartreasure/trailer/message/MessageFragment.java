@@ -64,6 +64,13 @@ public class MessageFragment extends BaseFragment implements MessageContract.Vie
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!CommUtil.checkIsNull(mPresenter))
+            mPresenter.onDetach();
+    }
+
+    @Override
     protected void initView() {
         int statusBarHeight = BarUtil.getStatusBarHeight(getActivity());
         int actionBarHeight = BarUtil.getActionBarHeight(getActivity());

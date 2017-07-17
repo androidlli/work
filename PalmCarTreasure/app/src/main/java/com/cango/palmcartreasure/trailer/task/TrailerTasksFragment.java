@@ -200,6 +200,13 @@ public class TrailerTasksFragment extends BaseFragment implements TaskContract.V
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!CommUtil.checkIsNull(mPresenter))
+            mPresenter.onDetach();
+    }
+
+    @Override
     protected void initView() {
         int statusBarHeight = BarUtil.getStatusBarHeight(getActivity());
         int actionBarHeight = BarUtil.getActionBarHeight(getActivity());

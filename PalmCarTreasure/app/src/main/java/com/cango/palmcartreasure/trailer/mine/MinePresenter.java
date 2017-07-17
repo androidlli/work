@@ -12,6 +12,7 @@ import com.cango.palmcartreasure.util.CommUtil;
 import java.util.HashMap;
 import java.util.Map;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -22,6 +23,7 @@ import rx.schedulers.Schedulers;
 public class MinePresenter implements MineContract.Presenter {
     MineContract.View mMineView;
     private LoginService mService;
+    private Subscription subscription1,subscription2,subscription3;
 
     public MinePresenter(MineContract.View mineView) {
         mMineView = mineView;
@@ -35,11 +37,21 @@ public class MinePresenter implements MineContract.Presenter {
     }
 
     @Override
+    public void onDetach() {
+        if (!CommUtil.checkIsNull(subscription1))
+            subscription1.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription2))
+            subscription2.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription3))
+            subscription3.unsubscribe();
+    }
+
+    @Override
     public void loadMineData(boolean showLoadingUI) {
         if (mMineView.isActive()){
             mMineView.showMineDataIndicator(showLoadingUI);
         }
-        mService.getPersonMain(MtApplication.mSPUtils.getInt(Api.USERID))
+        subscription1 = mService.getPersonMain(MtApplication.mSPUtils.getInt(Api.USERID))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<PersonMain>() {
@@ -75,7 +87,7 @@ public class MinePresenter implements MineContract.Presenter {
         stringMap.put("userid",MtApplication.mSPUtils.getInt(Api.USERID));
         stringMap.put("LAT",lat);
         stringMap.put("LON",lon);
-        mService.logoutTest(stringMap)
+        subscription2 = mService.logoutTest(stringMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TaskAbandon>() {
@@ -111,7 +123,7 @@ public class MinePresenter implements MineContract.Presenter {
         if (mMineView.isActive()) {
             mMineView.showMineDataIndicator(showLoadingUI);
         }
-        mService.logout(MtApplication.mSPUtils.getInt(Api.USERID), lat, lon)
+        subscription3 = mService.logout(MtApplication.mSPUtils.getInt(Api.USERID), lat, lon)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TaskAbandon>() {

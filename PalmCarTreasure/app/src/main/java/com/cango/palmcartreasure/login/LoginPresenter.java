@@ -6,11 +6,13 @@ import com.cango.palmcartreasure.api.LoginService;
 import com.cango.palmcartreasure.model.LoginData;
 import com.cango.palmcartreasure.net.NetManager;
 import com.cango.palmcartreasure.net.RxSubscriber;
+import com.cango.palmcartreasure.util.CommUtil;
 import com.cango.palmcartreasure.util.EncryptUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -21,6 +23,7 @@ import rx.schedulers.Schedulers;
 public class LoginPresenter implements LoginContract.Presenter {
     private LoginContract.View mLoginView;
     private LoginService mLoginService;
+    private Subscription subscription;
 
     public LoginPresenter(LoginContract.View loginView) {
         this.mLoginView = loginView;
@@ -34,6 +37,12 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
+    public void onDetach() {
+        if (!CommUtil.checkIsNull(subscription))
+            subscription.unsubscribe();
+    }
+
+    @Override
     public void login(String userName, String password, String imei, final double lat, final double lon, String deviceToken, String deviceType) {
         mLoginView.showLoginIndicator(true);
         Map<String, Object> objectMap = new HashMap<>();
@@ -44,7 +53,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         objectMap.put("LON", lon);
         objectMap.put("deviceToken", deviceToken);
         objectMap.put("deviceType", deviceType);
-        mLoginService.getLoginData(objectMap)
+        subscription = mLoginService.getLoginData(objectMap)
 //        mLoginService.getLoginData(userName, EncryptUtils.encryptMD5ToString(password), imei, lat, lon, deviceToken, deviceType)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

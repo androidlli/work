@@ -271,6 +271,8 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
             mLocationClient.unRegisterLocationListener(mLoactionListener);
             mLocationClient.onDestroy();
         }
+        if (!CommUtil.checkIsNull(mPresenter))
+            mPresenter.onDetach();
     }
 
     @Override

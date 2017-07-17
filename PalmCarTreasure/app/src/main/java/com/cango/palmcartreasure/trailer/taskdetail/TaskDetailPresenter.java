@@ -29,6 +29,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -39,6 +40,7 @@ import rx.schedulers.Schedulers;
 public class TaskDetailPresenter implements TaskDetailContract.Presenter {
     private TaskDetailContract.View mView;
     TrailerTaskService mService;
+    private Subscription subscription1,subscription2,subscription3,subscription4,subscription5;
 
     public TaskDetailPresenter(TaskDetailContract.View detailView) {
         mView = detailView;
@@ -52,13 +54,27 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
     }
 
     @Override
+    public void onDetach() {
+        if (!CommUtil.checkIsNull(subscription1))
+            subscription1.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription2))
+            subscription2.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription3))
+            subscription3.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription4))
+            subscription4.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription5))
+            subscription5.unsubscribe();
+    }
+
+    @Override
     public void loadTaskDetail(int type, boolean showLoadingUI, int agencyID, int caseID) {
         if (mView.isActive()) {
             mView.showTaskDetailIndicator(showLoadingUI);
         }
         switch (type) {
             case 0:
-                mService.callRecord(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
+                subscription1 = mService.callRecord(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new RxSubscriber<CallRecord>() {
@@ -94,7 +110,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                         });
                 break;
             case 1:
-                mService.homeVisitRecord(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
+                subscription2 = mService.homeVisitRecord(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new RxSubscriber<HomeVisitRecord>() {
@@ -130,7 +146,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                         });
                 break;
             case 2:
-                mService.caseInfo(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
+                subscription3 = mService.caseInfo(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new RxSubscriber<CaseInfo>() {
@@ -162,7 +178,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                         });
                 break;
             case 3:
-                mService.customerinfo(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
+                subscription4 = mService.customerinfo(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new RxSubscriber<CustomerInfo>() {
@@ -203,7 +219,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
 
     @Override
     public void loadTrailerInfo(boolean showLoadingUI, int applyID, String applyCD, int caseID) {
-        mService.trailerInfo(MtApplication.mSPUtils.getInt(Api.USERID), applyID, applyCD, caseID)
+        subscription5 = mService.trailerInfo(MtApplication.mSPUtils.getInt(Api.USERID), applyID, applyCD, caseID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TrailerInfo>() {

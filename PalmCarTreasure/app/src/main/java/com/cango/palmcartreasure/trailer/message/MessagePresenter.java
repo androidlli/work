@@ -7,10 +7,12 @@ import com.cango.palmcartreasure.model.MessageList;
 import com.cango.palmcartreasure.model.TaskAbandon;
 import com.cango.palmcartreasure.net.NetManager;
 import com.cango.palmcartreasure.net.RxSubscriber;
+import com.cango.palmcartreasure.util.CommUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -21,6 +23,7 @@ import rx.schedulers.Schedulers;
 public class MessagePresenter implements MessageContract.Presenter{
     private MessageContract.View mView;
     private LoginService mService;
+    private Subscription subscription1,subscription2;
     public MessagePresenter(MessageContract.View messageView) {
         mView=messageView;
         mView.setPresenter(this);
@@ -30,6 +33,14 @@ public class MessagePresenter implements MessageContract.Presenter{
     @Override
     public void start() {
 
+    }
+
+    @Override
+    public void onDetach() {
+        if (!CommUtil.checkIsNull(subscription1))
+            subscription1.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription2))
+            subscription2.unsubscribe();
     }
 
     @Override
@@ -43,7 +54,7 @@ public class MessagePresenter implements MessageContract.Presenter{
         if (mView.isActive()){
             mView.showMessagesIndicator(showRefreshLoadingUI);
         }
-        mService.getMessageList(MtApplication.mSPUtils.getInt(Api.USERID),status,pageCount,pageSize)
+        subscription1 = mService.getMessageList(MtApplication.mSPUtils.getInt(Api.USERID),status,pageCount,pageSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<MessageList>() {
@@ -75,7 +86,7 @@ public class MessagePresenter implements MessageContract.Presenter{
         Map<String,Object> objectMap=new HashMap<>();
         objectMap.put("userid",MtApplication.mSPUtils.getInt(Api.USERID));
         objectMap.put("messageID",messageID);
-        mService.postMessageRead(objectMap)
+        subscription2 = mService.postMessageRead(objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TaskAbandon>() {

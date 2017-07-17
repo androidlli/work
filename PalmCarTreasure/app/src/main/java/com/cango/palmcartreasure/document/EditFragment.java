@@ -32,6 +32,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -57,6 +58,7 @@ public class EditFragment extends BaseFragment {
     private EditActivity mActivity;
     private TrailerTaskService mService;
     private TypeTaskData.DataBean.TaskListBean mTaskListBean;
+    private Subscription subscription;
 
     public static EditFragment newInstance(TypeTaskData.DataBean.TaskListBean bean) {
         EditFragment fragment = new EditFragment();
@@ -64,6 +66,13 @@ public class EditFragment extends BaseFragment {
         args.putParcelable(BEAN, bean);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!CommUtil.checkIsNull(subscription))
+            subscription.unsubscribe();
     }
 
     @Override
@@ -116,7 +125,7 @@ public class EditFragment extends BaseFragment {
                 objectMap.put("applyCD", mTaskListBean.getApplyCD());
                 objectMap.put("caseID", mTaskListBean.getCaseID());
                 objectMap.put("comment", comment);
-                mService.agencySave(objectMap)
+                subscription = mService.agencySave(objectMap)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new RxSubscriber<TaskAbandon>() {

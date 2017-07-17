@@ -9,6 +9,7 @@ import com.cango.palmcartreasure.net.RxSubscriber;
 import com.cango.palmcartreasure.util.CommUtil;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -19,7 +20,7 @@ import rx.schedulers.Schedulers;
 public class TrailerTaskPresenter implements TaskContract.Presenter {
     private TaskContract.View mTaskView;
     private TrailerTaskService mTaskService;
-
+    private Subscription subscription1,subscription2;
     public TrailerTaskPresenter(TaskContract.View taskView) {
         mTaskView = taskView;
         mTaskView.setPresenter(this);
@@ -28,6 +29,14 @@ public class TrailerTaskPresenter implements TaskContract.Presenter {
 
     @Override
     public void start() {
+    }
+
+    @Override
+    public void onDetach() {
+        if (!CommUtil.checkIsNull(subscription1))
+            subscription1.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription2))
+            subscription2.unsubscribe();
     }
 
     @Override
@@ -52,7 +61,7 @@ public class TrailerTaskPresenter implements TaskContract.Presenter {
             //search
             taskDataObservable = mTaskService.taskQuery(userId, "", "",0,pageCount,pageSize);
         }
-        taskDataObservable
+        subscription1 = taskDataObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TypeTaskData>() {
@@ -91,7 +100,7 @@ public class TrailerTaskPresenter implements TaskContract.Presenter {
         if (mTaskView.isActive()){
             mTaskView.showTasksIndicator(showRefreshLoadingUI);
         }
-        mTaskService.taskQuery(MtApplication.mSPUtils.getInt(Api.USERID),applyCD,customerName,timeFlag,pageIndex,pageSize)
+        subscription2 = mTaskService.taskQuery(MtApplication.mSPUtils.getInt(Api.USERID),applyCD,customerName,timeFlag,pageIndex,pageSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TypeTaskData>() {

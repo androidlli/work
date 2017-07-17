@@ -18,6 +18,7 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -28,7 +29,7 @@ import rx.schedulers.Schedulers;
 public class TrailerCompletePresenter implements TrailerCompleteContract.Presenter {
     private TrailerCompleteContract.View mView;
     private TrailerTaskService mService;
-
+    private Subscription subscription1,subscription2;
     public TrailerCompletePresenter(TrailerCompleteContract.View view) {
         mView = view;
         mView.setPresenter(this);
@@ -41,12 +42,20 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
     }
 
     @Override
+    public void onDetach() {
+        if (!CommUtil.checkIsNull(subscription1))
+            subscription1.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription2))
+            subscription2.unsubscribe();
+    }
+
+    @Override
     public void wareHouse(boolean showIndicatorUI, int agencyID, int caseID, double lat, double lon, String province) {
         if (mView.isActive()) {
             mView.showIndicator(showIndicatorUI);
         }
         if (lat > 0 && lon > 0 && province != null) {
-            mService.wareHouse(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID, lat, lon, province)
+            subscription1 = mService.wareHouse(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID, lat, lon, province)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<WareHouse>() {
@@ -109,7 +118,7 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
             RequestBody photoBody = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), photoBody);
 
-            mService.checkPiontSubmit(mUserId, mLat, mLon, mAgencyID, mCaseID, notifyCustImm, mAnswerList,
+            subscription2 = mService.checkPiontSubmit(mUserId, mLat, mLon, mAgencyID, mCaseID, notifyCustImm, mAnswerList,
                     mRealSPID, mTmpReason, part).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<TaskAbandon>() {

@@ -153,6 +153,13 @@ public class MineFragment extends BaseFragment implements MineContract.View, Eas
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!CommUtil.checkIsNull(mPresenter))
+            mPresenter.onDetach();
+    }
+
+    @Override
     protected void initView() {
         ivMine.setImageResource(R.drawable.my_on);
         int statusBarHeight = BarUtil.getStatusBarHeight(getActivity());

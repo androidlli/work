@@ -198,6 +198,13 @@ public class GroupFragment extends BaseFragment implements GroupContract.View, G
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!CommUtil.checkIsNull(mPresenter))
+            mPresenter.onDetach();
+    }
+
+    @Override
     protected void initView() {
 
         if (ADD.equals(mType)) {

@@ -108,6 +108,13 @@ public class StaiffFragment extends BaseFragment implements StaiffContract.View 
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!CommUtil.checkIsNull(mPresenter))
+            mPresenter.onDetach();
+    }
+
+    @Override
     protected void initView() {
         mActivity = (StaiffActivity) getActivity();
         mActivity.setSupportActionBar(mToolbar);

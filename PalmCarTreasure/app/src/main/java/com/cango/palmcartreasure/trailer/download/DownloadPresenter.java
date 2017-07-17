@@ -16,6 +16,11 @@ public class DownloadPresenter implements DownloadContract.Presenter {
     }
 
     @Override
+    public void onDetach() {
+
+    }
+
+    @Override
     public void loadDtas(boolean showRefreshLoadingUI, int pageCount, int pageSize) {
 
     }

@@ -13,4 +13,9 @@ public class SMSPresenter implements SMSContract.Presenter {
     public void start() {
 
     }
+
+    @Override
+    public void onDetach() {
+
+    }
 }

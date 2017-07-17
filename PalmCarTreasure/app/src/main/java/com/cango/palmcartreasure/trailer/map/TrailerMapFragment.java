@@ -75,6 +75,7 @@ import okhttp3.RequestBody;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import top.zibin.luban.Luban;
@@ -199,6 +200,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
     //压缩后的图片file集合
     private List<File> fileList;
     private TrailerTaskService mService;
+    private Subscription subscription1,subscription2,subscription3;
     private TypeTaskData.DataBean.TaskListBean mTaskListBean;
     //地图相关
     private AMap mMap;
@@ -276,6 +278,12 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             mLocationClient.unRegisterLocationListener(mLoactionListener);
             mLocationClient.onDestroy();
         }
+        if (!CommUtil.checkIsNull(subscription1))
+            subscription1.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription2))
+            subscription2.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription3))
+            subscription3.unsubscribe();
     }
 
     @Override
@@ -352,7 +360,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             if (isAdded()) {
                 mLoadView.smoothToShow();
             }
-            mService.navigationCar(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID())
+            subscription1 = mService.navigationCar(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<NavigationCar>() {
@@ -406,7 +414,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                 mLoadView.smoothToShow();
             }
             if (mPhoneLat > 0 && mPhoneLon > 0) {
-                mService.wareHouse(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),
+                subscription2 = mService.wareHouse(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),
                         mPhoneLat, mPhoneLon,mProvince)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -556,7 +564,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                     photos.put("file" + i + "\"; filename=\"" + file.getName(), photoBody);
                 }
             }
-            mService.godownSubmit(userId, LAT, LON, agencyID, caseID, photos)
+            subscription3 = mService.godownSubmit(userId, LAT, LON, agencyID, caseID, photos)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<TaskAbandon>() {

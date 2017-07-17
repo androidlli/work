@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -25,6 +26,7 @@ import rx.schedulers.Schedulers;
 public class GroupPresenter implements GroupContract.Presenter {
     private GroupContract.View mView;
     private AdminService mService;
+    private Subscription subscription1,subscription2;
 
     public GroupPresenter(GroupContract.View view) {
         mView = view;
@@ -38,11 +40,19 @@ public class GroupPresenter implements GroupContract.Presenter {
     }
 
     @Override
+    public void onDetach() {
+        if (!CommUtil.checkIsNull(subscription1))
+            subscription1.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription2))
+            subscription2.unsubscribe();
+    }
+
+    @Override
     public void loadMembers(String type, boolean showRefreshLoadingUI, int pageCount, int pageSize) {
         if (mView.isActive())
             mView.showMemberIndicator(showRefreshLoadingUI);
 
-        mService.getGroupList(MtApplication.mSPUtils.getInt(Api.USERID), "F")
+        subscription1 = mService.getGroupList(MtApplication.mSPUtils.getInt(Api.USERID), "F")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<GroupList>() {
@@ -53,7 +63,7 @@ public class GroupPresenter implements GroupContract.Presenter {
                             int code = o.getCode();
                             if (code == 0) {
                                 List<Member> currentMembers = new ArrayList<>();
-                                if (o.getData().getGroupList()!=null&&o.getData().getGroupList().size()>0){
+                                if (o.getData().getGroupList() != null && o.getData().getGroupList().size() > 0) {
                                     List<GroupList.DataBean.GroupListBean.UserListBean> userList = o.getData().getGroupList().get(0).getUserList();
                                     for (GroupList.DataBean.GroupListBean.UserListBean bean : userList) {
                                         Member member = new Member();
@@ -75,7 +85,7 @@ public class GroupPresenter implements GroupContract.Presenter {
 
                     @Override
                     protected void _onError() {
-                        if (mView.isActive()){
+                        if (mView.isActive()) {
                             mView.showMemberIndicator(false);
                             mView.showMembersError();
                         }
@@ -91,17 +101,17 @@ public class GroupPresenter implements GroupContract.Presenter {
         Map<String,Object> objectMap=new HashMap<>();
         objectMap.put("userid",MtApplication.mSPUtils.getInt(Api.USERID));
         objectMap.put("groupList",groupListBeanList);
-        mService.groupMDFTest(objectMap)
+        subscription2 = mService.groupMDFTest(objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TaskAbandon>() {
                     @Override
                     protected void _onNext(TaskAbandon o) {
-                        if (mView.isActive()){
+                        if (mView.isActive()) {
                             mView.showMemberIndicator(false);
                             int code = o.getCode();
-                            boolean isSuccess= code == 0;
-                           mView.showGroupMDFResult(isSuccess,o.getMsg());
+                            boolean isSuccess = code == 0;
+                            mView.showGroupMDFResult(isSuccess, o.getMsg());
                         }
                     }
 
@@ -112,33 +122,5 @@ public class GroupPresenter implements GroupContract.Presenter {
                     }
                 });
 
-//        mService.groupMDF(MtApplication.mSPUtils.getInt(Api.USERID), groupListBeanList)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new RxSubscriber<TaskAbandon>() {
-//                    @Override
-//                    protected void _onNext(TaskAbandon o) {
-//                        if (mView.isActive()){
-//                            mView.showMemberIndicator(false);
-//                            int code = o.getCode();
-//                            if (CommUtil.checkIsNull(o.getMsg())){
-//                                mView.showGroupMDFResult(o.getMsg());
-//                            }
-//                            if (code==0){
-//
-//                            }else if (code==-1){
-//                                mView.showMembersError();
-//                            }else {
-//
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    protected void _onError() {
-//                        mView.showMemberIndicator(false);
-//                        mView.showMembersError();
-//                    }
-//                });
     }
 }

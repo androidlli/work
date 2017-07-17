@@ -26,6 +26,11 @@ public class UpdatePresenter implements BasePresenter {
     public void start() {
     }
 
+    @Override
+    public void onDetach() {
+
+    }
+
     public void downLoadAPK(final String apkPath, ProgressListener progressListener) {
         mService = NetManager.getInstance().createUpdate(DownLoadService.class, progressListener);
         mService.downLoadAPK()

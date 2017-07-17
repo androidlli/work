@@ -158,6 +158,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
             mLocationClient.unRegisterLocationListener(mLoactionListener);
             mLocationClient.onDestroy();
         }
+        if (!CommUtil.checkIsNull(mPresenter))
+            mPresenter.onDetach();
     }
 
     @Override

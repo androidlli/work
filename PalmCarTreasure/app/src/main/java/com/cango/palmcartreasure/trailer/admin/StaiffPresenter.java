@@ -8,11 +8,13 @@ import com.cango.palmcartreasure.model.TaskAbandon;
 import com.cango.palmcartreasure.model.TaskManageList;
 import com.cango.palmcartreasure.net.NetManager;
 import com.cango.palmcartreasure.net.RxSubscriber;
+import com.cango.palmcartreasure.util.CommUtil;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -23,6 +25,7 @@ import rx.schedulers.Schedulers;
 public class StaiffPresenter implements StaiffContract.Presenter {
     private StaiffContract.View mStaiffView;
     private AdminService mService;
+    private Subscription subscription1,subscription2;
 
     public StaiffPresenter(StaiffContract.View staiffView) {
         mStaiffView = staiffView;
@@ -36,11 +39,19 @@ public class StaiffPresenter implements StaiffContract.Presenter {
     }
 
     @Override
+    public void onDetach() {
+        if (!CommUtil.checkIsNull(subscription1))
+            subscription1.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription2))
+            subscription2.unsubscribe();
+    }
+
+    @Override
     public void loadStaiff(String type, boolean showRefreshLoadingUI, int pageCount, int pageSize) {
         if (mStaiffView.isActive()) {
             mStaiffView.showStaiffIndicator(showRefreshLoadingUI);
         }
-        mService.getGroupList(MtApplication.mSPUtils.getInt(Api.USERID), "T")
+        subscription1 = mService.getGroupList(MtApplication.mSPUtils.getInt(Api.USERID), "T")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<GroupList>() {
@@ -79,7 +90,7 @@ public class StaiffPresenter implements StaiffContract.Presenter {
         objectMap.put("userid",MtApplication.mSPUtils.getInt(Api.USERID));
         objectMap.put("groupid",groupId);
         objectMap.put("taskList",taskListBeanList);
-        mService.taskArrange(objectMap)
+        subscription2 = mService.taskArrange(objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TaskAbandon>() {
@@ -88,8 +99,8 @@ public class StaiffPresenter implements StaiffContract.Presenter {
                         if (mStaiffView.isActive()) {
                             mStaiffView.showStaiffIndicator(false);
                             int code = o.getCode();
-                            boolean isSuccess= code == 0;
-                            mStaiffView.showTaskArrangeSuccess(isSuccess,o.getMsg());
+                            boolean isSuccess = code == 0;
+                            mStaiffView.showTaskArrangeSuccess(isSuccess, o.getMsg());
                         }
                     }
 

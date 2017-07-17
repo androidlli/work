@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -27,6 +28,7 @@ import rx.schedulers.Schedulers;
 public class AdminTaskPresenter implements AdminTasksContract.Presenter {
     private AdminTasksContract.View mAdminView;
     private AdminService mService;
+    private Subscription subscription1,subscription2,subscription3,subscription4,subscription5,subscription6;
 
     public AdminTaskPresenter(AdminTasksContract.View adminView) {
         mAdminView = adminView;
@@ -39,6 +41,22 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
     }
 
     @Override
+    public void onDetach() {
+        if (!CommUtil.checkIsNull(subscription1))
+            subscription1.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription2))
+            subscription2.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription3))
+            subscription3.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription4))
+            subscription4.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription5))
+            subscription5.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription6))
+            subscription6.unsubscribe();
+    }
+
+    @Override
     public void loadAdminTasks(String type, double lat, double lon, boolean showRefreshLoadingUI, int pageCount, int pageSize) {
         if (showRefreshLoadingUI) {
             if (mAdminView.isActive())
@@ -47,7 +65,7 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
 
         }
         if (type.equals(AdminTasksFragment.GROUP)) {
-            mService.getGroupTaskCount(MtApplication.mSPUtils.getInt(Api.USERID),
+            subscription1 = mService.getGroupTaskCount(MtApplication.mSPUtils.getInt(Api.USERID),
                     lat, lon)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -88,8 +106,8 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
         } else if (type.equals(AdminTasksFragment.TASK)) {
 
         } else if (type.equals(AdminTasksFragment.ADMIN_UNABSORBED)) {
-            mService.getTaskManageList(MtApplication.mSPUtils.getInt(Api.USERID),
-                   lat, lon, pageCount, pageSize)
+            subscription2 = mService.getTaskManageList(MtApplication.mSPUtils.getInt(Api.USERID),
+                    lat, lon, pageCount, pageSize)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<TaskManageList>() {
@@ -147,7 +165,7 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
         objectMap.put("LON", lon);
         objectMap.put("pageIndex", pageCount);
         objectMap.put("pageSize", pageSize);
-        mService.getGroupTaskQuery(objectMap)
+        subscription3 = mService.getGroupTaskQuery(objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<GroupTaskQuery>() {
@@ -191,7 +209,7 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
         Map<String, Object> objectMap = new HashMap<>();
         objectMap.put("userid", MtApplication.mSPUtils.getInt(Api.USERID));
         objectMap.put("taskList", taskListBeanList);
-        mService.groupTaskDraw(objectMap)
+        subscription4 = mService.groupTaskDraw(objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TaskAbandon>() {
@@ -223,7 +241,7 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
         Map<String, Object> objectMap = new HashMap<>();
         objectMap.put("userid", MtApplication.mSPUtils.getInt(Api.USERID));
         objectMap.put("taskList", requests);
-        mService.TaskAbandon(objectMap)
+        subscription5 = mService.TaskAbandon(objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TaskAbandon>() {
@@ -261,7 +279,7 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
         objectMap.put("caseID",caseID);
         objectMap.put("applyID",applyID);
         objectMap.put("applyCD",applyCD);
-        mService.taskManagerRead(objectMap)
+        subscription6 = mService.taskManagerRead(objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TaskAbandon>() {
@@ -271,7 +289,7 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
                             int code = o.getCode();
                             if (code == 0 || code == -1) {
                                 boolean isSuccess = code == 0;
-                                mAdminView.updateRead(isSuccess,position);
+                                mAdminView.updateRead(isSuccess, position);
                             }
                         }
                     }

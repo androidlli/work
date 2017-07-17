@@ -409,6 +409,8 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
             mLocationClient.unRegisterLocationListener(mLoactionListener);
             mLocationClient.onDestroy();
         }
+        if (!CommUtil.checkIsNull(mPresenter))
+            mPresenter.onDetach();
     }
 
     @Override
