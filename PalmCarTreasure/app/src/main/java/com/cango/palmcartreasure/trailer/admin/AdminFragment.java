@@ -38,9 +38,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link AdminFragment#newInstance} factory method to
- * create an instance of this fragment.
+ *管理员首页view，展示
  */
 public class AdminFragment extends BaseFragment {
 

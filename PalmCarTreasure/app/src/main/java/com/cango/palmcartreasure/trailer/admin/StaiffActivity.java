@@ -14,6 +14,9 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
+/**
+ * 员工分组
+ */
 public class StaiffActivity extends BaseActivity {
 
     private StaiffPresenter staiffPresenter;

@@ -11,6 +11,9 @@ import com.cango.palmcartreasure.util.CommUtil;
 
 import java.util.ArrayList;
 
+/**
+ * 管理员分组界面
+ */
 public class GroupActivity extends BaseActivity {
 
     @Override

@@ -11,6 +11,9 @@ import com.cango.application.R;
 import com.cango.application.base.BaseActivity;
 import com.cango.application.util.CommUtil;
 
+/**
+ * 主页界面
+ */
 public class HomeActivity extends BaseActivity {
 
     private HomeContract.Presenter mHomePresenter;

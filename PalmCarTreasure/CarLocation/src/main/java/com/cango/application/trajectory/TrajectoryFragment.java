@@ -60,7 +60,7 @@ import butterknife.OnClick;
 import static com.amap.api.col.bx.m;
 
 /**
- * A simple {@link Fragment} subclass.
+ * 查看轨迹界面的view
  */
 public class TrajectoryFragment extends BaseFragment implements TrajectoryContract.View {
     public final static String IMEI = "imei";
@@ -79,6 +79,7 @@ public class TrajectoryFragment extends BaseFragment implements TrajectoryContra
     @OnClick({R.id.fab_start})
     public void onClick(View view) {
         switch (view.getId()) {
+            //开始或暂定或再次开始
             case R.id.fab_start:
                 if (mList != null) {
                     if (isStart) {
@@ -112,6 +113,9 @@ public class TrajectoryFragment extends BaseFragment implements TrajectoryContra
 
     private TrajectoryContract.Presenter mPresenter;
     private TrajectoryActivity mActivity;
+    /**
+     * 当前的IMEI
+     */
     private String mIMEI;
     private Date mStartTime, mEndTime;
     private List<CarTrackQuery.DataBean.TrackListBean> mList;
@@ -229,6 +233,9 @@ public class TrajectoryFragment extends BaseFragment implements TrajectoryContra
         }
     }
 
+    /**
+     * 设置线
+     */
     public void setLine() {
         addPolylineInPlayGround();
 
@@ -244,6 +251,7 @@ public class TrajectoryFragment extends BaseFragment implements TrajectoryContra
         marker.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 14, 0, 0)));
 
+        //循环添加特殊点上的文字描述，将textview转成bitmap
         for (int i = 0; i < mList.size(); i++) {
             CarTrackQuery.DataBean.TrackListBean bean = mList.get(i);
             if (!TextUtils.isEmpty(bean.getStopRemark())) {
@@ -354,6 +362,7 @@ public class TrajectoryFragment extends BaseFragment implements TrajectoryContra
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //到屏幕边缘的话移动地图中心点
 //                        if (infoWindowLayout != null && title != null) {
 //
 //                            title.setText("距离终点还有： " + (int) distance + "米");

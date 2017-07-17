@@ -16,6 +16,9 @@ import com.cango.palmcartreasure.trailer.message.MessageFragment;
 import com.cango.palmcartreasure.trailer.message.MessagePresenter;
 import com.cango.palmcartreasure.util.CommUtil;
 
+/**
+ * 下载界面
+ */
 public class DownloadActivity extends BaseActivity {
 
     @Override

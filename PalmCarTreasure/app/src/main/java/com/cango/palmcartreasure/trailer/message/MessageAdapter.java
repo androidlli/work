@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Created by cango on 2017/5/8.
+ * 消息界面adapter
  */
 
 public class MessageAdapter extends BaseAdapter<MessageList.DataBean.MessageListBean> {

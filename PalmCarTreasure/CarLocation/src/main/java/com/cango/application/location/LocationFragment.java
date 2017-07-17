@@ -76,7 +76,7 @@ import rx.Subscription;
 import rx.functions.Action1;
 
 /**
- * A simple {@link Fragment} subclass.
+ * 定位界面的view
  */
 public class LocationFragment extends BaseFragment implements LocationContract.View, EasyPermissions.PermissionCallbacks {
     private static final int REQUEST_LOCATION_GROUP_AND_STORAGE_GROUP = 102;
@@ -100,6 +100,7 @@ public class LocationFragment extends BaseFragment implements LocationContract.V
     @OnClick({R.id.iv_map_nav, R.id.ll_toolbar_right})
     public void onClick(View view) {
         switch (view.getId()) {
+            //导航
             case R.id.iv_map_nav:
                 boolean hasBaiduMap = AppUtils.isHasBaiduMap(mActivity);
                 boolean hasGaodeMap = AppUtils.isHasGaodeMap(mActivity);
@@ -121,7 +122,13 @@ public class LocationFragment extends BaseFragment implements LocationContract.V
      */
     private String mStartTime;
     private List<LatLng> mPoints;
+    /**
+     * 当前的点
+     */
     private List<LatLng> mCurrentPoints;
+    /**
+     * 最后一个点
+     */
     private List<LatLng> mLastPoints;
     private LocationActivity mActivity;
     private LocationContract.Presenter mPresenter;
@@ -243,6 +250,9 @@ public class LocationFragment extends BaseFragment implements LocationContract.V
         setUpMapIfNeeded();
     }
 
+    /**
+     * 更新界面UI
+     */
     private void updateUi() {
         if (!CommUtil.checkIsNull(mLocationBean)) {
             tvName.setText(mLocationBean.getCustomerName());
@@ -376,6 +386,9 @@ public class LocationFragment extends BaseFragment implements LocationContract.V
         return isAdded();
     }
 
+    /**
+     * 展示日历控件
+     */
     private void showCalendarDialog() {
         if (CommUtil.checkIsNull(mCalendarDialog)) {
             //TODO

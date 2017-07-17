@@ -264,6 +264,11 @@ public class GroupFragment extends BaseFragment implements GroupContract.View, G
         }
     }
 
+    /**
+     * 设置组员的状态
+     * @param members
+     * @param selectSize
+     */
     @Override
     public void onSelectCount(List<Member> members, int selectSize) {
         currentMembers = members;
@@ -464,6 +469,9 @@ public class GroupFragment extends BaseFragment implements GroupContract.View, G
         return -1;
     }
 
+    /**
+     * 提交修改或者删除
+     */
     private void confirmGroupMDF() {
         String groupName = etGroupName.getText().toString().trim();
 //        if (CommUtil.checkIsNull(groupName) || CommUtil.checkIsNull(memberLeader) || CommUtil.checkIsNull(currentMembers)) {

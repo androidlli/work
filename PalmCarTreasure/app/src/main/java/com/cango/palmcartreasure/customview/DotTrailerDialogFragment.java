@@ -17,6 +17,7 @@ import java.io.File;
 
 /**
  * Created by cango on 2017/4/27.
+ * 拖车打点
  */
 
 public class DotTrailerDialogFragment extends DialogFragment {

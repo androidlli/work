@@ -9,6 +9,7 @@ import com.zhy.autolayout.utils.AutoLayoutHelper;
 
 /**
  * Created by cango on 2017/4/6.
+ * cardview 加入自适应
  */
 
 public class AutoCardView extends CardView

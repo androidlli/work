@@ -10,6 +10,9 @@ import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.util.CommUtil;
 
+/**
+ * 我的界面
+ */
 public class MineActivity extends BaseActivity {
 
     @Override

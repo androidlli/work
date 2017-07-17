@@ -10,6 +10,9 @@ import com.cango.application.home.HomePresenter;
 import com.cango.application.model.ImeiQuery;
 import com.cango.application.util.CommUtil;
 
+/**
+ * 定位界面
+ */
 public class LocationActivity extends BaseActivity {
 
     @Override

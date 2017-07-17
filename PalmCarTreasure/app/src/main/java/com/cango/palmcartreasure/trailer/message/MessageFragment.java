@@ -31,6 +31,9 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * 消息界面view
+ */
 public class MessageFragment extends BaseFragment implements MessageContract.View, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.toolbar_message)
@@ -206,6 +209,10 @@ public class MessageFragment extends BaseFragment implements MessageContract.Vie
         mPresenter.loadMessages(true, -1, mPageCount, PAGE_SIZE);
     }
 
+    /**
+     * 展示消息详情
+     * @param messageListBean
+     */
     private void showMessageDialog(MessageList.DataBean.MessageListBean messageListBean) {
         if (CommUtil.checkIsNull(mDialog)) {
             mDialog = MessageItemDialogFragment.getInstance(messageListBean);

@@ -11,6 +11,9 @@ import com.cango.application.util.CommUtil;
 
 import java.util.Date;
 
+/**
+ * 查看轨迹界面
+ */
 public class TrajectoryActivity extends BaseActivity {
 
     @Override

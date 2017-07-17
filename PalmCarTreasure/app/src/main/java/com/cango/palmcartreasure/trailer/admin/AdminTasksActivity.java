@@ -9,6 +9,9 @@ import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.util.CommUtil;
 
+/**
+ * 管理员任务页面
+ */
 public class AdminTasksActivity extends BaseActivity {
 
     public static final int ACTIVITY_ARRANGE_REQUEST_CODE=1001;

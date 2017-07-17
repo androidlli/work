@@ -11,6 +11,9 @@ import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.util.CommUtil;
 
+/**
+ * 首页界面
+ */
 public class TrailerActivity extends BaseActivity {
 
     @Override

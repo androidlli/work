@@ -11,6 +11,7 @@ import rx.android.MainThreadSubscription;
 
 /**
  * Created by cango on 2017/6/5.
+ * 多次点击view的观察rxjava
  */
 
 public class MultiClickSubscribe implements Observable.OnSubscribe<Integer>, View.OnClickListener {

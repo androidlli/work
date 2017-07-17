@@ -13,6 +13,9 @@ import com.cango.palmcartreasure.trailer.main.TrailerActivity;
 import com.cango.palmcartreasure.util.CommUtil;
 import com.orhanobut.logger.Logger;
 
+/**
+ * 消息界面
+ */
 public class MessageActivity extends BaseActivity {
 
     @Override

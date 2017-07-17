@@ -95,6 +95,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
     @OnClick({R.id.tv_toolbar_right, R.id.tv_admin_task_bottom, R.id.tv_give_up, R.id.tv_arrange})
     public void onClick(View view) {
         switch (view.getId()) {
+            //右侧toolbar按钮
             case R.id.tv_toolbar_right:
                 String text = tvRight.getText().toString();
                 if (text.equals(getString(R.string.check_all))) {
@@ -379,6 +380,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
         //开启presenter
         mPresenter.start();
+        //打开相关权限
         openPermissions();
     }
 

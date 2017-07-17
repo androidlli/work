@@ -9,6 +9,9 @@ import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.util.CommUtil;
 
+/**
+ * 管理员首页
+ */
 public class AdminActivity extends BaseActivity {
 
     @Override

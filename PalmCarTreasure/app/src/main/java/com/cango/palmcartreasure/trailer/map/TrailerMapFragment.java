@@ -81,6 +81,9 @@ import rx.schedulers.Schedulers;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
+/**
+ * 拖车导航和送车入库
+ */
 public class TrailerMapFragment extends BaseFragment implements EasyPermissions.PermissionCallbacks {
     public static final String TYPE = "type";
     public static final String TRAILER_NAV = "trailer_navigation";
@@ -155,10 +158,12 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
 //                    mSelectPW.showAsDropDown(mToolbar);
 //                }
                 break;
+            //拖车导航
             case R.id.iv_map_nav:
                 rlShadow.setVisibility(View.VISIBLE);
                 selectMapPW.showAtLocation(rlShadow, Gravity.BOTTOM, 0, 0);
                 break;
+            //定位
             case R.id.iv_map_location:
                 if (mMap != null) {
                     setLocationBluePoint();
@@ -179,6 +184,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                 tvOneFive.setBackgroundColor(Color.WHITE);
                 tvTwo.setBackgroundResource(R.drawable.trailer_map_run_speed_bg);
                 break;
+            //送车入库
             case R.id.btn_map_send:
                 if (isSendCarOk) {
                     ToastUtils.showLong("已经送车入库了！");
@@ -355,6 +361,9 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         openPermissions();
     }
 
+    /**
+     * 加载数据
+     */
     private void onLoadData() {
         if (TRAILER_NAV.equals(mType)) {
             if (isAdded()) {
@@ -474,6 +483,9 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         initLocation();
     }
 
+    /**
+     * 展示上传图片dialog
+     */
     private void showUpLoadDialog() {
         if (CommUtil.checkIsNull(upLoadDialog)) {
             upLoadDialog = new UploadDialogFragment();
@@ -541,6 +553,10 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         }
     }
 
+    /**
+     * 上传图片集合
+     * @param strings
+     */
     private void upLoadImages(List<String> strings) {
         if (mPhoneLat > 0 && mPhoneLon > 0) {
             RequestBody userId = RequestBody.create(null, MtApplication.mSPUtils.getInt(Api.USERID) + "");
@@ -610,6 +626,10 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         }
     }
 
+    /**
+     * 删除所有图片文件
+     * @param fileList
+     */
     private void deleteImageFileList(List<File> fileList) {
         if (!CommUtil.checkIsNull(fileList)) {
             for (int i = 0; i < fileList.size(); i++) {
@@ -636,6 +656,9 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         }
     }
 
+    /**
+     * 设置车辆定位点
+     */
     private void setCarGPSLocationPoint() {
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(carGPSLatLng, 15, 0, 0)));
         mMap.clear();
@@ -647,6 +670,9 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         mMap.addMarker(carMarker);
     }
 
+    /**
+     * 设置定位蓝点
+     */
     private void setLocationBluePoint() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类
         myLocationStyle
@@ -810,6 +836,9 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         return popupWindow;
     }
 
+    /**
+     * 更新界面
+     */
     private void updateCurrentLibrary() {
 //        mTitle.setText(currentLibrary.getWarehouseName() + "（" + currentLibrary.getDistance() + "）");
         tvCarNum.setText(currentLibrary.getWarehouseName());
@@ -831,6 +860,12 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         }
     }
 
+    /**
+     * 打开百度地图
+     * @param lat
+     * @param lon
+     * @param name
+     */
     private void startBaiduMap(double lat, double lon, String name) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
@@ -842,6 +877,12 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         startActivity(intent);
     }
 
+    /**
+     * 打开高德地图
+     * @param lat
+     * @param lon
+     * @param name
+     */
     private void startGaodeMap(double lat, double lon, String name) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
@@ -853,6 +894,9 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         startActivity(intent);
     }
 
+    /**
+     * 删除图片
+     */
     private void deleteImagePictures() {
         File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         boolean deleteDir = FileUtils.deleteDir(storageDir);

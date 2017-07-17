@@ -23,6 +23,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Created by cango on 2017/3/28.
+ * 网络加载类
  */
 
 public class NetManager {

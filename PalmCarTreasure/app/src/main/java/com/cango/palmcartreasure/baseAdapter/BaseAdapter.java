@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * Created by cango on 2017/3/20.
+ * 上拉加载框架和holder处理更加优化，处理无数据和错误的UI
  */
 
 public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder> {

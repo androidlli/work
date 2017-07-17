@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by cango on 2017/5/4.
+ * 管理员分组adapter
  */
 
 public class GroupAdapter extends BaseAdapter<Member> {
@@ -109,6 +110,9 @@ public class GroupAdapter extends BaseAdapter<Member> {
 
     }
 
+    /**
+     * 得到组长的position
+     */
     private int getGroupLeaderPosition() {
         for (int i = 0; i < mDatas.size(); i++) {
             if (mDatas.get(i).isGroupLeader()) {
@@ -118,6 +122,10 @@ public class GroupAdapter extends BaseAdapter<Member> {
         return -1;
     }
 
+    /**
+     * 得到选中的数量
+     * @return select 的size
+     */
     private int getSelectSize() {
         int selectedSize = 0;
         for (Member member : mDatas) {
@@ -128,6 +136,9 @@ public class GroupAdapter extends BaseAdapter<Member> {
         return selectedSize;
     }
 
+    /**
+     * 检查选中的数量并赋值
+     */
     private void checkSelectCount() {
         int selectedSize = 0;
         for (Member member : mDatas) {

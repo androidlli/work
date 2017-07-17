@@ -39,6 +39,9 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+/**
+ * 我的下载文件view
+ */
 public class DownloadFragment extends BaseFragment implements DownloadContract.View, EasyPermissions.PermissionCallbacks {
     private static final int REQUEST_STORAGE_GROUP = 122;
     @BindView(R.id.toolbar_download)
@@ -87,6 +90,7 @@ public class DownloadFragment extends BaseFragment implements DownloadContract.V
         mAdapter.setOnItemClickListener(new OnBaseItemClickListener<File>() {
             @Override
             public void onItemClick(BaseHolder viewHolder, File data, int position) {
+                //打开pdf文件
                 Intent intent = new Intent("android.intent.action.VIEW");
                 intent.addCategory("android.intent.category.DEFAULT");
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

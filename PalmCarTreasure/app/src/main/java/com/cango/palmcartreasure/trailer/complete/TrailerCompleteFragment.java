@@ -155,6 +155,7 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
         llSixth.setVisibility(View.GONE);
         mPresenter.wareHouse(true, mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(), mLat, mLon, mProvince);
 
+        //动态的生成radiobutton
         final List<RadioButton> radioButtons = new ArrayList<>();
         RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
         for (int i = 0; i < 4; i++) {

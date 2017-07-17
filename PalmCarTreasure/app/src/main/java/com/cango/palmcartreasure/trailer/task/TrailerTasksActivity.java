@@ -11,6 +11,9 @@ import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.util.CommUtil;
 import com.orhanobut.logger.Logger;
 
+/**
+ * 任务详情界面
+ */
 public class TrailerTasksActivity extends BaseActivity {
 
     private TaskContract.Presenter mPresenter;

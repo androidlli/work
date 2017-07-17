@@ -11,6 +11,9 @@ import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.model.TypeTaskData;
 import com.cango.palmcartreasure.util.CommUtil;
 
+/**
+ * 送车入库和拖车导航的界面
+ */
 public class TrailerMapActivity extends BaseActivity {
 
     @Override

@@ -94,6 +94,9 @@ import rx.schedulers.Schedulers;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
+/**
+ * 首页view
+ */
 public class TrailerFragment extends BaseFragment implements EasyPermissions.PermissionCallbacks {
     private static final int REQUEST_LOCATION_GROUP_AND_STORAGE_GROUP = 140;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -310,6 +313,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
 
             @Override
             public void onPageSelected(int position) {
+                //得到当前的viewpager position，等首页刷新将其设置到当前的curren position
                 currentPosition = position;
                 currentBean = taskListBeanList.get(position);
                 if (vpType == 0) {
@@ -348,6 +352,10 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
     }
 
     private UpdateFragment mUpdateDialog;
+
+    /**
+     * 显示更新dialog
+     */
     private void showUpdateDialog() {
         if (CommUtil.checkIsNull(mUpdateDialog)) {
             mUpdateDialog = new UpdateFragment();
@@ -454,6 +462,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                                         badge1 = null;
                                         badge2 = null;
                                         if (o.getData().getTotalCount()>0){
+                                            //设置首页小红点
                                             badge1 = new QBadgeView(getActivity())
                                                     .setBadgeBackgroundColor(getResources().getColor(R.color.mtffe0b9))
                                                     .setShowShadow(false)
@@ -576,6 +585,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
         openPermissions();
     }
 
+    //接受推送后的首页刷新
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPushTrailerEvent(TrailerEvent trailerEvent) {
         mLoadView.smoothToShow();
@@ -687,6 +697,11 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                 });
     }
 
+    /**
+     * 更新首页的view
+     * @param type
+     * @param o
+     */
     private void updateView(int type, TypeTaskData o) {
         vpType = type;
         llCenter.setVisibility(View.VISIBLE);
@@ -870,6 +885,9 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
         }
     }
 
+    /**
+     * 显示日历空间dialog
+     */
     private void showCalendarDialog() {
         if (CommUtil.checkIsNull(mCalendarDialog)) {
             mCalendarDialog = new CalendarDialogFragment();
@@ -952,6 +970,9 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
         }
     }
 
+    /**
+     * 打开自定义相机
+     */
     private void openCamera() {
         boolean hasSystemFeature = mActivity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
         if (hasSystemFeature) {

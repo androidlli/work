@@ -12,6 +12,7 @@ import rx.Subscriber;
 
 /**
  * Created by cango on 2017/4/11.
+ * 观察者，处理onerror等情况
  */
 
 public abstract class RxSubscriber<T> extends Subscriber<T> {

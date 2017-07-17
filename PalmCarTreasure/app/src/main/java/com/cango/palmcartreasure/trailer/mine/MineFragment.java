@@ -49,6 +49,9 @@ import pub.devrel.easypermissions.EasyPermissions;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
+/**
+ * 我的界面view
+ */
 public class MineFragment extends BaseFragment implements MineContract.View, EasyPermissions.PermissionCallbacks {
 
     private static final int REQUEST_LOCATION_GROUP_AND_STORAGE_GROUP = 121;

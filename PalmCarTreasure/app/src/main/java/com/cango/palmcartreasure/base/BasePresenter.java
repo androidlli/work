@@ -7,5 +7,9 @@ package com.cango.palmcartreasure.base;
 
 public interface BasePresenter {
     void start();
+
+    /**
+     * 销毁动作
+     */
     void onDetach();
 }

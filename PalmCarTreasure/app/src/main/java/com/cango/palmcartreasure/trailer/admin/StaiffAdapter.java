@@ -15,6 +15,7 @@ import java.util.Random;
 
 /**
  * Created by cango on 2017/5/2.
+ * 任务分组adapter
  */
 
 public class StaiffAdapter extends BaseAdapter<GroupList.DataBean.GroupListBean> {

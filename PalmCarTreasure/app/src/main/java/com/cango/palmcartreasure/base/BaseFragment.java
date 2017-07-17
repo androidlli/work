@@ -12,9 +12,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by cango on 2017/4/6.
+ * 自定义basefragment加入butterknife
  */
-
 public abstract class BaseFragment extends Fragment {
     protected View mRootView;
     protected Unbinder mUnbinder;

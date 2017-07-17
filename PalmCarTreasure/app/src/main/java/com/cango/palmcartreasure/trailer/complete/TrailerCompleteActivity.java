@@ -11,6 +11,9 @@ import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.model.TypeTaskData;
 import com.cango.palmcartreasure.util.CommUtil;
 
+/**
+ * 拖车打点后的提交界面
+ */
 public class TrailerCompleteActivity extends BaseActivity {
 
     @Override

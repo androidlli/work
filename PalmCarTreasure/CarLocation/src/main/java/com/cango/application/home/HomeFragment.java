@@ -45,7 +45,7 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
- * A simple {@link Fragment} subclass.
+ * 主页界面的view
  */
 public class HomeFragment extends BaseFragment implements HomeContract.View, EasyPermissions.PermissionCallbacks {
 
@@ -243,6 +243,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Eas
         }
     }
 
+    /**
+     * 更新界面UI
+     */
     private void updateUi() {
         if (mImeiQuery!=null&&mImeiQuery.getData()!=null){
             ImeiQuery.DataBean data = mImeiQuery.getData();
@@ -277,6 +280,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View, Eas
         return isAdded();
     }
 
+    /**
+     * 检查IMEI合法性
+     * @return true：不为空
+     */
     private boolean checkIMEI() {
         boolean isOk = true;
         String IMEI = etImei.getText().toString().trim();

@@ -18,6 +18,9 @@ import com.rd.PageIndicatorView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 第一次安装apk的欢迎界面
+ */
 public class LaunchActivity extends BaseActivity {
 
     ViewPager mViewPager;

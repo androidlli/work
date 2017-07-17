@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Created by cango on 2017/5/8.
+ * 我的文件界面的adapter
  */
 
 public class DownloadAdapter extends BaseAdapter<File> {
@@ -40,6 +41,7 @@ public class DownloadAdapter extends BaseAdapter<File> {
             public void onClick(View v) {
 //                Intent pdfFileIntent = getPdfFileIntent(data);
 //                mContext.startActivity(pdfFileIntent);
+                //分享pdf文件
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
                 intent.addCategory("android.intent.category.DEFAULT");

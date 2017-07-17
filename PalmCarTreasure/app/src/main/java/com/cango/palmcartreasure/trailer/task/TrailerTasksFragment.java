@@ -56,6 +56,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * Created by cango on 2017/4/7.
+ * 任务详情view
  */
 
 public class TrailerTasksFragment extends BaseFragment implements TaskContract.View, SwipeRefreshLayout.OnRefreshListener, EasyPermissions.PermissionCallbacks {
@@ -350,6 +351,9 @@ public class TrailerTasksFragment extends BaseFragment implements TaskContract.V
         }
     }
 
+    /**
+     * 请求数据
+     */
     private void getData() {
         String title;
         if (mLat > 0 && mLon > 0) {
@@ -439,6 +443,12 @@ public class TrailerTasksFragment extends BaseFragment implements TaskContract.V
         onRefresh();
     }
 
+    /**
+     * popupwindow
+     * @param context
+     * @param layoutId
+     * @return
+     */
     public PopupWindow getPopupWindow(Context context, final int layoutId) {
         final PopupWindow popupWindow = new PopupWindow(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         View popupView = LayoutInflater.from(context).inflate(layoutId, null);

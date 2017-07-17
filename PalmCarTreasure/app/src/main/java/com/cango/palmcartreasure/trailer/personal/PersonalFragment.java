@@ -19,6 +19,9 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 
+/**
+ * 个人详细信息view
+ */
 public class PersonalFragment extends BaseFragment implements PersonalContract.View {
     @BindView(R.id.toolbar_personal)
     Toolbar mToolbar;
