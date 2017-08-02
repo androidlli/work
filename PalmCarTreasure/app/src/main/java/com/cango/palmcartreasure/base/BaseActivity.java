@@ -12,6 +12,7 @@ import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
 import com.jaeger.library.StatusBarUtil;
 import com.orhanobut.logger.Logger;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.zhy.autolayout.AutoLayoutActivity;
 
@@ -36,6 +37,15 @@ public abstract class BaseActivity extends AutoLayoutActivity implements BGASwip
         MtApplication.addActivity(this);
         Logger.d(MtApplication.activityList.size());
         super.onCreate(savedInstanceState);
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     /**

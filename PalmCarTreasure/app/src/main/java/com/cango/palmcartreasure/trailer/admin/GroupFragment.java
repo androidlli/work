@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -475,9 +476,13 @@ public class GroupFragment extends BaseFragment implements GroupContract.View, G
     private void confirmGroupMDF() {
         String groupName = etGroupName.getText().toString().trim();
 //        if (CommUtil.checkIsNull(groupName) || CommUtil.checkIsNull(memberLeader) || CommUtil.checkIsNull(currentMembers)) {
-        if (CommUtil.checkIsNull(groupName) || CommUtil.checkIsNull(memberLeader)) {
+        if (TextUtils.isEmpty((groupName)) || CommUtil.checkIsNull(memberLeader)) {
             ToastUtils.showLong(R.string.please_input_all_message);
         } else {
+            if (memberLeader!=null&&memberLeader.getId()<=0){
+                ToastUtils.showLong(R.string.please_input_all_message);
+                return;
+            }
 //            if (currentMembers.size() > 0) {
             List<GroupList.DataBean.GroupListBean> groupListBeanList = new ArrayList<>();
             GroupList.DataBean.GroupListBean groupListBean = new GroupList.DataBean.GroupListBean();
