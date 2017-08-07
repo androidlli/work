@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,7 @@ import com.cango.palmcartreasure.model.WareHouse;
 import com.cango.palmcartreasure.net.NetManager;
 import com.cango.palmcartreasure.net.RxSubscriber;
 import com.cango.palmcartreasure.trailer.main.TrailerActivity;
+import com.cango.palmcartreasure.trailer.taskdetail.TaskDetailPresenter;
 import com.cango.palmcartreasure.util.AppUtils;
 import com.cango.palmcartreasure.util.BarUtil;
 import com.cango.palmcartreasure.util.CommUtil;
@@ -843,9 +845,14 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
 //        mTitle.setText(currentLibrary.getWarehouseName() + "（" + currentLibrary.getDistance() + "）");
         tvCarNum.setText(currentLibrary.getWarehouseName());
         tvTimeStatus.setText(currentLibrary.getWarehouseAdd());
-        tvPeople1.setText(currentLibrary.getContactPerson());
-        tvPeople2.setText(currentLibrary.getContactPerson());
-        tvPeople3.setText(currentLibrary.getContactPerson());
+//        tvPeople1.setText(currentLibrary.getContactPerson());
+//        tvPeople2.setText(currentLibrary.getContactPerson());
+//        tvPeople3.setText(currentLibrary.getContactPerson());
+        //Andrioid电催信息、家访信息、库管员信息中我司人员名字隐去，只留姓+XX
+        String name = getFirstNameXX(currentLibrary.getContactPerson());
+        tvPeople1.setText(getFirstNameXX(name));
+        tvPeople2.setText(getFirstNameXX(name));
+        tvPeople3.setText(getFirstNameXX(name));
         tvNum1.setText(currentLibrary.getMobilePhone1());
         tvNum2.setText(currentLibrary.getMobilePhone2());
         tvNum3.setText(currentLibrary.getMobilePhone3());
@@ -858,6 +865,18 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         } else {
             setCarGPSLocationPoint();
         }
+    }
+
+    private String getFirstNameXX(String name){
+        String xx="";
+        if (TextUtils.isEmpty(name)){
+        }else {
+            if (name.length()>0){
+                xx=name.substring(0,1)+"XX";
+            }else {
+            }
+        }
+        return xx;
     }
 
     /**

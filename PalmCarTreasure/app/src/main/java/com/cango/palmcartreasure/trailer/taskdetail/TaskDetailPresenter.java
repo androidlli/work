@@ -1,6 +1,7 @@
 package com.cango.palmcartreasure.trailer.taskdetail;
 
 import android.net.Uri;
+import android.text.TextUtils;
 
 import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
@@ -277,7 +278,9 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
 
             for (CallRecord.DataBean.CallRecordDataBean bean : callRecordDataBeanList) {
                 taskInfo = new TaskDetailData.TaskSection.TaskInfo();
-                taskInfo.setLeft(bean.getCallUser());
+//                taskInfo.setLeft(bean.getCallUser());
+                //Andrioid电催信息、家访信息、库管员信息中我司人员名字隐去，只留姓+XX
+                taskInfo.setLeft(getFirstNameXX(bean.getCallUser()));
                 taskInfo.setLeftColor(R.color.colorPrimary);
                 taskInfo.setCenter(bean.getCallTime());
                 taskInfo.setCenterColor(R.color.colorPrimary);
@@ -349,7 +352,9 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
             for (int j = 0; j < dataBean.size(); j++) {
                 HomeVisitRecord.DataBean bean = dataBean.get(j);
                 taskInfo = new TaskDetailData.TaskSection.TaskInfo();
-                taskInfo.setLeft(bean.getVisitUser());
+//                taskInfo.setLeft(bean.getVisitUser());
+//                Andrioid电催信息、家访信息、库管员信息中我司人员名字隐去，只留姓+XX
+                taskInfo.setLeft(getFirstNameXX(bean.getVisitUser()));
                 taskInfo.setLeftColor(R.color.colorPrimary);
                 taskInfo.setCenter(bean.getVisitTime());
                 taskInfo.setCenterColor(R.color.colorPrimary);
@@ -935,5 +940,17 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                         }
                     }
                 });
+    }
+
+    public String getFirstNameXX(String name){
+        String xx="";
+        if (TextUtils.isEmpty(name)){
+        }else {
+            if (name.length()>0){
+                xx=name.substring(0,1)+"XX";
+            }else {
+            }
+        }
+        return xx;
     }
 }

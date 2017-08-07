@@ -41,6 +41,7 @@
     <string name="trailer_dot">拖车成功</string>
     <string name="trailer_over">拖车完成</string>
     <string name="send_car_library">送车入库</string>
+    <string name="car_handover">车辆交接</string>
     <string name="vehicle_localization">车辆定位</string>
     <string name="on_going">进行中</string>
     <string name="expect_completion_time">预计完成时间</string>

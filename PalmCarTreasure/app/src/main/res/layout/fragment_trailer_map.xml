@@ -195,7 +195,7 @@
             android:layout_marginRight="88px"
             android:background="@drawable/button_press_bg"
             android:gravity="center"
-            android:text="@string/send_car_to_library"
+            android:text="@string/car_handover"
             android:textColor="@android:color/white"
             android:textSize="46px" />
     </RelativeLayout>

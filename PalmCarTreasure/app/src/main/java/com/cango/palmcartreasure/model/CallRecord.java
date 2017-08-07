@@ -1,5 +1,7 @@
 package com.cango.palmcartreasure.model;
 
+import com.cango.palmcartreasure.util.CommUtil;
+
 import java.util.List;
 
 /**
@@ -91,6 +93,8 @@ public class CallRecord {
             }
 
             public void setOverdueReason(String overdueReason) {
+                if (CommUtil.checkIsNull(overdueReason))
+                    overdueReason="";
                 this.overdueReason = overdueReason;
             }
 
@@ -99,6 +103,8 @@ public class CallRecord {
             }
 
             public void setOverdueComment(String overdueComment) {
+                if (CommUtil.checkIsNull(overdueComment))
+                    overdueComment="";
                 this.overdueComment = overdueComment;
             }
         }
@@ -119,6 +125,8 @@ public class CallRecord {
             }
 
             public void setCallUser(String callUser) {
+                if (CommUtil.checkIsNull(callUser))
+                    callUser="";
                 this.callUser = callUser;
             }
 
@@ -127,6 +135,8 @@ public class CallRecord {
             }
 
             public void setCallTime(String callTime) {
+                if (CommUtil.checkIsNull(callTime))
+                    callTime="";
                 this.callTime = callTime;
             }
 
@@ -135,6 +145,8 @@ public class CallRecord {
             }
 
             public void setComment(String comment) {
+                if (CommUtil.checkIsNull(comment))
+                    comment="";
                 this.comment = comment;
             }
         }
