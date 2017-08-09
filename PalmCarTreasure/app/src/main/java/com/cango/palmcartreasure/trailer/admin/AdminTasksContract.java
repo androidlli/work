@@ -66,6 +66,9 @@ public interface AdminTasksContract {
 
         void loadGroupTasks(int[] groupIds, double lat, double lon, boolean showRefreshLoadingUI, int pageCount, int pageSize);
 
+        void loadGroupSearchTasks(int[] groupIds, double lat, double lon, boolean showRefreshLoadingUI, int pageCount, int pageSize,String applyId,
+                                  String mobile,String plateNo);
+
         //抽回任务
         void groupTaskDraw(boolean showRefreshLoadingUI, List<GroupTaskQuery.DataBean.TaskListBean> taskListBeanList);
 

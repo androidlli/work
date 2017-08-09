@@ -54,7 +54,8 @@
             android:layout_height="match_parent"
             />
     </android.support.v4.widget.SwipeRefreshLayout>
-    
+
+    <!--只用来做抽回页面的操作-->
     <TextView
         android:visibility="gone"
         android:id="@+id/tv_admin_task_bottom"
@@ -66,6 +67,35 @@
         android:text="@string/query"
         android:textSize="16sp"
         android:textColor="@android:color/white"/>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/ll_bottom_search"
+        android:layout_width="match_parent"
+        android:layout_height="134px"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:id="@+id/tv_search_history"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="条件查询"
+            android:textColor="@color/mt646464"
+        android:textSize="16sp"
+            android:background="@color/mtdcdcdc"
+        android:gravity="center"/>
+        <TextView
+            android:id="@+id/tv_search_group"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="组任务查询"
+            android:background="@android:color/holo_red_dark"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:gravity="center"/>
+    </LinearLayout>
 
     <LinearLayout
         android:visibility="gone"
@@ -99,4 +129,13 @@
     <include layout="@layout/avload_view"/>
     <include layout="@layout/sorry"/>
     <include layout="@layout/no_data"/>
+
+    <FrameLayout
+        android:id="@+id/rl_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_admin"
+        android:visibility="gone"
+        android:background="#36000000">
+    </FrameLayout>
 </RelativeLayout>

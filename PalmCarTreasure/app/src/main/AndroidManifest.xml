@@ -144,7 +144,8 @@
         <activity
             android:name=".trailer.admin.AdminTasksActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent" />
+            android:theme="@style/AppTheme.Transparent"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".trailer.admin.AdminActivity"
             android:label=""
@@ -184,12 +185,18 @@
         <activity
             android:name=".document.EditActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent"></activity>
+            android:theme="@style/AppTheme.Transparent" />
         <activity
             android:name=".trailer.complete.TrailerCompleteActivity"
-            android:screenOrientation="portrait"
             android:label=""
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Transparent">
+
+        </activity>
+        <activity android:name=".trailer.track.TrackActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent">
+
         </activity>
     </application>
 

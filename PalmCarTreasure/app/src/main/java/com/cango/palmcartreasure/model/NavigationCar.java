@@ -65,6 +65,17 @@ public class NavigationCar {
         private double resultLAT;
         private double resultLON;
         private String resultAddress;
+        private String resultDeviceId;
+
+        public String getResultDeviceId() {
+            return resultDeviceId;
+        }
+
+        public void setResultDeviceId(String resultDeviceId) {
+            if (CommUtil.checkIsNull(resultDeviceId))
+                resultDeviceId="";
+            this.resultDeviceId = resultDeviceId;
+        }
 
         public String getResultAddress() {
             return resultAddress;

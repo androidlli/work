@@ -148,4 +148,7 @@
     <string name="flash_off">Flash off</string>
     <string name="flash_on">Flash on</string>
     <string name="please_input_note">请填写注记</string>
+    <string name="track_query">轨迹查询</string>
+    <string name="track_title">轨迹展示</string>
+    <string name="data_error">暂无数据信息</string>
 </resources>

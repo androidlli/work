@@ -29,6 +29,8 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
     private AdminTasksContract.View mAdminView;
     private AdminService mService;
     private Subscription subscription1,subscription2,subscription3,subscription4,subscription5,subscription6;
+    //从条件查询过来的
+    private Subscription subscription7;
 
     public AdminTaskPresenter(AdminTasksContract.View adminView) {
         mAdminView = adminView;
@@ -54,6 +56,8 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
             subscription5.unsubscribe();
         if (!CommUtil.checkIsNull(subscription6))
             subscription6.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription7))
+            subscription7.unsubscribe();
     }
 
     @Override
@@ -166,6 +170,59 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
         objectMap.put("pageIndex", pageCount);
         objectMap.put("pageSize", pageSize);
         subscription3 = mService.getGroupTaskQuery(objectMap)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new RxSubscriber<GroupTaskQuery>() {
+                    @Override
+                    protected void _onNext(GroupTaskQuery o) {
+                        if (mAdminView.isActive()) {
+                            mAdminView.showAdminTasksIndicator(false);
+                            int code = o.getCode();
+                            if (code == 0) {
+                                if (CommUtil.checkIsNull(o.getData())) {
+                                    mAdminView.showAdminTasksError();
+                                } else {
+                                    if (!CommUtil.checkIsNull(o.getData().getTaskList()) && o.getData().getTaskList().size() > 0)
+                                        mAdminView.showAdminGroupTasks(o.getData().getTaskList());
+                                    else {
+                                        mAdminView.showNoAdminTasks();
+                                    }
+                                }
+                            } else
+                                mAdminView.showAdminTasksError();
+                        }
+                    }
+
+                    @Override
+                    protected void _onError() {
+                        if (mAdminView.isActive()) {
+                            mAdminView.showAdminTasksIndicator(false);
+                            mAdminView.showAdminTasksError();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void loadGroupSearchTasks(int[] groupIds, double lat, double lon, boolean showRefreshLoadingUI,
+                                     int pageCount, int pageSize, String applyId, String mobile, String plateNo) {
+        if (showRefreshLoadingUI) {
+            if (mAdminView.isActive())
+                mAdminView.showAdminTasksIndicator(showRefreshLoadingUI);
+        } else {
+
+        }
+        Map<String, Object> objectMap = new HashMap<>();
+        objectMap.put("userid", MtApplication.mSPUtils.getInt(Api.USERID));
+        objectMap.put("groupIDList", groupIds);
+        objectMap.put("LAT", lat);
+        objectMap.put("LON", lon);
+        objectMap.put("pageIndex", pageCount);
+        objectMap.put("pageSize", pageSize);
+        objectMap.put("applycd",applyId);
+        objectMap.put("mobile",mobile);
+        objectMap.put("licensePlateNo",plateNo);
+        subscription7 = mService.getGroupTaskQuery(objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<GroupTaskQuery>() {

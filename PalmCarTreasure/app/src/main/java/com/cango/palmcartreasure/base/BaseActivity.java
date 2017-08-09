@@ -35,7 +35,7 @@ public abstract class BaseActivity extends AutoLayoutActivity implements BGASwip
         initSwipeBackFinish();
         //为了退出账号在baseActivity中把 activity加入list管理
         MtApplication.addActivity(this);
-        Logger.d(MtApplication.activityList.size());
+//        Logger.d(MtApplication.activityList.size());
         super.onCreate(savedInstanceState);
     }
 
@@ -107,7 +107,7 @@ public abstract class BaseActivity extends AutoLayoutActivity implements BGASwip
     public void onSwipeBackLayoutExecuted() {
         mSwipeBackHelper.swipeBackward();
         MtApplication.clearLastActivity();
-        Logger.d(MtApplication.activityList.size());
+//        Logger.d(MtApplication.activityList.size());
     }
 
     @Override
@@ -118,7 +118,7 @@ public abstract class BaseActivity extends AutoLayoutActivity implements BGASwip
         }
         mSwipeBackHelper.backward();
         MtApplication.clearLastActivity();
-        Logger.d(MtApplication.activityList.size());
+//        Logger.d(MtApplication.activityList.size());
     }
 
     /**

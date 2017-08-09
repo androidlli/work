@@ -23,10 +23,17 @@ public class AdminTasksActivity extends BaseActivity {
         setContentView(R.layout.activity_admin_tasks);
         String type = getIntent().getStringExtra(AdminTasksFragment.TYPE);
         int[] groupIds = getIntent().getIntArrayExtra(AdminTasksFragment.GROUPIDS);
+        String applyId = getIntent().getStringExtra(AdminTasksFragment.SEARCH_APPLYID);
+        String mobile = getIntent().getStringExtra(AdminTasksFragment.SEARCH_MOBILE);
+        String plateNo =getIntent().getStringExtra(AdminTasksFragment.SEARCH_PLATENO);
         AdminTasksFragment adminTasksFragment = (AdminTasksFragment) getSupportFragmentManager().findFragmentById(R.id.fl_admin_contains);
         if (CommUtil.checkIsNull(adminTasksFragment)) {
-            if (getIntent().hasExtra(adminTasksFragment.GROUPIDS)){
-                adminTasksFragment=adminTasksFragment.newInstance(type,groupIds);
+            if (getIntent().hasExtra(AdminTasksFragment.GROUPIDS)){
+                if (groupIds.length>0){
+                    adminTasksFragment=AdminTasksFragment.newInstance(type,groupIds);
+                }else {
+                    adminTasksFragment = AdminTasksFragment.newInstance(type,groupIds,applyId,mobile,plateNo);
+                }
             }else {
                 adminTasksFragment = AdminTasksFragment.newInstance(type);
             }

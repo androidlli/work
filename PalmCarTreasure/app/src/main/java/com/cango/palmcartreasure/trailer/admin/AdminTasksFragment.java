@@ -2,7 +2,10 @@ package com.cango.palmcartreasure.trailer.admin;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -10,9 +13,19 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -73,6 +86,10 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
     public static final String GROUPIDS = "groupIds";
 
+    public static final String SEARCH_APPLYID="search_applyid";
+    public static final String SEARCH_MOBILE="search_mobile";
+    public static final String SEARCH_PLATENO="search_plateno";
+
     @BindView(R.id.toolbar_admin)
     Toolbar mToolbar;
     @BindView(R.id.tv_toolbar_right)
@@ -85,14 +102,23 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
     TextView tvBottom;
     @BindView(R.id.ll_admin_task_unabsorbed)
     LinearLayout llUnabsorbed;
+    @BindView(R.id.ll_bottom_search)
+    LinearLayout llSearch;
+    @BindView(R.id.tv_search_history)
+    TextView tvSearchHistory;
+    @BindView(R.id.tv_search_group)
+    TextView tvSearchGroup;
     @BindView(R.id.avl_login_indicator)
     AVLoadingIndicatorView mLoadView;
     @BindView(R.id.ll_sorry)
     LinearLayout llSorry;
     @BindView(R.id.ll_no_data)
     LinearLayout llNoData;
+    @BindView(R.id.rl_shadow)
+    FrameLayout rlShadow;
 
-    @OnClick({R.id.tv_toolbar_right, R.id.tv_admin_task_bottom, R.id.tv_give_up, R.id.tv_arrange})
+    @OnClick({R.id.tv_toolbar_right, R.id.tv_admin_task_bottom, R.id.tv_give_up, R.id.tv_arrange,
+    R.id.tv_search_history,R.id.tv_search_group})
     public void onClick(View view) {
         switch (view.getId()) {
             //右侧toolbar按钮
@@ -124,6 +150,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     tvRight.setText(getString(R.string.check_all));
                 }
                 break;
+            //只针对于抽回任务
             case R.id.tv_admin_task_bottom:
                 if (mType.equals(GROUP)) {
                     if (checkedAllByGroup()) {
@@ -163,15 +190,40 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     mActivity.mSwipeBackHelper.forward(intent, AdminTasksActivity.ACTIVITY_ARRANGE_REQUEST_CODE);
                 }
                 break;
+            //条件查询
+            case R.id.tv_search_history:
+                rlShadow.setVisibility(View.VISIBLE);
+                tvRight.setVisibility(View.GONE);
+                mSearchPW.update();
+                mSearchPW.showAsDropDown(mToolbar);
+                break;
+            //组任务查询
+            case R.id.tv_search_group:
+                if (mType.equals(GROUP)) {
+                    if (checkedAllByGroup()) {
+                        //跳转组的任务
+                        int[] checkUserIdsByGroup = getCheckUserIdsByGroup();
+                        Intent groupTaskIntent = new Intent(getActivity(), AdminTasksActivity.class);
+                        groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
+                        groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
+                        mActivity.mSwipeBackHelper.forward(groupTaskIntent);
+                    }else {
+                        ToastUtils.showShort("请选择组");
+                    }
+                }
+                break;
         }
     }
 
     private String mType;
     private int[] mGroupIds;
+    //从条件查询中过来的信息
+    private String mSearchApplyId,mSearchMobile,mSearchPlateNo;
     private AdminTasksActivity mActivity;
     private int ToType=-1;
     private AdminTasksContract.Presenter mPresenter;
     private BaseAdapter mAdapter;
+    private PopupWindow mSearchPW;
     private List<GroupTaskCount.DataBean.TaskCountListBean> taskCountListBeanList = new ArrayList<>();
     private List<GroupTaskQuery.DataBean.TaskListBean> taskQueryBeanList = new ArrayList<>();
     private List<TaskManageList.DataBean.TaskListBean> taskManageList = new ArrayList<>();
@@ -240,6 +292,18 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         return fragment;
     }
 
+    public static AdminTasksFragment newInstance(String type,int[] groupIds,String applyId,String mobile,String plateNo){
+        AdminTasksFragment fragment = new AdminTasksFragment();
+        Bundle args = new Bundle();
+        args.putString(TYPE, type);
+        args.putIntArray(GROUPIDS, groupIds);
+        args.putString(SEARCH_APPLYID,applyId);
+        args.putString(SEARCH_MOBILE,mobile);
+        args.putString(SEARCH_PLATENO,plateNo);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     protected int initLayoutId() {
         return R.layout.fragment_admin_tasks;
@@ -263,6 +327,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         if (mType.equals(ADMIN_UNABSORBED)) {
             tvBottom.setVisibility(View.GONE);
             llUnabsorbed.setVisibility(View.VISIBLE);
+            llSearch.setVisibility(View.GONE);
             mAdapter = new UnabsorbedTaskAdapter(mActivity, taskManageList, true, new UnabsorbedTaskAdapter.MtOnCheckedChangeThenTypeListener() {
                 @Override
                 public void mtOnCheckedChangedThenType() {
@@ -295,9 +360,11 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                 }
             });
         } else if (mType.equals(GROUP)) {
-            tvBottom.setVisibility(View.VISIBLE);
-            tvBottom.setText(R.string.query);
+            mSearchPW=getPopupWindow(mActivity,R.layout.admin_search_popup);
+            tvBottom.setVisibility(View.GONE);
+//            tvBottom.setText(R.string.query);
             llUnabsorbed.setVisibility(View.GONE);
+            llSearch.setVisibility(View.VISIBLE);
             mAdapter = new AdminTaskAdapter(mActivity, taskCountListBeanList, true, new AdminTaskAdapter.MtOnCheckedChangeThenTypeListener() {
                 @Override
                 public void mtOnCheckedChangedThenType() {
@@ -319,6 +386,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
             tvBottom.setVisibility(View.VISIBLE);
             tvBottom.setText(R.string.revulsion);
             llUnabsorbed.setVisibility(View.GONE);
+            llSearch.setVisibility(View.GONE);
             mAdapter = new AdminGroupAdapter(mActivity, taskQueryBeanList, true, new AdminGroupAdapter.MtOnCheckedChangeThenTypeListener() {
                 @Override
                 public void mtOnCheckedChangedThenType() {
@@ -363,7 +431,12 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                 if (mLat > 0 && mLon > 0) {
                     if (!CommUtil.checkIsNull(mType)) {
                         if (mType.equals(TASK)) {
-                            mPresenter.loadGroupTasks(mGroupIds, mLat, mLon, false, mPageCount, PAGE_SIZE);
+                            if (mGroupIds.length>0){
+                                mPresenter.loadGroupTasks(mGroupIds, mLat, mLon, false, mPageCount, PAGE_SIZE);
+                            }else {
+                                //是条件查询过来的
+                                mPresenter.loadGroupSearchTasks(mGroupIds,mLat,mLon,false,mPageCount,PAGE_SIZE,mSearchApplyId,mSearchMobile,mSearchPlateNo);
+                            }
                         } else {
                             mPresenter.loadAdminTasks(mType, mLat, mLon, false, mPageCount, PAGE_SIZE);
                         }
@@ -387,7 +460,12 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
     private void getFirstData() {
         if (mLat > 0 && mLon > 0) {
             if (mType.equals(TASK)) {
-                mPresenter.loadGroupTasks(mGroupIds, mLat, mLon, true, mPageCount, PAGE_SIZE);
+                if (mGroupIds.length>0){
+                    mPresenter.loadGroupTasks(mGroupIds, mLat, mLon, true, mPageCount, PAGE_SIZE);
+                }else {
+                    //是条件查询过来的
+                    mPresenter.loadGroupSearchTasks(mGroupIds,mLat,mLon,true,mPageCount,PAGE_SIZE,mSearchApplyId,mSearchMobile,mSearchPlateNo);
+                }
             } else {
                 mPresenter.loadAdminTasks(mType, mLat, mLon, true, mPageCount, PAGE_SIZE);
             }
@@ -401,6 +479,9 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         mActivity = (AdminTasksActivity) getActivity();
         mType = getArguments().getString(TYPE);
         mGroupIds = getArguments().getIntArray(GROUPIDS);
+        mSearchApplyId = getArguments().getString(SEARCH_APPLYID);
+        mSearchMobile = getArguments().getString(SEARCH_MOBILE);
+        mSearchPlateNo = getArguments().getString(SEARCH_PLATENO);
         initLocation();
     }
 
@@ -473,12 +554,14 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
             llSorry.setVisibility(View.VISIBLE);
             llUnabsorbed.setVisibility(View.GONE);
             tvBottom.setVisibility(View.GONE);
+            llSearch.setVisibility(View.GONE);
             tvRight.setVisibility(View.GONE);
         }
     }
 
     /**
      * 这个接口没有分页，所以一次显示完全后加入end
+     * 展示组列表
      *
      * @param tasks
      */
@@ -490,9 +573,11 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         if (ADMIN_UNABSORBED.equals(mType)) {
             llUnabsorbed.setVisibility(View.VISIBLE);
             tvBottom.setVisibility(View.GONE);
+            llSearch.setVisibility(View.GONE);
         } else {
             llUnabsorbed.setVisibility(View.GONE);
-            tvBottom.setVisibility(View.VISIBLE);
+            llSearch.setVisibility(View.VISIBLE);
+            tvBottom.setVisibility(View.GONE);
         }
         if (isLoadMore) {
             if (tasks.size() == 0) {
@@ -508,6 +593,10 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         mAdapter.setLoadEndView(R.layout.load_end_layout);
     }
 
+    /**
+     * 展示的是具体组的所有任务列表
+     * @param tasks
+     */
     @Override
     public void showAdminGroupTasks(List<GroupTaskQuery.DataBean.TaskListBean> tasks) {
         tvRight.setVisibility(View.VISIBLE);
@@ -516,9 +605,12 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         if (ADMIN_UNABSORBED.equals(mType)) {
             llUnabsorbed.setVisibility(View.VISIBLE);
             tvBottom.setVisibility(View.GONE);
+            llSearch.setVisibility(View.GONE);
         } else {
             llUnabsorbed.setVisibility(View.GONE);
             tvBottom.setVisibility(View.VISIBLE);
+            llSearch.setVisibility(View.GONE);
+
         }
         if (isLoadMore) {
             mTempPageCount++;
@@ -554,9 +646,11 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         if (ADMIN_UNABSORBED.equals(mType)) {
             llUnabsorbed.setVisibility(View.VISIBLE);
             tvBottom.setVisibility(View.GONE);
+            llSearch.setVisibility(View.GONE);
         } else {
             llUnabsorbed.setVisibility(View.GONE);
             tvBottom.setVisibility(View.VISIBLE);
+            llSearch.setVisibility(View.GONE);
         }
         if (isLoadMore) {
             mTempPageCount++;
@@ -597,6 +691,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
             llNoData.setVisibility(View.VISIBLE);
             llUnabsorbed.setVisibility(View.GONE);
             tvBottom.setVisibility(View.GONE);
+            llSearch.setVisibility(View.GONE);
             tvRight.setVisibility(View.GONE);
         }
     }
@@ -855,6 +950,72 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
             }
         }
         return TaskListBeanList;
+    }
+
+    /**
+     * popupwindow
+     * @param context
+     * @param layoutId
+     * @return
+     */
+    public PopupWindow getPopupWindow(Context context, final int layoutId) {
+        final PopupWindow popupWindow = new PopupWindow(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        View popupView = LayoutInflater.from(context).inflate(layoutId, null);
+        if (layoutId == R.layout.admin_search_popup) {
+            final EditText etApplyId = (EditText) popupView.findViewById(R.id.et_search_apply_id);
+            final EditText etMobile = (EditText) popupView.findViewById(R.id.et_search_mobile);
+            final EditText etPlateNo = (EditText) popupView.findViewById(R.id.et_search_plate_no);
+            Button btnCancal = (Button) popupView.findViewById(R.id.btn_search_cancal);
+            btnCancal.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    etApplyId.setText(null);
+                    etMobile.setText(null);
+                    etPlateNo.setText(null);
+                }
+            });
+            Button btnConfirm = (Button) popupView.findViewById(R.id.btn_search_confirm);
+            btnConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String applyId = etApplyId.getText().toString().trim();
+                    String mobile = etMobile.getText().toString().trim();
+                    String plateNo = etPlateNo.getText().toString().trim();
+                    if (TextUtils.isEmpty(applyId) && TextUtils.isEmpty(mobile) && TextUtils.isEmpty(plateNo)) {
+                        ToastUtils.showLong(R.string.please_input_search_conditions);
+                    } else {
+                        int[] checkUserIdsByGroup = new int[]{};
+                        Intent groupTaskIntent = new Intent(getActivity(), AdminTasksActivity.class);
+                        groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
+                        groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
+                        groupTaskIntent.putExtra(AdminTasksFragment.SEARCH_APPLYID,applyId);
+                        groupTaskIntent.putExtra(AdminTasksFragment.SEARCH_MOBILE,mobile);
+                        groupTaskIntent.putExtra(AdminTasksFragment.SEARCH_PLATENO,plateNo);
+                        mActivity.mSwipeBackHelper.forward(groupTaskIntent);
+                        popupWindow.dismiss();
+                    }
+                }
+            });
+        }
+        popupWindow.setContentView(popupView);
+        // TODO: 2016/5/17 设置动画
+        // TODO: 2016/5/17 设置背景颜色
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#36000000")));
+        // TODO: 2016/5/17 设置可以获取焦点
+        popupWindow.setFocusable(true);
+        // TODO: 2016/5/17 设置可以触摸弹出框以外的区域
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                tvRight.setVisibility(View.VISIBLE);
+                rlShadow.setVisibility(View.GONE);
+            }
+        });
+        // TODO：更新popupwindow的状态
+        popupWindow.update();
+        // TODO: 2016/5/17 以下拉的方式显示，并且可以设置显示的位置
+        return popupWindow;
     }
 
     /**

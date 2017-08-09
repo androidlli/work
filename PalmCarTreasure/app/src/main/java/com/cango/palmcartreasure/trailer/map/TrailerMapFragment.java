@@ -42,6 +42,7 @@ import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.api.Api;
 import com.cango.palmcartreasure.api.TrailerTaskService;
 import com.cango.palmcartreasure.base.BaseFragment;
+import com.cango.palmcartreasure.customview.TrackDialogFragment;
 import com.cango.palmcartreasure.customview.UploadDialogFragment;
 import com.cango.palmcartreasure.model.NavigationCar;
 import com.cango.palmcartreasure.model.SelectPhoto;
@@ -52,6 +53,8 @@ import com.cango.palmcartreasure.net.NetManager;
 import com.cango.palmcartreasure.net.RxSubscriber;
 import com.cango.palmcartreasure.trailer.main.TrailerActivity;
 import com.cango.palmcartreasure.trailer.taskdetail.TaskDetailPresenter;
+import com.cango.palmcartreasure.trailer.track.TrackActivity;
+import com.cango.palmcartreasure.trailer.track.TrackFragment;
 import com.cango.palmcartreasure.util.AppUtils;
 import com.cango.palmcartreasure.util.BarUtil;
 import com.cango.palmcartreasure.util.CommUtil;
@@ -96,6 +99,8 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
 
     @BindView(R.id.toolbar_trailer_map)
     Toolbar mToolbar;
+    @BindView(R.id.ll_toolbar_right)
+    LinearLayout llRight;
     @BindView(R.id.ll_select)
     LinearLayout llSelect;
 //    @BindView(R.id.iv_task_down)
@@ -148,7 +153,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
     private double mLat, mLon;
 
     @OnClick({R.id.ll_select, R.id.iv_map_nav, R.id.iv_map_location, R.id.tv_one_speed, R.id.tv_one_point_five_speed, R.id.tv_two_speed,
-            R.id.btn_map_send})
+            R.id.btn_map_send,R.id.ll_toolbar_right})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_select:
@@ -194,6 +199,10 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                     showUpLoadDialog();
                 }
                 break;
+            //轨迹查询（老板和员工都可以看到轨迹查询）
+            case R.id.ll_toolbar_right:
+                showTrackDialog();
+                break;
             default:
                 break;
         }
@@ -205,6 +214,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
     private String mType;
     private UploadDialogFragment upLoadDialog;
     private boolean isSendCarOk;
+    private String mTrackDeviceId;
     //压缩后的图片file集合
     private List<File> fileList;
     private TrailerTaskService mService;
@@ -337,6 +347,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         mActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         if (TRAILER_NAV.equals(mType)) {
             mTitle.setText(R.string.traialer_navigation);
+            llRight.setVisibility(View.GONE);
             rlMapTop.setVisibility(View.GONE);
             llDate.setVisibility(View.GONE);
             rlMapBottom.setVisibility(View.GONE);
@@ -345,6 +356,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
 //            ivDown.setVisibility(View.GONE);
         } else if (SEND_CAR_LIBRARY.equals(mType)) {
             mTitle.setText(R.string.send_car_library);
+            llRight.setVisibility(View.GONE);
             rlMapTop.setVisibility(View.GONE);
             rlMapBottom.setVisibility(View.GONE);
             ivLocation.setVisibility(View.GONE);
@@ -390,7 +402,13 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                                         if (resultLAT == 0 && resultLON == 0) {
 //                                            llSorry.setVisibility(View.VISIBLE);
                                             llNoData.setVisibility(View.VISIBLE);
+                                            //测试，应该用gone的，但是测试
+                                            llRight.setVisibility(View.GONE);
                                         } else {
+                                            mTrackDeviceId= o.getData().getResultDeviceId();
+                                            if (!TextUtils.isEmpty(mTrackDeviceId)){
+                                                llRight.setVisibility(View.VISIBLE);
+                                            }
                                             tvCarNum.setText("车牌号码："+mTaskListBean.getCarPlateNO());
                                             tvTimeStatus.setText("最后定位时间："+o.getData().getCACHETIME() + "(" + o.getData().getConnectflag() + ")");
                                             tvLastAddress.setText("最后定位位置："+o.getData().getResultAddress());
@@ -864,6 +882,57 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             setUpMapIfNeeded();
         } else {
             setCarGPSLocationPoint();
+        }
+    }
+
+    /**
+     * 展示轨迹日历控件
+     */
+    private TrackDialogFragment mTrackDialog;
+    private void showTrackDialog() {
+        if (CommUtil.checkIsNull(mTrackDialog)) {
+            //TODO
+            int type;
+//            if (MTApplication.mSPUtils.getString(Api.ROLE).equals(Api.ADMIN)){
+//                type=1;
+//            }else {
+//                type=0;
+//            }
+            //TODO test
+            type = 0;
+            mTrackDialog = TrackDialogFragment.newInstance(type);
+            mTrackDialog.setCalendarDilaogListener(new TrackDialogFragment.CalendarDilaogListener() {
+                @Override
+                public void onCalendarClick(Date date, Date date1) {
+                    Logger.d(date.toString());
+                    Intent intent = new Intent(mActivity, TrackActivity.class);
+//                    mTrackDeviceId = "2170006363";
+                    intent.putExtra(TrackFragment.IMEI, mTrackDeviceId);
+                    if (!CommUtil.checkIsNull(date) && !CommUtil.checkIsNull(date1)) {
+                        intent.putExtra(TrackFragment.START_TIME, date);
+                        intent.putExtra(TrackFragment.END_TIME, date1);
+                    } else {
+                        intent.putExtra(TrackFragment.START_TIME, date);
+                        intent.putExtra(TrackFragment.END_TIME, date);
+                    }
+                    mActivity.mSwipeBackHelper.forward(intent);
+                }
+            });
+        }
+        if (mTrackDialog.isVisible()) {
+
+        } else {
+            mTrackDialog.show(getFragmentManager(), "CalendarDialog");
+        }
+    }
+
+    private void closeTrackDialog() {
+        if (CommUtil.checkIsNull(mTrackDialog)) {
+
+        } else {
+            if (mTrackDialog.isVisible()) {
+                mTrackDialog.dismiss();
+            }
         }
     }
 

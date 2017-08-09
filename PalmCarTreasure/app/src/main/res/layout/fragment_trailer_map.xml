@@ -55,6 +55,27 @@
                 <!--android:layout_marginLeft="5dp"-->
                 <!--android:src="@drawable/down" />-->
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_toolbar_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="26px"
+            android:orientation="vertical"
+            android:layout_gravity="right|center_vertical"
+            android:gravity="center"
+            android:layout_alignParentTop="true">
+            <ImageView
+                android:layout_width="48px"
+                android:layout_height="48px"
+                android:src="@drawable/trajectory"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8px"
+                android:textColor="@android:color/white"
+                android:textSize="13sp"
+                android:text="@string/track_query"/>
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
 
