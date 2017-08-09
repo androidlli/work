@@ -20,12 +20,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -45,6 +41,7 @@ import com.cango.palmcartreasure.model.TaskAbandonRequest;
 import com.cango.palmcartreasure.model.TaskDrawEvent;
 import com.cango.palmcartreasure.model.TaskManageList;
 import com.cango.palmcartreasure.model.TypeTaskData;
+import com.cango.palmcartreasure.net.MultiClickSubscribe;
 import com.cango.palmcartreasure.trailer.taskdetail.TaskDetailActivity;
 import com.cango.palmcartreasure.trailer.taskdetail.TaskDetailFragment;
 import com.cango.palmcartreasure.util.CommUtil;
@@ -56,17 +53,19 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
+import rx.Observable;
+import rx.functions.Action1;
 
 public class AdminTasksFragment extends BaseFragment implements AdminTasksContract.View, SwipeRefreshLayout.OnRefreshListener, EasyPermissions.PermissionCallbacks {
     private static final int REQUEST_LOCATION_GROUP_AND_STORAGE_GROUP = 130;
@@ -86,9 +85,9 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
     public static final String GROUPIDS = "groupIds";
 
-    public static final String SEARCH_APPLYID="search_applyid";
-    public static final String SEARCH_MOBILE="search_mobile";
-    public static final String SEARCH_PLATENO="search_plateno";
+    public static final String SEARCH_APPLYID = "search_applyid";
+    public static final String SEARCH_MOBILE = "search_mobile";
+    public static final String SEARCH_PLATENO = "search_plateno";
 
     @BindView(R.id.toolbar_admin)
     Toolbar mToolbar;
@@ -116,9 +115,11 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
     LinearLayout llNoData;
     @BindView(R.id.rl_shadow)
     FrameLayout rlShadow;
+    @BindView(R.id.tv_give_up)
+    TextView tvGiveUp;
 
     @OnClick({R.id.tv_toolbar_right, R.id.tv_admin_task_bottom, R.id.tv_give_up, R.id.tv_arrange,
-    R.id.tv_search_history,R.id.tv_search_group})
+            R.id.tv_search_history, R.id.tv_search_group})
     public void onClick(View view) {
         switch (view.getId()) {
             //右侧toolbar按钮
@@ -151,35 +152,35 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                 }
                 break;
             //只针对于抽回任务
-            case R.id.tv_admin_task_bottom:
-                if (mType.equals(GROUP)) {
-                    if (checkedAllByGroup()) {
-                        //跳转组的任务
-                        int[] checkUserIdsByGroup = getCheckUserIdsByGroup();
-                        Intent groupTaskIntent = new Intent(getActivity(), AdminTasksActivity.class);
-                        groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
-                        groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
-                        mActivity.mSwipeBackHelper.forward(groupTaskIntent);
-                    }
-                } else if (mType.equals(TASK)) {
-                    if (checkedAllByTask()) {
-                        //抽回任务
-                        List<GroupTaskQuery.DataBean.TaskListBean> checkUserIdsByTask = getCheckUserIdsByTask();
-                        if (!CommUtil.checkIsNull(checkUserIdsByTask) && checkUserIdsByTask.size() > 0) {
-                            mPresenter.groupTaskDraw(true, checkUserIdsByTask);
-                        }
-                    }
-                } else {
-
-                }
-                break;
-            case R.id.tv_give_up:
-                if (checkedAllByUnabsorbed()) {
-                    //任务放弃
-                    TaskAbandonRequest[] checkUserIdsByUnabsorbed = getCheckUserIdsByUnabsorbed();
-                    mPresenter.giveUpTasks(checkUserIdsByUnabsorbed);
-                }
-                break;
+//            case R.id.tv_admin_task_bottom:
+//                if (mType.equals(GROUP)) {
+//                    if (checkedAllByGroup()) {
+//                        //跳转组的任务
+//                        int[] checkUserIdsByGroup = getCheckUserIdsByGroup();
+//                        Intent groupTaskIntent = new Intent(getActivity(), AdminTasksActivity.class);
+//                        groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
+//                        groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
+//                        mActivity.mSwipeBackHelper.forward(groupTaskIntent);
+//                    }
+//                } else if (mType.equals(TASK)) {
+//                    if (checkedAllByTask()) {
+//                        //抽回任务
+//                        List<GroupTaskQuery.DataBean.TaskListBean> checkUserIdsByTask = getCheckUserIdsByTask();
+//                        if (!CommUtil.checkIsNull(checkUserIdsByTask) && checkUserIdsByTask.size() > 0) {
+//                            mPresenter.groupTaskDraw(true, checkUserIdsByTask);
+//                        }
+//                    }
+//                } else {
+//
+//                }
+//                break;
+//            case R.id.tv_give_up:
+//                if (checkedAllByUnabsorbed()) {
+//                    //任务放弃
+//                    TaskAbandonRequest[] checkUserIdsByUnabsorbed = getCheckUserIdsByUnabsorbed();
+//                    mPresenter.giveUpTasks(checkUserIdsByUnabsorbed);
+//                }
+//                break;
             case R.id.tv_arrange:
                 //任务分配
                 List<TaskManageList.DataBean.TaskListBean> taskListBeanList = getSelectedTaskListBean();
@@ -207,7 +208,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                         groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
                         groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
                         mActivity.mSwipeBackHelper.forward(groupTaskIntent);
-                    }else {
+                    } else {
                         ToastUtils.showShort("请选择组");
                     }
                 }
@@ -218,9 +219,9 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
     private String mType;
     private int[] mGroupIds;
     //从条件查询中过来的信息
-    private String mSearchApplyId,mSearchMobile,mSearchPlateNo;
+    private String mSearchApplyId, mSearchMobile, mSearchPlateNo;
     private AdminTasksActivity mActivity;
-    private int ToType=-1;
+    private int ToType = -1;
     private AdminTasksContract.Presenter mPresenter;
     private BaseAdapter mAdapter;
     private PopupWindow mSearchPW;
@@ -244,12 +245,12 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     if (!CommUtil.checkIsNull(aMapLocation.getLatitude())) {
 //                        BigDecimal latBD = new BigDecimal(String.valueOf(aMapLocation.getLatitude()));
 //                        mLat = latBD.floatValue();
-                        mLat=aMapLocation.getLatitude();
+                        mLat = aMapLocation.getLatitude();
                     }
                     if (!CommUtil.checkIsNull(aMapLocation.getLongitude())) {
 //                        BigDecimal lonBD = new BigDecimal(String.valueOf(aMapLocation.getLongitude()));
 //                        mLon = lonBD.floatValue();
-                        mLon=aMapLocation.getLongitude();
+                        mLon = aMapLocation.getLongitude();
                     }
                     if (mLat > 0 && mLon > 0) {
                         if (isShouldFirstAddData) {
@@ -292,14 +293,14 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         return fragment;
     }
 
-    public static AdminTasksFragment newInstance(String type,int[] groupIds,String applyId,String mobile,String plateNo){
+    public static AdminTasksFragment newInstance(String type, int[] groupIds, String applyId, String mobile, String plateNo) {
         AdminTasksFragment fragment = new AdminTasksFragment();
         Bundle args = new Bundle();
         args.putString(TYPE, type);
         args.putIntArray(GROUPIDS, groupIds);
-        args.putString(SEARCH_APPLYID,applyId);
-        args.putString(SEARCH_MOBILE,mobile);
-        args.putString(SEARCH_PLATENO,plateNo);
+        args.putString(SEARCH_APPLYID, applyId);
+        args.putString(SEARCH_MOBILE, mobile);
+        args.putString(SEARCH_PLATENO, plateNo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -351,16 +352,16 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     taskListBean.setIsStart("F");
                     taskListBean.setIsCheckPoint("F");
                     taskListBean.setIsDone("F");
-                    ToType=1;
-                    if ("F".equals(data.getIsRead())){
-                        mPresenter.taskManagerRead(position,data.getAgencyID(),data.getCaseID(),data.getApplyID(),data.getApplyCD());
-                    }else {
+                    ToType = 1;
+                    if ("F".equals(data.getIsRead())) {
+                        mPresenter.taskManagerRead(position, data.getAgencyID(), data.getCaseID(), data.getApplyID(), data.getApplyCD());
+                    } else {
                     }
                     mPresenter.openDetailTask(taskListBean);
                 }
             });
         } else if (mType.equals(GROUP)) {
-            mSearchPW=getPopupWindow(mActivity,R.layout.admin_search_popup);
+            mSearchPW = getPopupWindow(mActivity, R.layout.admin_search_popup);
             tvBottom.setVisibility(View.GONE);
 //            tvBottom.setText(R.string.query);
             llUnabsorbed.setVisibility(View.GONE);
@@ -410,7 +411,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     taskListBean.setIsStart("F");
                     taskListBean.setIsCheckPoint("F");
                     taskListBean.setIsDone("F");
-                    ToType=2;
+                    ToType = 2;
                     mPresenter.openDetailTask(taskListBean);
                 }
             });
@@ -431,11 +432,11 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                 if (mLat > 0 && mLon > 0) {
                     if (!CommUtil.checkIsNull(mType)) {
                         if (mType.equals(TASK)) {
-                            if (mGroupIds.length>0){
+                            if (mGroupIds.length > 0) {
                                 mPresenter.loadGroupTasks(mGroupIds, mLat, mLon, false, mPageCount, PAGE_SIZE);
-                            }else {
+                            } else {
                                 //是条件查询过来的
-                                mPresenter.loadGroupSearchTasks(mGroupIds,mLat,mLon,false,mPageCount,PAGE_SIZE,mSearchApplyId,mSearchMobile,mSearchPlateNo);
+                                mPresenter.loadGroupSearchTasks(mGroupIds, mLat, mLon, false, mPageCount, PAGE_SIZE, mSearchApplyId, mSearchMobile, mSearchPlateNo);
                             }
                         } else {
                             mPresenter.loadAdminTasks(mType, mLat, mLon, false, mPageCount, PAGE_SIZE);
@@ -455,16 +456,59 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         mPresenter.start();
         //打开相关权限
         openPermissions();
+
+        //任务抽回
+        //防抖动
+        Observable.create(new MultiClickSubscribe(tvBottom))
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer s) {
+                        if (mType.equals(GROUP)) {
+                            if (checkedAllByGroup()) {
+                                //跳转组的任务
+                                int[] checkUserIdsByGroup = getCheckUserIdsByGroup();
+                                Intent groupTaskIntent = new Intent(getActivity(), AdminTasksActivity.class);
+                                groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
+                                groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
+                                mActivity.mSwipeBackHelper.forward(groupTaskIntent);
+                            }
+                        } else if (mType.equals(TASK)) {
+                            if (checkedAllByTask()) {
+                                //抽回任务
+                                List<GroupTaskQuery.DataBean.TaskListBean> checkUserIdsByTask = getCheckUserIdsByTask();
+                                if (!CommUtil.checkIsNull(checkUserIdsByTask) && checkUserIdsByTask.size() > 0) {
+                                    mPresenter.groupTaskDraw(true, checkUserIdsByTask);
+                                }
+                            }
+                        } else {
+
+                        }
+                    }
+                });
+        //任务放弃
+        Observable.create(new MultiClickSubscribe(tvGiveUp))
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer s) {
+                        if (checkedAllByUnabsorbed()) {
+                            //任务放弃
+                            TaskAbandonRequest[] checkUserIdsByUnabsorbed = getCheckUserIdsByUnabsorbed();
+                            mPresenter.giveUpTasks(checkUserIdsByUnabsorbed);
+                        }
+                    }
+                });
     }
 
     private void getFirstData() {
         if (mLat > 0 && mLon > 0) {
             if (mType.equals(TASK)) {
-                if (mGroupIds.length>0){
+                if (mGroupIds.length > 0) {
                     mPresenter.loadGroupTasks(mGroupIds, mLat, mLon, true, mPageCount, PAGE_SIZE);
-                }else {
+                } else {
                     //是条件查询过来的
-                    mPresenter.loadGroupSearchTasks(mGroupIds,mLat,mLon,true,mPageCount,PAGE_SIZE,mSearchApplyId,mSearchMobile,mSearchPlateNo);
+                    mPresenter.loadGroupSearchTasks(mGroupIds, mLat, mLon, true, mPageCount, PAGE_SIZE, mSearchApplyId, mSearchMobile, mSearchPlateNo);
                 }
             } else {
                 mPresenter.loadAdminTasks(mType, mLat, mLon, true, mPageCount, PAGE_SIZE);
@@ -500,7 +544,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        if (mLocationClient!=null){
+        if (mLocationClient != null) {
             mLocationClient.startLocation();
         }
     }
@@ -509,7 +553,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-        if (mLocationClient!=null){
+        if (mLocationClient != null) {
             mLocationClient.stopLocation();
         }
     }
@@ -525,9 +569,10 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
      * 管理员进入任务详情界面并且分配了任务那么分配成功后就要刷新未分配列表
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAllotTaskDetailToAdminTaskEvent(AllotTaskDetailToAdminTaskEvent allotTaskDetailToAdminTaskEvent){
+    public void onAllotTaskDetailToAdminTaskEvent(AllotTaskDetailToAdminTaskEvent allotTaskDetailToAdminTaskEvent) {
         onRefresh();
     }
+
     @Override
     public void setPresenter(AdminTasksContract.Presenter presenter) {
         mPresenter = presenter;
@@ -595,6 +640,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
     /**
      * 展示的是具体组的所有任务列表
+     *
      * @param tasks
      */
     @Override
@@ -666,7 +712,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
     @Override
     public void updateRead(boolean success, int position) {
-        if (success){
+        if (success) {
             taskManageList.get(position).setIsRead("T");
             mAdapter.notifyDataSetChanged();
         }
@@ -700,7 +746,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
     public void showAdminTaskDetailUi(TypeTaskData.DataBean.TaskListBean taskListBean) {
         Intent intent = new Intent(getContext(), TaskDetailActivity.class);
         intent.putExtra(TaskDetailFragment.TASKLISTBEAN, taskListBean);
-        intent.putExtra("FromType",ToType);
+        intent.putExtra("FromType", ToType);
         mActivity.mSwipeBackHelper.forward(intent);
     }
 
@@ -954,6 +1000,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
     /**
      * popupwindow
+     *
      * @param context
      * @param layoutId
      * @return
@@ -988,9 +1035,9 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                         Intent groupTaskIntent = new Intent(getActivity(), AdminTasksActivity.class);
                         groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
                         groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
-                        groupTaskIntent.putExtra(AdminTasksFragment.SEARCH_APPLYID,applyId);
-                        groupTaskIntent.putExtra(AdminTasksFragment.SEARCH_MOBILE,mobile);
-                        groupTaskIntent.putExtra(AdminTasksFragment.SEARCH_PLATENO,plateNo);
+                        groupTaskIntent.putExtra(AdminTasksFragment.SEARCH_APPLYID, applyId);
+                        groupTaskIntent.putExtra(AdminTasksFragment.SEARCH_MOBILE, mobile);
+                        groupTaskIntent.putExtra(AdminTasksFragment.SEARCH_PLATENO, plateNo);
                         mActivity.mSwipeBackHelper.forward(groupTaskIntent);
                         popupWindow.dismiss();
                     }

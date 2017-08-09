@@ -23,6 +23,7 @@ import com.cango.palmcartreasure.baseAdapter.MemberItemDecoration;
 import com.cango.palmcartreasure.baseAdapter.OnBaseItemClickListener;
 import com.cango.palmcartreasure.model.GroupList;
 import com.cango.palmcartreasure.model.Member;
+import com.cango.palmcartreasure.net.MultiClickSubscribe;
 import com.cango.palmcartreasure.util.CommUtil;
 import com.cango.palmcartreasure.util.SizeUtil;
 import com.cango.palmcartreasure.util.ToastUtils;
@@ -30,9 +31,12 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.functions.Action1;
 
 public class GroupFragment extends BaseFragment implements GroupContract.View, GroupAdapter.OnSelectCountListener {
 
@@ -45,6 +49,8 @@ public class GroupFragment extends BaseFragment implements GroupContract.View, G
     Toolbar mToolbar;
     @BindView(R.id.tv_title)
     TextView tvTitle;
+    @BindView(R.id.tv_ensure)
+    TextView tvEnsure;
     @BindView(R.id.ll_detele)
     LinearLayout llDetele;
     @BindView(R.id.iv_drawer_line)
@@ -143,13 +149,13 @@ public class GroupFragment extends BaseFragment implements GroupContract.View, G
                     checkSelectCount();
                 }
                 break;
-            case R.id.tv_ensure:
-                confirmGroupMDF();
-                break;
-            case R.id.ll_detele:
-                isDoDetele=true;
-                confirmGroupMDF();
-                break;
+//            case R.id.tv_ensure:
+//                confirmGroupMDF();
+//                break;
+//            case R.id.ll_detele:
+//                isDoDetele=true;
+//                confirmGroupMDF();
+//                break;
         }
     }
 
@@ -216,7 +222,6 @@ public class GroupFragment extends BaseFragment implements GroupContract.View, G
         } else {
 
         }
-
         mActivity = (GroupActivity) getActivity();
         mActivity.setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -248,6 +253,25 @@ public class GroupFragment extends BaseFragment implements GroupContract.View, G
 
         mPresenter.start();
         mPresenter.loadMembers(mType, false, 0, 0);
+
+        //防抖动
+        Observable.create(new MultiClickSubscribe(tvEnsure))
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer s) {
+                        confirmGroupMDF();
+                    }
+                });
+        Observable.create(new MultiClickSubscribe(llDetele))
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer s) {
+                        isDoDetele=true;
+                        confirmGroupMDF();
+                    }
+                });
     }
 
     @Override
