@@ -18,6 +18,7 @@ import rx.Observable;
 
 /**
  * Created by cango on 2017/5/9.
+ * aaaa
  */
 
 public interface AdminService {
