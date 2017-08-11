@@ -519,7 +519,9 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         if (upLoadDialog.isVisible()) {
 
         } else {
-            upLoadDialog.show(getFragmentManager(), "DotDialog");
+            if (!upLoadDialog.isAdded()){
+                upLoadDialog.show(getFragmentManager(), "DotDialog");
+            }
         }
     }
 

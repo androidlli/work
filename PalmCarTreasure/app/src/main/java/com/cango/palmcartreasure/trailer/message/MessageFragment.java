@@ -214,9 +214,9 @@ public class MessageFragment extends BaseFragment implements MessageContract.Vie
      * @param messageListBean
      */
     private void showMessageDialog(MessageList.DataBean.MessageListBean messageListBean) {
-        if (CommUtil.checkIsNull(mDialog)) {
+//        if (CommUtil.checkIsNull(mDialog)) {
             mDialog = MessageItemDialogFragment.getInstance(messageListBean);
-        }
+//        }
         if (mDialog.isVisible()) {
 
         } else {
