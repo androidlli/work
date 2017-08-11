@@ -179,8 +179,8 @@ public class CameraActivity extends AppCompatActivity implements
 
     @Override
     protected void onPause() {
-        mCameraView.stop();
         super.onPause();
+        mCameraView.stop();
     }
 
     @Override
