@@ -92,6 +92,10 @@ public class DocFragment extends BaseFragment {
         settings.setLoadWithOverviewMode(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setBlockNetworkImage(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) // KITKAT
+        {
+            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
 
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
