@@ -41,7 +41,6 @@ import com.cango.palmcartreasure.model.TaskAbandonRequest;
 import com.cango.palmcartreasure.model.TaskDrawEvent;
 import com.cango.palmcartreasure.model.TaskManageList;
 import com.cango.palmcartreasure.model.TypeTaskData;
-import com.cango.palmcartreasure.net.MultiClickSubscribe;
 import com.cango.palmcartreasure.trailer.taskdetail.TaskDetailActivity;
 import com.cango.palmcartreasure.trailer.taskdetail.TaskDetailFragment;
 import com.cango.palmcartreasure.util.CommUtil;
@@ -57,15 +56,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
-import rx.Observable;
-import rx.functions.Action1;
 
 public class AdminTasksFragment extends BaseFragment implements AdminTasksContract.View, SwipeRefreshLayout.OnRefreshListener, EasyPermissions.PermissionCallbacks {
     private static final int REQUEST_LOCATION_GROUP_AND_STORAGE_GROUP = 130;
@@ -152,35 +148,45 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                 }
                 break;
             //只针对于抽回任务
-//            case R.id.tv_admin_task_bottom:
-//                if (mType.equals(GROUP)) {
-//                    if (checkedAllByGroup()) {
-//                        //跳转组的任务
-//                        int[] checkUserIdsByGroup = getCheckUserIdsByGroup();
-//                        Intent groupTaskIntent = new Intent(getActivity(), AdminTasksActivity.class);
-//                        groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
-//                        groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
-//                        mActivity.mSwipeBackHelper.forward(groupTaskIntent);
-//                    }
-//                } else if (mType.equals(TASK)) {
-//                    if (checkedAllByTask()) {
-//                        //抽回任务
-//                        List<GroupTaskQuery.DataBean.TaskListBean> checkUserIdsByTask = getCheckUserIdsByTask();
-//                        if (!CommUtil.checkIsNull(checkUserIdsByTask) && checkUserIdsByTask.size() > 0) {
-//                            mPresenter.groupTaskDraw(true, checkUserIdsByTask);
-//                        }
-//                    }
-//                } else {
-//
-//                }
-//                break;
-//            case R.id.tv_give_up:
-//                if (checkedAllByUnabsorbed()) {
-//                    //任务放弃
-//                    TaskAbandonRequest[] checkUserIdsByUnabsorbed = getCheckUserIdsByUnabsorbed();
-//                    mPresenter.giveUpTasks(checkUserIdsByUnabsorbed);
-//                }
-//                break;
+            case R.id.tv_admin_task_bottom:
+                if (mType.equals(GROUP)) {
+                    if (checkedAllByGroup()) {
+                        //跳转组的任务
+                        int[] checkUserIdsByGroup = getCheckUserIdsByGroup();
+                        Intent groupTaskIntent = new Intent(getActivity(), AdminTasksActivity.class);
+                        groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
+                        groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
+                        mActivity.mSwipeBackHelper.forward(groupTaskIntent);
+                    }
+                } else if (mType.equals(TASK)) {
+                    if (isCanTaskDraw) {
+                        Logger.d("isCanTaskDraw");
+                        if (checkedAllByTask()) {
+                            //抽回任务
+                            List<GroupTaskQuery.DataBean.TaskListBean> checkUserIdsByTask = getCheckUserIdsByTask();
+                            if (!CommUtil.checkIsNull(checkUserIdsByTask) && checkUserIdsByTask.size() > 0) {
+                                isCanTaskDraw = false;
+                                mPresenter.groupTaskDraw(true, checkUserIdsByTask);
+                            }
+                        }
+
+                    }
+                } else {
+
+                }
+                break;
+            case R.id.tv_give_up:
+                if (isCanGiveUpTASK) {
+                    Logger.d("isCanGiveUpTASK");
+                    if (checkedAllByUnabsorbed()) {
+                        //任务放弃
+                        TaskAbandonRequest[] checkUserIdsByUnabsorbed = getCheckUserIdsByUnabsorbed();
+                        isCanGiveUpTASK=false;
+                        mPresenter.giveUpTasks(checkUserIdsByUnabsorbed);
+                    }
+
+                }
+                break;
             case R.id.tv_arrange:
                 //任务分配
                 List<TaskManageList.DataBean.TaskListBean> taskListBeanList = getSelectedTaskListBean();
@@ -216,6 +222,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         }
     }
 
+    private boolean isCanTaskDraw = true, isCanGiveUpTASK = true;
     private String mType;
     private int[] mGroupIds;
     //从条件查询中过来的信息
@@ -457,48 +464,48 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         //打开相关权限
         openPermissions();
 
-        //任务抽回
-        //防抖动
-        Observable.create(new MultiClickSubscribe(tvBottom))
-                .throttleFirst(2, TimeUnit.SECONDS)
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer s) {
-                        if (mType.equals(GROUP)) {
-                            if (checkedAllByGroup()) {
-                                //跳转组的任务
-                                int[] checkUserIdsByGroup = getCheckUserIdsByGroup();
-                                Intent groupTaskIntent = new Intent(getActivity(), AdminTasksActivity.class);
-                                groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
-                                groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
-                                mActivity.mSwipeBackHelper.forward(groupTaskIntent);
-                            }
-                        } else if (mType.equals(TASK)) {
-                            if (checkedAllByTask()) {
-                                //抽回任务
-                                List<GroupTaskQuery.DataBean.TaskListBean> checkUserIdsByTask = getCheckUserIdsByTask();
-                                if (!CommUtil.checkIsNull(checkUserIdsByTask) && checkUserIdsByTask.size() > 0) {
-                                    mPresenter.groupTaskDraw(true, checkUserIdsByTask);
-                                }
-                            }
-                        } else {
-
-                        }
-                    }
-                });
-        //任务放弃
-        Observable.create(new MultiClickSubscribe(tvGiveUp))
-                .throttleFirst(2, TimeUnit.SECONDS)
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer s) {
-                        if (checkedAllByUnabsorbed()) {
-                            //任务放弃
-                            TaskAbandonRequest[] checkUserIdsByUnabsorbed = getCheckUserIdsByUnabsorbed();
-                            mPresenter.giveUpTasks(checkUserIdsByUnabsorbed);
-                        }
-                    }
-                });
+//        //任务抽回
+//        //防抖动
+//        Observable.create(new MultiClickSubscribe(tvBottom))
+//                .throttleFirst(2, TimeUnit.SECONDS)
+//                .subscribe(new Action1<Integer>() {
+//                    @Override
+//                    public void call(Integer s) {
+//                        if (mType.equals(GROUP)) {
+//                            if (checkedAllByGroup()) {
+//                                //跳转组的任务
+//                                int[] checkUserIdsByGroup = getCheckUserIdsByGroup();
+//                                Intent groupTaskIntent = new Intent(getActivity(), AdminTasksActivity.class);
+//                                groupTaskIntent.putExtra(AdminTasksFragment.TYPE, AdminTasksFragment.TASK);
+//                                groupTaskIntent.putExtra(AdminTasksFragment.GROUPIDS, checkUserIdsByGroup);
+//                                mActivity.mSwipeBackHelper.forward(groupTaskIntent);
+//                            }
+//                        } else if (mType.equals(TASK)) {
+//                            if (checkedAllByTask()) {
+//                                //抽回任务
+//                                List<GroupTaskQuery.DataBean.TaskListBean> checkUserIdsByTask = getCheckUserIdsByTask();
+//                                if (!CommUtil.checkIsNull(checkUserIdsByTask) && checkUserIdsByTask.size() > 0) {
+//                                    mPresenter.groupTaskDraw(true, checkUserIdsByTask);
+//                                }
+//                            }
+//                        } else {
+//
+//                        }
+//                    }
+//                });
+//        //任务放弃
+//        Observable.create(new MultiClickSubscribe(tvGiveUp))
+//                .throttleFirst(2, TimeUnit.SECONDS)
+//                .subscribe(new Action1<Integer>() {
+//                    @Override
+//                    public void call(Integer s) {
+//                        if (checkedAllByUnabsorbed()) {
+//                            //任务放弃
+//                            TaskAbandonRequest[] checkUserIdsByUnabsorbed = getCheckUserIdsByUnabsorbed();
+//                            mPresenter.giveUpTasks(checkUserIdsByUnabsorbed);
+//                        }
+//                    }
+//                });
     }
 
     private void getFirstData() {
@@ -672,6 +679,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
     @Override
     public void showGroupTaskDraw(boolean isSuccess, String message) {
+        isCanTaskDraw = true;
         if (!CommUtil.checkIsNull(message))
             ToastUtils.showShort(message);
         if (isSuccess) {
@@ -720,10 +728,13 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
     @Override
     public void showGiveUpTasksAndNotifyUi(boolean isSuccess, String message) {
+        isCanGiveUpTASK=true;
         if (!CommUtil.checkIsNull(message)) {
             ToastUtils.showShort(message);
         }
-        onRefresh();
+        if (isSuccess){
+            onRefresh();
+        }
     }
 
     /**

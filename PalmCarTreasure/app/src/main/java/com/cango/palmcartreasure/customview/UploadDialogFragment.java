@@ -128,8 +128,8 @@ public class UploadDialogFragment extends DialogFragment {
                 if (datas.size() > 1) {
 //                    if (checkQuestonIsOver()) {
                     isDoUp = true;
-                    mListener.upLoadClick(datas, stringList);
                     dismiss();
+                    mListener.upLoadClick(datas, stringList);
 //                    } else {
 //                        ToastUtils.showShort("请填写全部问卷！");
 //                    }

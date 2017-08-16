@@ -20,14 +20,13 @@ import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.api.Api;
 import com.cango.palmcartreasure.base.BaseFragment;
 import com.cango.palmcartreasure.model.CheckPointOkToDetailEvent;
-import com.cango.palmcartreasure.model.CheckPointOkToHomeEvent;
 import com.cango.palmcartreasure.model.TypeTaskData;
 import com.cango.palmcartreasure.model.WareHouse;
-import com.cango.palmcartreasure.net.MultiClickSubscribe;
 import com.cango.palmcartreasure.util.BarUtil;
 import com.cango.palmcartreasure.util.CommUtil;
 import com.cango.palmcartreasure.util.SizeUtil;
 import com.cango.palmcartreasure.util.ToastUtils;
+import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,12 +34,9 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import rx.Observable;
-import rx.functions.Action1;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
@@ -49,7 +45,7 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
     /**
      * 判断是从首页还是详情页面进入的 type
      */
-    public static final String TYPE= "type";
+    public static final String TYPE = "type";
     public static final String IMG_PATH = "img_path";
     public static final String LAT = "lat";
     public static final String LON = "lon";
@@ -94,22 +90,28 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
     @BindView(R.id.avl_login_indicator)
     AVLoadingIndicatorView mLoadView;
 
-//    @OnClick({R.id.tv_complete_confirm})
-//    public void onClick(View view) {
-//        switch (view.getId()) {
-//            case R.id.tv_complete_confirm:
-//                if (checkQuestonIsOver()) {
-//                    zipPicture();
-//                } else {
-//                    ToastUtils.showShort("请填写全部问卷！");
-//                }
-//                break;
-//        }
-//    }
+    public boolean isCanDoConfirm = true;
+
+    @OnClick({R.id.tv_complete_confirm})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_complete_confirm:
+                if (isCanDoConfirm) {
+                    Logger.d("isCanDoConfirm");
+                    if (checkQuestonIsOver()) {
+                        isCanDoConfirm = false;
+                        zipPicture();
+                    } else {
+                        ToastUtils.showShort("请填写全部问卷！");
+                    }
+                }
+                break;
+        }
+    }
 
     //0:首页进入；1：详情页面进入
-    private String mType,mImgPath, mProvince;
-    private String[] sevenResults=new String[]{"车辆故障","库管暂时无法接车","集中派送","其他"};
+    private String mType, mImgPath, mProvince;
+    private String[] sevenResults = new String[]{"车辆故障", "库管暂时无法接车", "集中派送", "其他"};
     private double mLat, mLon;
     private TrailerCompleteActivity mActivity;
     private TrailerCompleteContract.Presenter mPresenter;
@@ -119,10 +121,10 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
     private String isNotifyCustImm, secondValue, thirdValue, mTmpReason;
     private int mRealSPID = -1;
 
-    public static TrailerCompleteFragment getInstance(String type,String imgPath, double lat, double lon, String province, TypeTaskData.DataBean.TaskListBean taskListBean) {
+    public static TrailerCompleteFragment getInstance(String type, String imgPath, double lat, double lon, String province, TypeTaskData.DataBean.TaskListBean taskListBean) {
         TrailerCompleteFragment trailerCompleteFragment = new TrailerCompleteFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(TYPE,type);
+        bundle.putString(TYPE, type);
         bundle.putString(IMG_PATH, imgPath);
         bundle.putDouble(LAT, lat);
         bundle.putDouble(LON, lon);
@@ -176,7 +178,7 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
 //                        mTmpReason = radioButton.getText().toString().trim();
-                        mTmpReason = "QN01,5;"+ (finalI+1);
+                        mTmpReason = "QN01,5;" + (finalI + 1);
                     }
                 }
             });
@@ -302,18 +304,18 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
         });
 
         //防抖动
-        Observable.create(new MultiClickSubscribe(tvConfirm))
-                .throttleFirst(2, TimeUnit.SECONDS)
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer s) {
-                        if (checkQuestonIsOver()) {
-                            zipPicture();
-                        } else {
-                            ToastUtils.showShort("请填写全部问卷！");
-                        }
-                    }
-                });
+//        Observable.create(new MultiClickSubscribe(tvConfirm))
+//                .throttleFirst(2, TimeUnit.SECONDS)
+//                .subscribe(new Action1<Integer>() {
+//                    @Override
+//                    public void call(Integer s) {
+//                        if (checkQuestonIsOver()) {
+//                            zipPicture();
+//                        } else {
+//                            ToastUtils.showShort("请填写全部问卷！");
+//                        }
+//                    }
+//                });
     }
 
     @Override
@@ -345,6 +347,7 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
         if (!CommUtil.checkIsNull(msg)) {
             ToastUtils.showShort(msg);
         }
+        isCanDoConfirm = true;
     }
 
     @Override
@@ -354,15 +357,16 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
 
     @Override
     public void showComfirmSuccess(String msg) {
+        isCanDoConfirm = true;
         if (!CommUtil.checkIsNull(msg)) {
             ToastUtils.showShort(msg);
         }
-        if ("0".equals(mType)){
+        if ("0".equals(mType)) {
             //因为首页做了可见刷新所以暂时不加
 //            EventBus.getDefault().post(new CheckPointOkToHomeEvent(""));
-        }else if ("1".equals(mType)){
+        } else if ("1".equals(mType)) {
             EventBus.getDefault().post(new CheckPointOkToDetailEvent(""));
-        }else {
+        } else {
 
         }
         mActivity.mSwipeBackHelper.swipeBackward();
@@ -496,6 +500,7 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
                         if (isAdded()) {
                             mLoadView.smoothToHide();
                         }
+                        isCanDoConfirm = true;
                     }
                 }).launch();    //启动压缩
     }

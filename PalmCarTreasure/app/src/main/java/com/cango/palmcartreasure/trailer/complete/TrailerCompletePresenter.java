@@ -140,6 +140,7 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
                         protected void _onError() {
                             if (mView.isActive()) {
                                 mView.showIndicator(false);
+                                mView.showError(null);
                                 deleteImageFile(file);
                             }
                         }

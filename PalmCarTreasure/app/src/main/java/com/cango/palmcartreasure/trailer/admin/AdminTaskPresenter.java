@@ -284,6 +284,7 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
                     protected void _onError() {
                         if (mAdminView.isActive()) {
                             mAdminView.showLoadingView(false);
+                            mAdminView.showGroupTaskDraw(false,null);
                         }
                     }
                 });
@@ -318,6 +319,7 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
                     protected void _onError() {
                         if (mAdminView.isActive()) {
                             mAdminView.showLoadingView(false);
+                            mAdminView.showGiveUpTasksAndNotifyUi(false,null);
                         }
                     }
                 });
