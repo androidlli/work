@@ -80,6 +80,7 @@ import okhttp3.RequestBody;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -194,7 +195,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             //送车入库
             case R.id.btn_map_send:
                 if (isSendCarOk) {
-                    ToastUtils.showLong("已经送车入库了！");
+//                    ToastUtils.showLong("已经送车入库了！");
                 } else {
                     showUpLoadDialog();
                 }
@@ -219,6 +220,9 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
     private List<File> fileList;
     private TrailerTaskService mService;
     private Subscription subscription1,subscription2,subscription3;
+    private Observable<Long> interval;
+    //固定时间查询动态轨迹
+    private Subscription subscribeInterval;
     private TypeTaskData.DataBean.TaskListBean mTaskListBean;
     //地图相关
     private AMap mMap;
@@ -291,7 +295,6 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (mLocationClient != null) {
             mLocationClient.unRegisterLocationListener(mLoactionListener);
             mLocationClient.onDestroy();
@@ -302,6 +305,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             subscription2.unsubscribe();
         if (!CommUtil.checkIsNull(subscription3))
             subscription3.unsubscribe();
+        super.onDestroy();
     }
 
     @Override
@@ -581,6 +585,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
      */
     private void upLoadImages(List<String> strings) {
         if (mPhoneLat > 0 && mPhoneLon > 0) {
+            isSendCarOk=true;
             RequestBody userId = RequestBody.create(null, MtApplication.mSPUtils.getInt(Api.USERID) + "");
             RequestBody LAT = RequestBody.create(null, mPhoneLat + "");
             RequestBody LON = RequestBody.create(null, mPhoneLon + "");
@@ -617,13 +622,13 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                                     ToastUtils.showShort(o.getMsg());
                                 }
                                 if (code == 0) {
-                                    isSendCarOk = true;
+                                    isSendCarOk = false;
                                     //将文件夹清空
                                     deleteImageFileList(fileList);
                                     //通过eventbus来设置删除acivitylist
                                     Intent intent = new Intent(mActivity, TrailerActivity.class);
                                     intent.putExtra("isFromSMS", true);
-                                    mActivity.mSwipeBackHelper.forward(intent);
+                                    mActivity.mSwipeBackHelper.forwardAndFinish(intent);
                                 } else {
                                     isSendCarOk = false;
                                 }

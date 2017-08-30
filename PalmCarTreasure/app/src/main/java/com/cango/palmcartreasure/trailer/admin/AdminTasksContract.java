@@ -62,7 +62,8 @@ public interface AdminTasksContract {
     }
 
     interface Presenter extends BasePresenter {
-        void loadAdminTasks(String type, double lat, double lon, boolean showRefreshLoadingUI, int pageCount, int pageSize);
+        void loadAdminTasks(String type, double lat, double lon, boolean showRefreshLoadingUI, int pageCount, int pageSize,String applyId,
+                            String mobile,String plateNo);
 
         void loadGroupTasks(int[] groupIds, double lat, double lon, boolean showRefreshLoadingUI, int pageCount, int pageSize);
 

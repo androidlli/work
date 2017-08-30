@@ -28,11 +28,13 @@ public interface AdminService {
     @GET("trailer/grouptaskcount")
     Observable<GroupTaskCount> getGroupTaskCount(@Query("userid") int userId, @Query("LAT") double lat, @Query("LON") double lon);
 
-    //所有管理员未分配的任务
+    //所有管理员未分配的任务    objectMap.put("applycd",applyId);objectMap.put("mobile",mobile);objectMap.put("licensePlateNo",plateNo);
     @GET("trailer/taskmanagelist")
     Observable<TaskManageList> getTaskManageList(@Query("userid") int userId, @Query("LAT") double lat,
                                                  @Query("LON") double lon, @Query("pageIndex") int pageIndex,
-                                                 @Query("pageSize") int pageSize);
+                                                 @Query("pageSize") int pageSize,
+                                                 @Query("applycd") String applyId, @Query("mobile") String mobile,
+                                                 @Query("licensePlateNo") String plateNo);
 
     ///api/trailer/grouptaskquery?userid={userid}&LAT={LAT}&LON={LON}&pageIndex={pageIndex}&pageSize={pageSize}&ApiToken={APITOKEN}
     //分组任务查询

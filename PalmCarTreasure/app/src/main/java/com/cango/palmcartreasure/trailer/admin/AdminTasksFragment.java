@@ -113,9 +113,11 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
     FrameLayout rlShadow;
     @BindView(R.id.tv_give_up)
     TextView tvGiveUp;
+    @BindView(R.id.tv_toolbar_search)
+    TextView tvUnabsorbedSearch;
 
     @OnClick({R.id.tv_toolbar_right, R.id.tv_admin_task_bottom, R.id.tv_give_up, R.id.tv_arrange,
-            R.id.tv_search_history, R.id.tv_search_group})
+            R.id.tv_search_history, R.id.tv_search_group, R.id.tv_toolbar_search})
     public void onClick(View view) {
         switch (view.getId()) {
             //右侧toolbar按钮
@@ -181,7 +183,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     if (checkedAllByUnabsorbed()) {
                         //任务放弃
                         TaskAbandonRequest[] checkUserIdsByUnabsorbed = getCheckUserIdsByUnabsorbed();
-                        isCanGiveUpTASK=false;
+                        isCanGiveUpTASK = false;
                         mPresenter.giveUpTasks(checkUserIdsByUnabsorbed);
                     }
 
@@ -219,6 +221,13 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     }
                 }
                 break;
+            //老板未分配任务界面展示搜索
+            case R.id.tv_toolbar_search:
+                rlShadow.setVisibility(View.VISIBLE);
+                tvRight.setVisibility(View.GONE);
+                mUnabsorbedSearchPW.update();
+                mUnabsorbedSearchPW.showAsDropDown(mToolbar);
+                break;
         }
     }
 
@@ -231,7 +240,9 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
     private int ToType = -1;
     private AdminTasksContract.Presenter mPresenter;
     private BaseAdapter mAdapter;
-    private PopupWindow mSearchPW;
+    private PopupWindow mSearchPW, mUnabsorbedSearchPW;
+    //管理员未分配页面可以选择这些选项来得到列表
+    String mApplyId, mMobile, mPlateNo;
     private List<GroupTaskCount.DataBean.TaskCountListBean> taskCountListBeanList = new ArrayList<>();
     private List<GroupTaskQuery.DataBean.TaskListBean> taskQueryBeanList = new ArrayList<>();
     private List<TaskManageList.DataBean.TaskListBean> taskManageList = new ArrayList<>();
@@ -333,6 +344,8 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         mActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if (mType.equals(ADMIN_UNABSORBED)) {
+            tvUnabsorbedSearch.setVisibility(View.VISIBLE);
+            mUnabsorbedSearchPW = getPopupWindow(mActivity, R.layout.admin_search_unabsorbed_popup);
             tvBottom.setVisibility(View.GONE);
             llUnabsorbed.setVisibility(View.VISIBLE);
             llSearch.setVisibility(View.GONE);
@@ -368,6 +381,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                 }
             });
         } else if (mType.equals(GROUP)) {
+            tvUnabsorbedSearch.setVisibility(View.GONE);
             mSearchPW = getPopupWindow(mActivity, R.layout.admin_search_popup);
             tvBottom.setVisibility(View.GONE);
 //            tvBottom.setText(R.string.query);
@@ -391,6 +405,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                 }
             });
         } else if (mType.equals(TASK)) {
+            tvUnabsorbedSearch.setVisibility(View.GONE);
             tvBottom.setVisibility(View.VISIBLE);
             tvBottom.setText(R.string.revulsion);
             llUnabsorbed.setVisibility(View.GONE);
@@ -423,7 +438,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                 }
             });
         } else {
-
+            tvUnabsorbedSearch.setVisibility(View.GONE);
         }
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorAccent, R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -446,7 +461,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                                 mPresenter.loadGroupSearchTasks(mGroupIds, mLat, mLon, false, mPageCount, PAGE_SIZE, mSearchApplyId, mSearchMobile, mSearchPlateNo);
                             }
                         } else {
-                            mPresenter.loadAdminTasks(mType, mLat, mLon, false, mPageCount, PAGE_SIZE);
+                            mPresenter.loadAdminTasks(mType, mLat, mLon, false, mPageCount, PAGE_SIZE, mApplyId, mMobile, mPlateNo);
                         }
                     }
                 } else {
@@ -518,7 +533,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     mPresenter.loadGroupSearchTasks(mGroupIds, mLat, mLon, true, mPageCount, PAGE_SIZE, mSearchApplyId, mSearchMobile, mSearchPlateNo);
                 }
             } else {
-                mPresenter.loadAdminTasks(mType, mLat, mLon, true, mPageCount, PAGE_SIZE);
+                mPresenter.loadAdminTasks(mType, mLat, mLon, true, mPageCount, PAGE_SIZE, mApplyId, mMobile, mPlateNo);
             }
         } else {
             ToastUtils.showShort(R.string.no_get_location);
@@ -603,6 +618,9 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         if (isLoadMore) {
             mAdapter.setLoadFailedView(R.layout.load_failed_layout);
         } else {
+            if (!CommUtil.checkIsNull(mApplyId) || !CommUtil.checkIsNull(mMobile) || !CommUtil.checkIsNull(mPlateNo)) {
+                mAdapter.setNewDataNoError(new ArrayList());
+            }
             llSorry.setVisibility(View.VISIBLE);
             llUnabsorbed.setVisibility(View.GONE);
             tvBottom.setVisibility(View.GONE);
@@ -728,11 +746,11 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
 
     @Override
     public void showGiveUpTasksAndNotifyUi(boolean isSuccess, String message) {
-        isCanGiveUpTASK=true;
+        isCanGiveUpTASK = true;
         if (!CommUtil.checkIsNull(message)) {
             ToastUtils.showShort(message);
         }
-        if (isSuccess){
+        if (isSuccess) {
             onRefresh();
         }
     }
@@ -745,6 +763,9 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
         if (isLoadMore) {
             mAdapter.setLoadEndView(R.layout.load_end_layout);
         } else {
+            if (!CommUtil.checkIsNull(mApplyId) || !CommUtil.checkIsNull(mMobile) || !CommUtil.checkIsNull(mPlateNo)) {
+                mAdapter.setNewDataNoError(new ArrayList());
+            }
             llNoData.setVisibility(View.VISIBLE);
             llUnabsorbed.setVisibility(View.GONE);
             tvBottom.setVisibility(View.GONE);
@@ -1052,6 +1073,39 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                         mActivity.mSwipeBackHelper.forward(groupTaskIntent);
                         popupWindow.dismiss();
                     }
+                }
+            });
+        } else if (layoutId == R.layout.admin_search_unabsorbed_popup) {
+            final EditText etApplyId = (EditText) popupView.findViewById(R.id.et_search_apply_id);
+            final EditText etMobile = (EditText) popupView.findViewById(R.id.et_search_mobile);
+            final EditText etPlateNo = (EditText) popupView.findViewById(R.id.et_search_plate_no);
+            Button btnCancal = (Button) popupView.findViewById(R.id.btn_search_cancal);
+            btnCancal.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    etApplyId.setText(null);
+                    etMobile.setText(null);
+                    etPlateNo.setText(null);
+                }
+            });
+            Button btnConfirm = (Button) popupView.findViewById(R.id.btn_search_confirm);
+            btnConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mApplyId = etApplyId.getText().toString().trim();
+                    mMobile = etMobile.getText().toString().trim();
+                    mPlateNo = etPlateNo.getText().toString().trim();
+
+                    if (TextUtils.isEmpty(mApplyId) && TextUtils.isEmpty(mMobile) && TextUtils.isEmpty(mPlateNo)) {
+//                        ToastUtils.showLong(R.string.please_input_search_conditions);
+                        mApplyId = null;
+                        mMobile = null;
+                        mPlateNo = null;
+                        mPresenter.loadAdminTasks(mType, mLat, mLon, true, mPageCount, PAGE_SIZE, mApplyId, mMobile, mPlateNo);
+                    } else {
+                        mPresenter.loadAdminTasks(mType, mLat, mLon, true, mPageCount, PAGE_SIZE, mApplyId, mMobile, mPlateNo);
+                    }
+                    popupWindow.dismiss();
                 }
             });
         }

@@ -61,7 +61,8 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
     }
 
     @Override
-    public void loadAdminTasks(String type, double lat, double lon, boolean showRefreshLoadingUI, int pageCount, int pageSize) {
+    public void loadAdminTasks(String type, double lat, double lon, boolean showRefreshLoadingUI, int pageCount, int pageSize,
+                               String applyId,String mobile,String plateNo) {
         if (showRefreshLoadingUI) {
             if (mAdminView.isActive())
                 mAdminView.showAdminTasksIndicator(showRefreshLoadingUI);
@@ -111,7 +112,7 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
 
         } else if (type.equals(AdminTasksFragment.ADMIN_UNABSORBED)) {
             subscription2 = mService.getTaskManageList(MtApplication.mSPUtils.getInt(Api.USERID),
-                    lat, lon, pageCount, pageSize)
+                    lat, lon, pageCount, pageSize,applyId,mobile,plateNo)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<TaskManageList>() {
