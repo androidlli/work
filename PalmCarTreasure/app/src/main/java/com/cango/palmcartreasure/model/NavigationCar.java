@@ -2,6 +2,8 @@ package com.cango.palmcartreasure.model;
 
 import com.cango.palmcartreasure.util.CommUtil;
 
+import java.util.List;
+
 /**
  * Created by cango on 2017/5/18.
  */
@@ -66,6 +68,8 @@ public class NavigationCar {
         private double resultLON;
         private String resultAddress;
         private String resultDeviceId;
+        private String serverTime;
+        private List<TrackListBean> trackList;
 
         public String getResultDeviceId() {
             return resultDeviceId;
@@ -121,6 +125,73 @@ public class NavigationCar {
 
         public void setResultLON(double resultLON) {
             this.resultLON = resultLON;
+        }
+
+        public String getServerTime() {
+            return serverTime;
+        }
+
+        public void setServerTime(String serverTime) {
+            if (CommUtil.checkIsNull(serverTime))
+                serverTime="";
+            this.serverTime = serverTime;
+        }
+        public List<TrackListBean> getTrackList() {
+            return trackList;
+        }
+
+        public void setTrackList(List<TrackListBean> trackList) {
+            this.trackList = trackList;
+        }
+
+        public static class TrackListBean {
+            /**
+             * stopRemark : string
+             * trackTime : 2017-06-27T02:55:27.315Z
+             * resultLAT : 0
+             * resultLON : 0
+             */
+
+            private String stopRemark;
+            private String trackTime;
+            private double resultLAT;
+            private double resultLON;
+
+            public String getStopRemark() {
+                return stopRemark;
+            }
+
+            public void setStopRemark(String stopRemark) {
+                if (CommUtil.checkIsNull(stopRemark))
+                    stopRemark="";
+                this.stopRemark = stopRemark;
+            }
+
+            public String getTrackTime() {
+                return trackTime;
+            }
+
+            public void setTrackTime(String trackTime) {
+                if (CommUtil.checkIsNull(trackTime))
+                    trackTime="";
+                this.trackTime = trackTime;
+            }
+
+            public double getResultLAT() {
+                return resultLAT;
+            }
+
+            public void setResultLAT(double resultLAT) {
+                this.resultLAT = resultLAT;
+            }
+
+            public double getResultLON() {
+                return resultLON;
+            }
+
+            public void setResultLON(double resultLON) {
+                this.resultLON = resultLON;
+            }
         }
     }
 }

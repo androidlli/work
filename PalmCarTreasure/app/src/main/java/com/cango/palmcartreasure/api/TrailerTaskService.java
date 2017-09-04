@@ -103,7 +103,7 @@ public interface TrailerTaskService {
 
     //GET /trailer/navigation2car?userId={userId}&agencyID={agencyID}&caseID={caseID}&ApiToken={APITOKEN} 任务开始导航
     @GET("trailer/navigation2car")
-    Observable<NavigationCar> navigationCar(@Query("userid") int userId, @Query("agencyID") int agencyID, @Query("caseID") int caseID);
+    Observable<NavigationCar> navigationCar(@Query("userid") int userId, @Query("agencyID") int agencyID, @Query("caseID") int caseID,@Query("startTime") String startTime);
 
     //GET /trailer/navigation2warehouse?userId={userId}&agencyID={agencyID}&caseID={caseID}&LAT={LAT}&LON={LON}&ApiToken={APITOKEN} 送车入库导航
     @GET("trailer/navigation2warehouse")

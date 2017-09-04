@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.trailer.main.TrailerActivity;
+import com.cango.palmcartreasure.util.ToastUtils;
 import com.google.android.cameraview.CameraView;
 import com.orhanobut.logger.Logger;
 
@@ -88,7 +89,11 @@ public class CameraActivity extends AppCompatActivity implements
             switch (v.getId()) {
                 case R.id.take_picture:
                     if (mCameraView != null) {
-                        mCameraView.takePicture();
+                        if (mCameraView.isCameraOpened()){
+                            mCameraView.takePicture();
+                        }else {
+                            ToastUtils.showShort(R.string.camera_is_opening);
+                        }
                     }
                     break;
             }

@@ -5,6 +5,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,11 +34,16 @@ import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.SupportMapFragment;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
+import com.amap.api.maps.utils.SpatialRelationUtil;
+import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
 import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.api.Api;
@@ -59,6 +66,8 @@ import com.cango.palmcartreasure.util.AppUtils;
 import com.cango.palmcartreasure.util.BarUtil;
 import com.cango.palmcartreasure.util.CommUtil;
 import com.cango.palmcartreasure.util.FileUtils;
+import com.cango.palmcartreasure.util.ScreenUtil;
+import com.cango.palmcartreasure.util.SizeUtil;
 import com.cango.palmcartreasure.util.ToastUtils;
 import com.google.gson.JsonArray;
 import com.orhanobut.logger.Logger;
@@ -72,6 +81,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -83,6 +94,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
@@ -150,7 +163,8 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
     LinearLayout llNoData;
     @BindView(R.id.avl_login_indicator)
     AVLoadingIndicatorView mLoadView;
-    private LatLng carGPSLatLng;
+    private LatLng carGPSLatLng,resultLatLng;
+    private String mfirstServerTime;
     private double mLat, mLon;
 
     @OnClick({R.id.ll_select, R.id.iv_map_nav, R.id.iv_map_location, R.id.tv_one_speed, R.id.tv_one_point_five_speed, R.id.tv_two_speed,
@@ -305,6 +319,9 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             subscription2.unsubscribe();
         if (!CommUtil.checkIsNull(subscription3))
             subscription3.unsubscribe();
+        if (interval != null && subscribeInterval != null) {
+            subscribeInterval.unsubscribe();
+        }
         super.onDestroy();
     }
 
@@ -387,7 +404,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             if (isAdded()) {
                 mLoadView.smoothToShow();
             }
-            subscription1 = mService.navigationCar(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID())
+            subscription1 = mService.navigationCar(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),null)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<NavigationCar>() {
@@ -424,7 +441,12 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                                             BigDecimal latBD = new BigDecimal(String.valueOf(mLat));
                                             BigDecimal lonBD = new BigDecimal(String.valueOf(mLon));
                                             carGPSLatLng = new LatLng(latBD.doubleValue(), lonBD.doubleValue());
+                                            resultLatLng = new LatLng(latBD.doubleValue(), lonBD.doubleValue());
                                             setUpMapIfNeeded();
+                                            if (!TextUtils.isEmpty(o.getData().getServerTime())){
+                                                mfirstServerTime = o.getData().getServerTime();
+                                                doCarDynamicInfoSearch(mfirstServerTime);
+                                            }
                                         }
                                     }
                                 } else {
@@ -496,6 +518,145 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             }
         }
 
+    }
+
+    private void doCarDynamicInfoSearch(final String firstServerTime){
+        if (TextUtils.isEmpty(firstServerTime))
+            return;
+        //10s一次轮询
+        interval = Observable.interval(30, TimeUnit.SECONDS);
+        subscribeInterval = interval.subscribe(new Action1<Long>() {
+            @Override
+            public void call(Long aLong) {
+                    mService.navigationCar(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),firstServerTime)
+                            .subscribeOn(Schedulers.io())
+                            .doOnSubscribe(new Action0() {
+                                @Override
+                                public void call() {
+                                    // 需要在主线程执行
+                                    if (isAdded()){
+                                        mLoadView.smoothToShow();
+                                    }
+                                }
+                            })
+                            .subscribeOn(AndroidSchedulers.mainThread()) // 指定主线程
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new RxSubscriber<NavigationCar>() {
+                                @Override
+                                protected void _onNext(NavigationCar o) {
+                                    if (isAdded()) {
+                                        mLoadView.smoothToHide();
+                                        int code = o.getCode();
+                                        if (code == 0) {
+                                            if (CommUtil.checkIsNull(o.getData())) {
+//                                                llNoData.setVisibility(View.VISIBLE);
+                                            } else {
+                                                double resultLAT = o.getData().getResultLAT();
+                                                double resultLON = o.getData().getResultLON();
+                                                if (resultLAT == 0 && resultLON == 0) {
+//                                                    llNoData.setVisibility(View.VISIBLE);
+                                                    llRight.setVisibility(View.GONE);
+                                                } else {
+                                                    mTrackDeviceId= o.getData().getResultDeviceId();
+                                                    if (!TextUtils.isEmpty(mTrackDeviceId)){
+                                                        llRight.setVisibility(View.VISIBLE);
+                                                    }
+                                                    tvCarNum.setText("车牌号码："+mTaskListBean.getCarPlateNO());
+                                                    tvTimeStatus.setText("最后定位时间："+o.getData().getCACHETIME() + "(" + o.getData().getConnectflag() + ")");
+                                                    tvLastAddress.setText("最后定位位置："+o.getData().getResultAddress());
+                                                    rlMapBottom.setVisibility(View.VISIBLE);
+                                                    ivLocation.setVisibility(View.VISIBLE);
+                                                    rlFragment.setVisibility(View.VISIBLE);
+                                                    mLat = resultLAT;
+                                                    mLon = resultLON;
+
+                                                    //画轨迹路线了
+                                                    doDrawTrack(o.getData());
+                                                }
+                                            }
+                                        } else {
+//                                            llNoData.setVisibility(View.VISIBLE);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                protected void _onError() {
+                                    if (isAdded()) {
+                                        mLoadView.smoothToHide();
+//                                        llSorry.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            });
+            }
+        });
+    }
+
+    /**
+     * 得到轨迹的开始时间，考虑销毁重建的问题
+     */
+    private String mStartTime;
+    private List<LatLng> mPoints;
+    /**
+     * 当前的点
+     */
+    private List<LatLng> mCurrentPoints;
+    /**
+     * 最后一个点
+     */
+    private List<LatLng> mLastPoints;
+    private SmoothMoveMarker smoothMarker;
+
+    private void doDrawTrack(NavigationCar.DataBean data) {
+        List<NavigationCar.DataBean.TrackListBean> trackList = data.getTrackList();
+        if (trackList != null && trackList.size() > 0) {
+//                carMarker.visible(false);
+            mPoints = readLatLngs(trackList);
+            if (mLastPoints == null) {
+                if (mPoints.size() > 0) {
+                    mMap.clear();
+                    if (smoothMarker != null) {
+                        smoothMarker.destroy();
+                    }
+                    mLastPoints = mPoints;
+
+                    List<LatLng> points = new ArrayList<>();
+                    for (int i = 0; i < mPoints.size(); i++) {
+                        points.add(new LatLng(mPoints.get(i).latitude, mPoints.get(i).longitude));
+                    }
+                    points.add(0,resultLatLng);
+
+                    addPolylineInPlayGround(points);
+                    startMove(points);
+                }
+            } else {
+                int allSize = mPoints.size();
+                int lastSize = mLastPoints.size();
+                if (allSize > lastSize) {
+//                        mCurrentPoints = mPoints.subList(allSize - lastSize - 1, allSize - 1);
+                    mCurrentPoints = new ArrayList<>();
+                    for (int i = lastSize; i < mPoints.size(); i++) {
+                        mCurrentPoints.add(new LatLng(mPoints.get(i).latitude, mPoints.get(i).longitude));
+                    }
+
+                    List<LatLng> points = new ArrayList<>();
+                    for (int i = 0; i < mPoints.size(); i++) {
+                        points.add(new LatLng(mPoints.get(i).latitude, mPoints.get(i).longitude));
+                    }
+                    points.add(0,resultLatLng);
+
+                    mLastPoints = mPoints;
+                    if (mPoints.size() > 0 && mCurrentPoints.size() > 0) {
+                        mMap.clear();
+                        if (smoothMarker != null) {
+                            smoothMarker.destroy();
+                        }
+                        addPolylineInPlayGround(points);
+                        startMove(mCurrentPoints);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -694,7 +855,11 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
 //                .title("库点位置")
 //                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.landmark));
-        mMap.addMarker(carMarker);
+        if (carGPSLatLng.latitude==0&&carGPSLatLng.longitude==0){
+            ToastUtils.showShort("未获取最后一次定位信息");
+        }else {
+            mMap.addMarker(carMarker);
+        }
     }
 
     /**
@@ -953,6 +1118,116 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             }
         }
         return xx;
+    }
+
+    /**
+     * 读取坐标点
+     *
+     * @return
+     */
+    private List<LatLng> readLatLngs(List<NavigationCar.DataBean.TrackListBean> listBean) {
+        List<LatLng> points = new ArrayList<LatLng>();
+        for (NavigationCar.DataBean.TrackListBean bean : listBean) {
+            points.add(new LatLng(bean.getResultLAT(), bean.getResultLON()));
+        }
+        return points;
+    }
+
+    /**
+     * 添加轨迹线
+     */
+    private void addPolylineInPlayGround(List<LatLng> points) {
+        List<Integer> colorList = new ArrayList<Integer>();
+        List<BitmapDescriptor> bitmapDescriptors = new ArrayList<BitmapDescriptor>();
+
+        int[] colors = new int[]{Color.argb(255, 0, 255, 0), Color.argb(255, 255, 255, 0), Color.argb(255, 255, 0, 0)};
+
+        //用一个数组来存放纹理
+        List<BitmapDescriptor> textureList = new ArrayList<BitmapDescriptor>();
+        textureList.add(BitmapDescriptorFactory.fromResource(R.drawable.custtexture));
+
+        List<Integer> texIndexList = new ArrayList<Integer>();
+        texIndexList.add(0);//对应上面的第0个纹理
+        texIndexList.add(1);
+        texIndexList.add(2);
+
+        Random random = new Random();
+        for (int i = 0; i < points.size(); i++) {
+            colorList.add(colors[random.nextInt(3)]);
+            bitmapDescriptors.add(textureList.get(0));
+
+        }
+
+        Polyline mPolyline = mMap.addPolyline(new PolylineOptions().setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.custtexture)) //setCustomTextureList(bitmapDescriptors)
+//				.setCustomTextureIndex(texIndexList)
+                .addAll(points)
+                .useGradient(true)
+                .width(18));
+
+//        LatLngBounds bounds = new LatLngBounds(mPoints.get(0), mPoints.get(mPoints.size() - 2));
+////        LatLngBounds bounds = new LatLngBounds(mPoints.get(0), mPoints.get(mPoints.size()-1));
+//        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+    }
+
+    /**
+     * 开始移动
+     */
+    public void startMove(List<LatLng> points) {
+        // 构建 轨迹的显示区域
+//        LatLngBounds bounds = new LatLngBounds(points.get(0), points.get(points.size() - 2));
+////        LatLngBounds bounds = new LatLngBounds(points.get(0), points.get(points.size()-1));
+//        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+
+        // 实例 SmoothMoveMarker 对象
+        smoothMarker = new SmoothMoveMarker(mMap);
+        // 设置 平滑移动的 图标
+        smoothMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.drawable.car));
+
+        // 取轨迹点的第一个点 作为 平滑移动的启动
+        LatLng drivePoint = points.get(0);
+        Pair<Integer, LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(points, drivePoint);
+        points.set(pair.first, drivePoint);
+        List<LatLng> subList = points.subList(pair.first, points.size());
+
+
+        // 设置轨迹点
+        smoothMarker.setPoints(subList);
+        // 设置平滑移动的总时间  单位  秒
+        smoothMarker.setTotalDuration(30);
+        smoothMarker.startSmoothMove();
+        float zoom = mMap.getCameraPosition().zoom;
+        LatLng target = mMap.getCameraPosition().target;
+        LatLng latLng = new LatLng(points.get(0).latitude, points.get(0).longitude);
+//        LatLng latLng = new LatLng(target.latitude, target.longitude);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, zoom, 0, 0)));
+
+        final int screenWidth = ScreenUtil.getScreenWidth(getContext());
+        final int screenHeight = ScreenUtil.getScreenHeight(getContext());
+        final int navigationBarHeight = ScreenUtil.getNavigationBarHeight(mActivity);
+        final int bottomSize = SizeUtil.dp2px(mActivity, 85);
+        final int borderX = screenWidth/6;
+        final int borderY = screenHeight/8;
+        smoothMarker.setMoveListener(new SmoothMoveMarker.MoveListener() {
+            @Override
+            public void move(final double distance) {
+
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        float zoom = mMap.getCameraPosition().zoom;
+                        Point mPoint = mMap.getProjection().toScreenLocation(smoothMarker.getPosition());
+                        if (mPoint != null) {
+                            int x = mPoint.x;
+                            int y = mPoint.y;
+                            if (x<borderX||screenWidth-x<borderX||y<borderY||screenHeight-y<borderY+navigationBarHeight+bottomSize){
+                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(smoothMarker.getPosition(), zoom, 0, 0)));
+                            }
+                        }
+                    }
+                });
+
+            }
+        });
     }
 
     /**
