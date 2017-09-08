@@ -150,6 +150,57 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
         }
     }
 
+    @Override
+    public void comfirmTrailerCompleteNoFile(int userId, double LAT, double LON, int agencyID, int caseID, String isNotifyCustImm, List<String> answerList, int realSPID, String tmpReason) {
+        if (LAT > 0 && LON > 0) {
+            RequestBody mUserId = RequestBody.create(null, userId + "");
+            RequestBody mLat = RequestBody.create(null, LAT + "");
+            RequestBody mLon = RequestBody.create(null, LON + "");
+            RequestBody mAgencyID = RequestBody.create(null, agencyID + "");
+            RequestBody mCaseID = RequestBody.create(null, caseID + "");
+            RequestBody notifyCustImm = RequestBody.create(null, isNotifyCustImm);
+            JsonArray jsonArray = new JsonArray();
+            for (String str : answerList) {
+                jsonArray.add(str);
+            }
+            RequestBody mAnswerList = RequestBody.create(null, jsonArray.toString());
+            RequestBody mRealSPID = RequestBody.create(null, realSPID + "");
+            if (CommUtil.checkIsNull(tmpReason)){
+                tmpReason="";
+            }else {
+            }
+            RequestBody mTmpReason = RequestBody.create(null, tmpReason);
+
+            subscription2 = mService.checkPiontSubmitNoFile(mUserId, mLat, mLon, mAgencyID, mCaseID, notifyCustImm, mAnswerList,
+                    mRealSPID, mTmpReason).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new RxSubscriber<TaskAbandon>() {
+                        @Override
+                        protected void _onNext(TaskAbandon o) {
+                            if (mView.isActive()) {
+                                mView.showIndicator(false);
+                                boolean isSuccess = o.getCode() == 0;
+                                if (isSuccess) {
+                                    mView.showComfirmSuccess(o.getMsg());
+                                } else {
+                                    mView.showError(o.getMsg());
+                                }
+                            }
+                        }
+
+                        @Override
+                        protected void _onError() {
+                            if (mView.isActive()) {
+                                mView.showIndicator(false);
+                                mView.showError(null);
+                            }
+                        }
+                    });
+        } else {
+            ToastUtils.showShort(R.string.no_get_location);
+        }
+    }
+
     private boolean deleteImageFile(File file) {
         if (file.exists())
             return file.delete();

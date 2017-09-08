@@ -38,5 +38,7 @@ public interface TrailerCompleteContract {
 
         void comfirmTrailerComplete(int userId, double LAT, double LON,int agencyID, int caseID, String isNotifyCustImm,
                                     List<String> answerList, int realSPID, String tmpReason, File file);
+        void comfirmTrailerCompleteNoFile(int userId, double LAT, double LON,int agencyID, int caseID, String isNotifyCustImm,
+                                          List<String> answerList, int realSPID, String tmpReason);
     }
 }

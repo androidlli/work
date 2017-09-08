@@ -190,14 +190,14 @@
             android:name=".trailer.complete.TrailerCompleteActivity"
             android:label=""
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent">
-
-        </activity>
-        <activity android:name=".trailer.track.TrackActivity"
+            android:theme="@style/AppTheme.Transparent"/>
+        <activity
+            android:name=".trailer.track.TrackActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent">
-
-        </activity>
+            android:theme="@style/AppTheme.Transparent"/>
+        <activity android:name=".trailer.checkorder.CheckOrderActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent"/>
     </application>
 
 </manifest>

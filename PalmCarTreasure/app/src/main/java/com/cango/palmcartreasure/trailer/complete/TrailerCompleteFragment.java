@@ -100,7 +100,11 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
                     Logger.d("isCanDoConfirm");
                     if (checkQuestonIsOver()) {
                         isCanDoConfirm = false;
-                        zipPicture();
+//                        zipPicture();
+                        if (isAdded()) {
+                            mLoadView.smoothToShow();
+                        }
+                        upLoadImageNoFile();
                     } else {
                         ToastUtils.showShort("请填写全部问卷！");
                     }
@@ -156,6 +160,16 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
             mToolbar.setPadding(0, statusBarHeight, 0, 0);
         }
         mActivity.setSupportActionBar(mToolbar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.onBackPressed();
+            }
+        });
+        mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mActivity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
+        mActivity.getSupportActionBar().setHomeButtonEnabled(true);
+        mActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         showIndicator(false);
         tvConfirm.setVisibility(View.GONE);
         llSixth.setVisibility(View.GONE);
@@ -369,7 +383,11 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
         } else {
 
         }
-        mActivity.mSwipeBackHelper.swipeBackward();
+        //在这里先finishcheckorderactivity然后finish当前的activity并且把acitivylist减少了
+        MtApplication.clearSecondLastActivity();
+//        mActivity.mSwipeBackHelper.swipeBackward();
+        MtApplication.clearLastActivity();
+        mActivity.finish();
     }
 
     @Override
@@ -508,5 +526,9 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
     private void upLoadImage(File file) {
         mPresenter.comfirmTrailerComplete(MtApplication.mSPUtils.getInt(Api.USERID), mLat, mLon, mTaskListBean.getAgencyID(),
                 mTaskListBean.getCaseID(), isNotifyCustImm, mAnswerList, mRealSPID, mTmpReason, file);
+    }
+    private void upLoadImageNoFile(){
+        mPresenter.comfirmTrailerCompleteNoFile(MtApplication.mSPUtils.getInt(Api.USERID), mLat, mLon, mTaskListBean.getAgencyID(),
+                mTaskListBean.getCaseID(), isNotifyCustImm, mAnswerList, mRealSPID, mTmpReason);
     }
 }

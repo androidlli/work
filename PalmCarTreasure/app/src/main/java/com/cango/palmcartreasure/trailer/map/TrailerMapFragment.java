@@ -524,7 +524,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         if (TextUtils.isEmpty(firstServerTime))
             return;
         //10s一次轮询
-        interval = Observable.interval(30, TimeUnit.SECONDS);
+        interval = Observable.interval(10, TimeUnit.SECONDS);
         subscribeInterval = interval.subscribe(new Action1<Long>() {
             @Override
             public void call(Long aLong) {
@@ -884,7 +884,8 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
     private void openPermissions() {
         String[] perms = {
                 Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
         if (EasyPermissions.hasPermissions(getContext(), perms)) {
             mLocationClient.startLocation();
 //            onLoadData();
@@ -905,7 +906,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             new AppSettingsDialog.Builder(this)
                     .setRequestCode(REQUEST_LOCATION_GROUP_AND_STORAGE_GROUP)
                     .setTitle("权限获取失败")
-                    .setRationale(R.string.setting_group_and_storage)
+                    .setRationale(R.string.setting_group_and_storage1)
                     .build().show();
         }
 //        }
@@ -1193,7 +1194,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         // 设置轨迹点
         smoothMarker.setPoints(subList);
         // 设置平滑移动的总时间  单位  秒
-        smoothMarker.setTotalDuration(30);
+        smoothMarker.setTotalDuration(3);
         smoothMarker.startSmoothMove();
         float zoom = mMap.getCameraPosition().zoom;
         LatLng target = mMap.getCameraPosition().target;

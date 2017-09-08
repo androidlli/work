@@ -58,6 +58,7 @@ import com.cango.palmcartreasure.net.NetManager;
 import com.cango.palmcartreasure.net.RxSubscriber;
 import com.cango.palmcartreasure.trailer.admin.StaiffActivity;
 import com.cango.palmcartreasure.trailer.admin.StaiffFragment;
+import com.cango.palmcartreasure.trailer.checkorder.CheckOrderActivity;
 import com.cango.palmcartreasure.trailer.complete.TrailerCompleteActivity;
 import com.cango.palmcartreasure.trailer.complete.TrailerCompleteFragment;
 import com.cango.palmcartreasure.trailer.map.TrailerMapActivity;
@@ -852,7 +853,20 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
             }
             if (isCheckPoint) {
                 isCheckPoint = false;
-                openCamera();
+//                openCamera();
+                pointLat = mLat;
+                pointLon = mLon;
+                pointProvince = mProvince;
+//                mCurrentPhotoPath = data.getStringExtra("path");
+//            showDotDialog();
+                Intent completeIntent = new Intent(mActivity, CheckOrderActivity.class);
+                completeIntent.putExtra(TrailerCompleteFragment.TYPE, "1");
+                completeIntent.putExtra(TrailerCompleteFragment.IMG_PATH, mCurrentPhotoPath);
+                completeIntent.putExtra(TrailerCompleteFragment.LAT, pointLat);
+                completeIntent.putExtra(TrailerCompleteFragment.LON, pointLon);
+                completeIntent.putExtra(TrailerCompleteFragment.PROVINCE, pointProvince);
+                completeIntent.putExtra(TrailerCompleteFragment.TASKLISTBEAN, mTaskListBean);
+                mActivity.mSwipeBackHelper.forward(completeIntent);
             }
 //            if (isDoDownLoad){
 //                isDoDownLoad=false;

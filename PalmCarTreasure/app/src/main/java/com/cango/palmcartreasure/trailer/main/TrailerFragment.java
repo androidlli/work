@@ -45,6 +45,7 @@ import com.cango.palmcartreasure.model.TrailerEvent;
 import com.cango.palmcartreasure.model.TypeTaskData;
 import com.cango.palmcartreasure.net.NetManager;
 import com.cango.palmcartreasure.net.RxSubscriber;
+import com.cango.palmcartreasure.trailer.checkorder.CheckOrderActivity;
 import com.cango.palmcartreasure.trailer.complete.TrailerCompleteActivity;
 import com.cango.palmcartreasure.trailer.complete.TrailerCompleteFragment;
 import com.cango.palmcartreasure.trailer.map.TrailerMapActivity;
@@ -158,10 +159,22 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
             case R.id.ll_dot_trailer:
 //                openCamera();
                 if (!CommUtil.checkIsNull(currentBean)) {
-                    if (currentBean.getIsCheckPoint().equals("T"))
-                        openCamera();
+                    if (currentBean.getIsCheckPoint().equals("T")){
+                        pointLat = mLat;
+                        pointLon = mLon;
+                        pointProvince = mProvince;
+//                        mCurrentPhotoPath = data.getStringExtra("path");
+                        Intent completeIntent = new Intent(mActivity, CheckOrderActivity.class);
+                        completeIntent.putExtra(TrailerCompleteFragment.TYPE, "0");
+                        completeIntent.putExtra(TrailerCompleteFragment.IMG_PATH, mCurrentPhotoPath);
+                        completeIntent.putExtra(TrailerCompleteFragment.LAT, pointLat);
+                        completeIntent.putExtra(TrailerCompleteFragment.LON, pointLon);
+                        completeIntent.putExtra(TrailerCompleteFragment.PROVINCE, pointProvince);
+                        completeIntent.putExtra(TrailerCompleteFragment.TASKLISTBEAN, currentBean);
+                        mActivity.mSwipeBackHelper.forward(completeIntent);
+//                        openCamera();
 //                        startActivity(new Intent(mActivity,CameraActivity.class));
-                    else {
+                    } else {
                         ToastUtils.showShort("请先开始任务");
                     }
                 }

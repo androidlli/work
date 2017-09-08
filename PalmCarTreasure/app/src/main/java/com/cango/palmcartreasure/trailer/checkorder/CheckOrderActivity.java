@@ -1,4 +1,4 @@
-package com.cango.palmcartreasure.trailer.complete;
+package com.cango.palmcartreasure.trailer.checkorder;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -9,12 +9,10 @@ import android.view.View;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.model.TypeTaskData;
+import com.cango.palmcartreasure.trailer.complete.TrailerCompleteFragment;
 import com.cango.palmcartreasure.util.CommUtil;
 
-/**
- * 拖车打点后的提交界面
- */
-public class TrailerCompleteActivity extends BaseActivity {
+public class CheckOrderActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +24,7 @@ public class TrailerCompleteActivity extends BaseActivity {
             decorView.setSystemUiVisibility(option);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
-        setContentView(R.layout.activity_trailer_complete);
+        setContentView(R.layout.activity_check_order);
 
         String type = getIntent().getStringExtra(TrailerCompleteFragment.TYPE);
         String imgPath = getIntent().getStringExtra(TrailerCompleteFragment.IMG_PATH);
@@ -34,18 +32,14 @@ public class TrailerCompleteActivity extends BaseActivity {
         double lon = getIntent().getDoubleExtra(TrailerCompleteFragment.LON, 0);
         String province = getIntent().getStringExtra(TrailerCompleteFragment.PROVINCE);
         TypeTaskData.DataBean.TaskListBean taskListBean = getIntent().getParcelableExtra(TrailerCompleteFragment.TASKLISTBEAN);
-        TrailerCompleteFragment trailerCompleteFragment = (TrailerCompleteFragment) getSupportFragmentManager().findFragmentById(R.id.fl_complete_contains);
-        if (CommUtil.checkIsNull(trailerCompleteFragment)) {
-            trailerCompleteFragment = TrailerCompleteFragment.getInstance(type,imgPath, lat, lon, province,taskListBean);
+
+        CheckOrderFragment checkOrderFragment = (CheckOrderFragment) getSupportFragmentManager().findFragmentById(R.id.fl_order_contains);
+        if (CommUtil.checkIsNull(checkOrderFragment)) {
+            checkOrderFragment = CheckOrderFragment.getInstance(type,imgPath,lat,lon,province,taskListBean);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.fl_complete_contains, trailerCompleteFragment);
+            transaction.add(R.id.fl_order_contains, checkOrderFragment);
             transaction.commit();
         }
-        TrailerCompletePresenter presenter = new TrailerCompletePresenter(trailerCompleteFragment);
+        CheckOrderPresenter presenter = new CheckOrderPresenter(checkOrderFragment);
     }
-
-//    @Override
-//    public void onBackPressed() {
-//
-//    }
 }

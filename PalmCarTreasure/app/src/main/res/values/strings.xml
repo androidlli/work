@@ -58,6 +58,7 @@
     <string name="setting_read_phone_state">请到设置中授权读取手机状态和位置的权限</string>
     <string name="location_group_and_storage">必须授权位置和存储空间的权限</string>
     <string name="setting_group_and_storage">请到设置中授权位置和存储空间的权限</string>
+    <string name="setting_group_and_storage1">请到设置中授权位置和存储空间和相机的权限</string>
     <string name="all_task_type">所有分类</string>
     <string name="task_number">任务数</string>
     <string name="task_query">任务查询</string>
@@ -152,4 +153,8 @@
     <string name="track_title">轨迹展示</string>
     <string name="data_error">暂无数据信息</string>
     <string name="camera_is_opening">照相机正在启动</string>
+
+    <string name="please_check_name">请您选择正确的客户姓名</string>
+    <string name="please_check_number">请您选择正确的车牌号码</string>
+    <string name="please_check_message">请您选择正确的信息</string>
 </resources>

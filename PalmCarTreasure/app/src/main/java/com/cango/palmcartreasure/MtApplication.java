@@ -169,6 +169,18 @@ public class MtApplication extends Application {
         }
     }
 
+    public static void clearSecondLastActivity(){
+        if (activityList == null || activityList.size() == 0||activityList.size()<2) {
+
+        } else {
+            if (activityList.size()>=2){
+                AppCompatActivity activity = activityList.get(activityList.size() - 2);
+                activityList.remove(activity);
+                activity.finish();
+            }
+        }
+    }
+
     private static boolean isHasTrailerActivity() {
         boolean isHas = false;
         if (activityList == null || activityList.size() == 0) {

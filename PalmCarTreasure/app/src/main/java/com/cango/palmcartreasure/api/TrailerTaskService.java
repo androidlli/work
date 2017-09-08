@@ -2,6 +2,7 @@ package com.cango.palmcartreasure.api;
 
 import com.cango.palmcartreasure.model.CallRecord;
 import com.cango.palmcartreasure.model.CaseInfo;
+import com.cango.palmcartreasure.model.CheckOrderData;
 import com.cango.palmcartreasure.model.CustomerInfo;
 import com.cango.palmcartreasure.model.HomeVisitRecord;
 import com.cango.palmcartreasure.model.NavigationCar;
@@ -66,6 +67,14 @@ public interface TrailerTaskService {
                                              @Part("realSPID") RequestBody realSPID,@Part("tmpReason") RequestBody tmpReason,
                                              @Part MultipartBody.Part photo);
 
+    //POST /trailer/checkpiontsubmit?ApiToken={APITOKEN}
+    @Multipart
+    @POST("trailer/checkpiontsubmit")
+    Observable<TaskAbandon> checkPiontSubmitNoFile(@Part("userid") RequestBody userId,@Part("LAT") RequestBody lat,@Part("LON") RequestBody lon,
+                                             @Part("agencyID") RequestBody agencyID,@Part("caseID") RequestBody caseID,
+                                             @Part("notifyCustImm") RequestBody notifyCustImm,@Part("answerList") RequestBody answerList,
+                                             @Part("realSPID") RequestBody realSPID,@Part("tmpReason") RequestBody tmpReason);
+
     //POST /trailer/godownsubmit?ApiToken={APITOKEN} 送车入库
 //    @Multipart
 //    @POST("trailer/godownsubmit")
@@ -119,4 +128,8 @@ public interface TrailerTaskService {
     @POST("trailer/agencysave")
     Observable<TaskAbandon> agencySave(@Body Map<String,Object> objectMap);
 
+//    GET /trailer/checkquestion?userid={userid}&agencyID={agencyID}&applyCD={applyCD}&caseID={caseID}&ApiToken={APITOKEN} 拖车信息校验接口
+    @GET("trailer/checkquestion")
+    Observable<CheckOrderData> getCheckOrderData(@Query("userid") int userId, @Query("agencyID") int agencyID, @Query("applyCD") String applyCD,
+                                                 @Query("caseID") int caseID);
 }
