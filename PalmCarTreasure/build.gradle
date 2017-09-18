@@ -28,4 +28,6 @@ ext {
     minSdkVersion = 9
     targetSdkVersion = 25
     supportLibraryVersion = '25.3.1'
+    supportAppCompatV7Version = '25.3.1'
+    loggerVersion = '2.1.1'
 }

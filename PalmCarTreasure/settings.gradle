@@ -1,2 +1,2 @@
-include ':app', ':PushSDK', ':CarLocation', ':library'
+include ':app', ':PushSDK', ':CarLocation', ':library', ':adpickcar'
 include ':zxing'

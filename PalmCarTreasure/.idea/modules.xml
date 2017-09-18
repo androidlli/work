@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/CarLocation/CarLocation.iml" filepath="$PROJECT_DIR$/CarLocation/CarLocation.iml" />
       <module fileurl="file://$PROJECT_DIR$/PalmCarTreasure.iml" filepath="$PROJECT_DIR$/PalmCarTreasure.iml" />
       <module fileurl="file://$PROJECT_DIR$/PushSDK/PushSDK.iml" filepath="$PROJECT_DIR$/PushSDK/PushSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/adpickcar/adpickcar.iml" filepath="$PROJECT_DIR$/adpickcar/adpickcar.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/zxing/zxing.iml" filepath="$PROJECT_DIR$/zxing/zxing.iml" />
