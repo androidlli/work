@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
-import com.cango.palmcartreasure.MtApplication;
+import com.cango.adpickcar.ADApplication;
 
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +24,7 @@ public class SPUtils {
      * @param spName spName
      */
     public SPUtils(String spName) {
-        sp = MtApplication.getmContext().getSharedPreferences(spName, Context.MODE_PRIVATE);
+        sp = ADApplication.getmContext().getSharedPreferences(spName, Context.MODE_PRIVATE);
         editor = sp.edit();
         editor.apply();
     }
