@@ -66,8 +66,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/toolbar_main"
                 android:layout_marginLeft="13dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="13dp"
+                android:layout_marginTop="10dp"
                 app:cardCornerRadius="7dp">
 
                 <LinearLayout
@@ -90,8 +90,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
                             android:layout_below="@+id/iv_main_first"
+                            android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
                             android:text="未接车"
                             android:textColor="@color/ad888888"
@@ -120,9 +120,9 @@
                             android:src="@drawable/weitijiao_off" />
 
                         <TextView
-                            android:layout_below="@+id/iv_main_second"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/iv_main_second"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
                             android:text="未提交"
@@ -152,9 +152,9 @@
                             android:src="@drawable/shenhezhong_off" />
 
                         <TextView
-                            android:layout_below="@+id/iv_main_third"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/iv_main_third"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
                             android:text="审核中"
@@ -184,9 +184,9 @@
                             android:src="@drawable/shenhetuihui_off" />
 
                         <TextView
-                            android:layout_below="@+id/iv_main_fourth"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/iv_main_fourth"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
                             android:text="审核退回"
@@ -216,9 +216,9 @@
                             android:src="@drawable/shenhetongguo_off" />
 
                         <TextView
-                            android:layout_below="@+id/iv_main_fifth"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/iv_main_fifth"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="14dp"
                             android:text="审核通过"
@@ -241,7 +241,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_below="@+id/rl_main_head"
+            android:layout_marginBottom="50dp"
             android:layout_weight="0.74">
 
             <android.support.v7.widget.RecyclerView
@@ -250,11 +250,60 @@
                 android:layout_height="match_parent" />
         </RelativeLayout>
     </LinearLayout>
-    <RelativeLayout
+
+    <LinearLayout
         android:id="@+id/rl_drawer"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6">
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_main_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/ad888888" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/jieche_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:text="接车"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="10sp" />
+        </LinearLayout>
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>
