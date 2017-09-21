@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.cango.adpickcar.util.SPUtils;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 
 /**
  * Created by cango on 2017/9/18.
@@ -18,6 +20,7 @@ public class ADApplication extends Application {
         super.onCreate();
         mContext = getApplicationContext();
         mSPUtils = new SPUtils("AD_CAR");
+        Logger.addLogAdapter(new AndroidLogAdapter());
     }
 
     public static Context getmContext() {
