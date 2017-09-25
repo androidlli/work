@@ -8,7 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseFragment;
@@ -34,25 +36,61 @@ public class DetailFragment extends BaseFragment {
 
     @BindView(R.id.toolbar_detail)
     Toolbar mToolbar;
+    @BindView(R.id.iv_detail_basic_info)
+    ImageView ivBasic;
+    @BindView(R.id.tv_detail_basic_info)
+    TextView tvBasic;
+    @BindView(R.id.iv_detail_item_info)
+    ImageView ivItem;
+    @BindView(R.id.tv_detail_item_info)
+    TextView tvItem;
+    @BindView(R.id.iv_detail_car_info)
+    ImageView ivCar;
+    @BindView(R.id.tv_detail_car_info)
+    TextView tvCar;
+    @BindView(R.id.iv_detail_image_info)
+    ImageView ivImage;
+    @BindView(R.id.tv_detail_image_info)
+    TextView tvImage;
 
-    @OnClick({R.id.ll_detail_basic_info, R.id.ll_detail_item_info, R.id.ll_detail_car_info,R.id.ll_detail_image_info})
+    @OnClick({R.id.ll_detail_basic_info, R.id.ll_detail_item_info, R.id.ll_detail_car_info, R.id.ll_detail_image_info})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_detail_basic_info:
+                if (currentPosition==0){
+                    return;
+                }
+                currentPosition=0;
+                SelectChildTitle(currentPosition);
                 hideFragments();
-                showFragment(0);
+                showFragment(currentPosition);
                 break;
             case R.id.ll_detail_item_info:
+                if (currentPosition==1){
+                    return;
+                }
+                currentPosition=1;
+                SelectChildTitle(currentPosition);
                 hideFragments();
-                showFragment(1);
+                showFragment(currentPosition);
                 break;
             case R.id.ll_detail_car_info:
+                if (currentPosition==2){
+                    return;
+                }
+                currentPosition=2;
+                SelectChildTitle(currentPosition);
                 hideFragments();
-                showFragment(2);
+                showFragment(currentPosition);
                 break;
             case R.id.ll_detail_image_info:
+                if (currentPosition==3){
+                    return;
+                }
+                currentPosition=3;
+                SelectChildTitle(currentPosition);
                 hideFragments();
-                showFragment(3);
+                showFragment(currentPosition);
                 break;
         }
     }
@@ -60,6 +98,8 @@ public class DetailFragment extends BaseFragment {
     private DetailActivity mActivity;
     FragmentManager fm;
     private ArrayList<BaseFragment> mFragments = new ArrayList<>();
+    private int currentPosition;
+    private int selectColor,noSelectColor;
 
     @Override
     protected int initLayoutId() {
@@ -70,6 +110,8 @@ public class DetailFragment extends BaseFragment {
     protected void initView() {
         initToolbar();
         addChildFragment();
+        currentPosition = 0;
+        SelectChildTitle(currentPosition);
         hideFragments();
         showFragment(0);
     }
@@ -112,6 +154,8 @@ public class DetailFragment extends BaseFragment {
     @Override
     protected void initData() {
         mActivity = (DetailActivity) getActivity();
+        selectColor = getResources().getColor(R.color.colorPrimary);
+        noSelectColor = getResources().getColor(R.color.ad888888);
     }
 
     private void initToolbar() {
@@ -133,5 +177,50 @@ public class DetailFragment extends BaseFragment {
                 mActivity.onBackPressed();
             }
         });
+    }
+
+    private void SelectChildTitle(int position) {
+        switch (position) {
+            case 0:
+                ivBasic.setImageResource(R.drawable.jibenxinxi_on);
+                tvBasic.setTextColor(selectColor);
+                ivItem.setImageResource(R.drawable.wupinxinxi_off);
+                tvItem.setTextColor(noSelectColor);
+                ivCar.setImageResource(R.drawable.cheliangxinxi_off);
+                tvCar.setTextColor(noSelectColor);
+                ivImage.setImageResource(R.drawable.yingxiangxinxi_off);
+                tvImage.setTextColor(noSelectColor);
+                break;
+            case 1:
+                ivBasic.setImageResource(R.drawable.jibenxinxi_off);
+                tvBasic.setTextColor(noSelectColor);
+                ivItem.setImageResource(R.drawable.wupinxinxi_on);
+                tvItem.setTextColor(selectColor);
+                ivCar.setImageResource(R.drawable.cheliangxinxi_off);
+                tvCar.setTextColor(noSelectColor);
+                ivImage.setImageResource(R.drawable.yingxiangxinxi_off);
+                tvImage.setTextColor(noSelectColor);
+                break;
+            case 2:
+                ivBasic.setImageResource(R.drawable.jibenxinxi_off);
+                tvBasic.setTextColor(noSelectColor);
+                ivItem.setImageResource(R.drawable.wupinxinxi_off);
+                tvItem.setTextColor(noSelectColor);
+                ivCar.setImageResource(R.drawable.cheliangxinxi_on);
+                tvCar.setTextColor(selectColor);
+                ivImage.setImageResource(R.drawable.yingxiangxinxi_off);
+                tvImage.setTextColor(noSelectColor);
+                break;
+            case 3:
+                ivBasic.setImageResource(R.drawable.jibenxinxi_off);
+                tvBasic.setTextColor(noSelectColor);
+                ivItem.setImageResource(R.drawable.wupinxinxi_off);
+                tvItem.setTextColor(noSelectColor);
+                ivCar.setImageResource(R.drawable.cheliangxinxi_off);
+                tvCar.setTextColor(noSelectColor);
+                ivImage.setImageResource(R.drawable.yingxiangxinxi_on);
+                tvImage.setTextColor(selectColor);
+                break;
+        }
     }
 }
