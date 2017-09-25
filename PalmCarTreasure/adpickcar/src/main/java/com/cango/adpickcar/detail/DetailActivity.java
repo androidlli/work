@@ -1,4 +1,4 @@
-package com.cango.adpickcar.resetps;
+package com.cango.adpickcar.detail;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -8,14 +8,15 @@ import android.view.View;
 
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseActivity;
+import com.cango.adpickcar.main.MainFragment;
 import com.cango.adpickcar.util.CommUtil;
 
-public class ResetPSActivity extends BaseActivity {
+public class DetailActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reset_ps);
+        setContentView(R.layout.activity_detail);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             View decorView = getWindow().getDecorView();
             int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -23,13 +24,12 @@ public class ResetPSActivity extends BaseActivity {
             decorView.setSystemUiVisibility(option);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
-        ResetFragment resetFragment = (ResetFragment) getSupportFragmentManager().findFragmentById(R.id.fl_rest_container);
-        if (CommUtil.checkIsNull(resetFragment)) {
-            resetFragment = ResetFragment.getInstance();
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.fl_detail_container);
+        if (CommUtil.checkIsNull(detailFragment)) {
+            detailFragment = DetailFragment.getInstance();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.fl_rest_container, resetFragment);
+            transaction.add(R.id.fl_detail_container, detailFragment);
             transaction.commit();
         }
-        new ResetPSPresenter(resetFragment);
     }
 }

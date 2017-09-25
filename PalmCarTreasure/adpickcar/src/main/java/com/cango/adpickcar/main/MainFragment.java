@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,7 +38,9 @@ import butterknife.OnClick;
  * Created by cango on 2017/9/19.
  */
 
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+    public static final String CURRENT_TYPE = "current_type";
+
     public static MainFragment getInstance() {
         MainFragment mainFragment = new MainFragment();
         Bundle bundle = new Bundle();
@@ -59,6 +62,8 @@ public class MainFragment extends BaseFragment {
     ImageView ivPopupParent;
     @BindView(R.id.cardview_main)
     CardView mCardView;
+    @BindView(R.id.srl_main)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerview_main)
     RecyclerView mRecyclerView;
     @BindView(R.id.fl_shadow)
@@ -77,13 +82,15 @@ public class MainFragment extends BaseFragment {
     }
 
     private MainActivity mActivity;
-    private PopupWindow mSearchPopup;
 
     @Override
     protected int initLayoutId() {
         return R.layout.fragment_main;
     }
 
+    /**
+     *
+     */
     @Override
     protected void initView() {
         int statusBarHeight = BarUtil.getStatusBarHeight(getActivity());
@@ -115,6 +122,12 @@ public class MainFragment extends BaseFragment {
 
         mDrawerLayout.addDrawerListener(mToggle);
 
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorAccent, R.color.colorPrimary);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         ArrayList<String> datas = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             datas.add(i + "");
@@ -135,9 +148,14 @@ public class MainFragment extends BaseFragment {
         mActivity = (MainActivity) getActivity();
     }
 
+    @Override
+    public void onRefresh() {
+
+    }
+
     private void showPopSearch() {
         if (mCardView.getWidth() > 0) {
-            mSearchPopup = getPopupWindow(mActivity, R.layout.main_search_pop);
+            PopupWindow mSearchPopup = getPopupWindow(mActivity, R.layout.main_search_pop);
             rlHead.setBackgroundColor(Color.parseColor("#36000000"));
             flShadow.setVisibility(View.VISIBLE);
             mSearchPopup.showAsDropDown(ivPopupParent);

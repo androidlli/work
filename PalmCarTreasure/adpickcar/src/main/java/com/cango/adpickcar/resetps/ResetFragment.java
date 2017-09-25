@@ -8,17 +8,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseFragment;
 import com.cango.adpickcar.util.BarUtil;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ResetFragment extends BaseFragment {
+public class ResetFragment extends BaseFragment implements ResetPSContract.View {
 
     public static ResetFragment getInstance() {
         ResetFragment resetFragment = new ResetFragment();
@@ -29,7 +31,10 @@ public class ResetFragment extends BaseFragment {
 
     @BindView(R.id.toolbar_reset)
     Toolbar mToolbar;
+    @BindView(R.id.avl_login_indicator)
+    AVLoadingIndicatorView mLoadView;
     ResetPSActivity mActivity;
+    private ResetPSContract.Presenter mPresenter;
 
     @Override
     protected int initLayoutId() {
@@ -41,7 +46,7 @@ public class ResetFragment extends BaseFragment {
         int statusBarHeight = BarUtil.getStatusBarHeight(getActivity());
         int actionBarHeight = BarUtil.getActionBarHeight(getActivity());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, statusBarHeight + actionBarHeight);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, statusBarHeight + actionBarHeight);
             mToolbar.setLayoutParams(layoutParams);
             mToolbar.setPadding(0, statusBarHeight, 0, 0);
         }
@@ -56,10 +61,44 @@ public class ResetFragment extends BaseFragment {
                 mActivity.onBackPressed();
             }
         });
+        showResetIndicator(false);
     }
 
     @Override
     protected void initData() {
         mActivity = (ResetPSActivity) getActivity();
+    }
+
+    @Override
+    public void setPresenter(ResetPSContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public void showResetIndicator(boolean active) {
+        if (active)
+            mLoadView.smoothToShow();
+        else
+            mLoadView.smoothToHide();
+    }
+
+    @Override
+    public void showResetError() {
+
+    }
+
+    @Override
+    public void showResetSuccess(boolean isSuccess, String message) {
+
+    }
+
+    @Override
+    public void openOtherUi() {
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
     }
 }

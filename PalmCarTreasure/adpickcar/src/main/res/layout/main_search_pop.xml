@@ -22,7 +22,6 @@
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
             android:hint="车牌号码"
-            android:inputType="phone"
             android:maxLines="1"
             android:textColorHint="@color/adbbbbbb"
             android:textSize="14sp" />
@@ -43,7 +42,6 @@
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
             android:hint="客户姓名"
-            android:inputType="phone"
             android:maxLines="1"
             android:textColorHint="@color/adbbbbbb"
             android:textSize="14sp" />

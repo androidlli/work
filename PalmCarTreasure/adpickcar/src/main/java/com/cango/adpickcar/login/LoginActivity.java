@@ -20,5 +20,6 @@ public class LoginActivity extends BaseActivity {
             transaction.add(R.id.fl_login_container, loginFragment);
             transaction.commit();
         }
+        new LoginPresenter(loginFragment);
     }
 }

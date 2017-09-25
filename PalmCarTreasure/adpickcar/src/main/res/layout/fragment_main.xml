@@ -4,8 +4,8 @@
     android:id="@+id/drawer_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,13 +60,15 @@
                 </LinearLayout>
 
             </android.support.v7.widget.Toolbar>
+
             <ImageView
                 android:id="@+id/iv_main_popup_parent"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="13dp"
                 android:layout_marginRight="13dp"
-                android:layout_marginTop="101dp"/>
+                android:layout_marginTop="101dp" />
+
             <android.support.v7.widget.CardView
                 android:id="@+id/cardview_main"
                 android:layout_width="match_parent"
@@ -247,15 +249,18 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.7">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview_main"
+            android:layout_height="match_parent">
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/srl_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="50dp" />
+                android:layout_marginBottom="50dp" >
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
+            </android.support.v4.widget.SwipeRefreshLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -284,13 +289,13 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="10sp" />
             </LinearLayout>
+
             <FrameLayout
-                android:visibility="gone"
                 android:id="@+id/fl_shadow"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#36000000">
-            </FrameLayout>
+                android:background="#36000000"
+                android:visibility="gone"></FrameLayout>
         </RelativeLayout>
     </LinearLayout>
 
@@ -401,5 +406,4 @@
                 android:textSize="14sp" />
         </LinearLayout>
     </RelativeLayout>
-
 </android.support.v4.widget.DrawerLayout>
