@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -40,10 +39,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
-
-/**
- * Created by cango on 2017/9/19.
- */
 
 public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     public static final String CURRENT_TYPE = "current_type";
@@ -106,8 +101,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @BindView(R.id.fl_shadow)
     FrameLayout flShadow;
 
-    @OnClick({R.id.ll_modify_ps, R.id.ll_main_search,R.id.rl_main_first,R.id.rl_main_second,R.id.rl_main_third,
-    R.id.rl_main_fourth,R.id.rl_main_fifth})
+    @OnClick({R.id.ll_modify_ps, R.id.ll_main_search, R.id.rl_main_first, R.id.rl_main_second, R.id.rl_main_third,
+            R.id.rl_main_fourth, R.id.rl_main_fifth})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_modify_ps:
@@ -281,7 +276,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     private void initRecyclerView() {
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.red,R.color.green,R.color.blue);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.red, R.color.green, R.color.blue);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         ArrayList<String> datas = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
