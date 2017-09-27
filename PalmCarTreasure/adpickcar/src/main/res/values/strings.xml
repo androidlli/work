@@ -2,6 +2,9 @@
     <string name="app_name">ADPickCar</string>
     <string name="drawer_open">打开</string>
     <string name="drawer_close">关闭</string>
+    <string name="load_end_tip">已经全部加载完毕</string>
+    <string name="load_loading_tip">努力加载中</string>
+    <string name="load_failed_tip">点我再试试？</string>
 
     <string name="camera_permission_confirmation">需要打开使用摄像头权限</string>
     <string name="camera_permission_not_granted">需要设备拥有摄像头</string>

@@ -12,8 +12,8 @@ import java.util.List;
  * Created by cango on 2017/9/19.
  */
 
-public class MainTestAdapter extends BaseAdapter<String> {
-    public MainTestAdapter(Context context, List<String> datas, boolean isOpenLoadMore) {
+public class MainAdapter extends BaseAdapter<String> {
+    public MainAdapter(Context context, List<String> datas, boolean isOpenLoadMore) {
         super(context, datas, isOpenLoadMore);
     }
 

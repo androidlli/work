@@ -29,9 +29,12 @@ import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseFragment;
 import com.cango.adpickcar.baseAdapter.BaseHolder;
 import com.cango.adpickcar.baseAdapter.OnBaseItemClickListener;
+import com.cango.adpickcar.baseAdapter.OnLoadMoreListener;
 import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.resetps.ResetPSActivity;
 import com.cango.adpickcar.util.BarUtil;
+import com.cango.adpickcar.util.CommUtil;
+import com.cango.adpickcar.util.ToastUtils;
 
 import java.util.ArrayList;
 
@@ -40,7 +43,7 @@ import butterknife.OnClick;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
-public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener ,MainContract.View{
     public static final String CURRENT_TYPE = "current_type";
 
     public static MainFragment getInstance() {
@@ -96,6 +99,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     TextView tvFifth;
     @BindView(R.id.srl_main)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.ll_sorry)
+    LinearLayout llSorry;
     @BindView(R.id.recyclerview_main)
     RecyclerView mRecyclerView;
     @BindView(R.id.fl_shadow)
@@ -130,8 +135,21 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     private MainActivity mActivity;
+    private MainContract.Presenter mPresenter;
+    private MainAdapter mAdapter;
+    private ArrayList<String> datas;
     private Badge firstQV, secondQV, thirdQV, fourthQV, fifthQV;
     private int selectColor, noSelectColor;
+    private int mPageCount = 1, mTempPageCount = 2;
+    static int PAGE_SIZE = 10;
+    private boolean isLoadMore;
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!CommUtil.checkIsNull(mPresenter))
+            mPresenter.onDetach();
+    }
 
     @Override
     protected int initLayoutId() {
@@ -278,12 +296,24 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private void initRecyclerView() {
         mSwipeRefreshLayout.setColorSchemeResources(R.color.red, R.color.green, R.color.blue);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        ArrayList<String> datas = new ArrayList<>();
+        datas = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             datas.add(i + "");
         }
-        MainTestAdapter adapter = new MainTestAdapter(mActivity, datas, false);
-        adapter.setOnItemClickListener(new OnBaseItemClickListener<String>() {
+        mAdapter = new MainAdapter(mActivity, datas, false);
+        mAdapter.setLoadingView(R.layout.load_loading_layout);
+        mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(boolean isReload) {
+                if (mPageCount == mTempPageCount && !isReload) {
+                    return;
+                }
+                isLoadMore = true;
+                mPageCount = mTempPageCount;
+                mPresenter.loadListByStatus(mPageCount,PAGE_SIZE);
+            }
+        });
+        mAdapter.setOnItemClickListener(new OnBaseItemClickListener<String>() {
             @Override
             public void onItemClick(BaseHolder viewHolder, String data, int position) {
                 new AlertDialog.Builder(mActivity)
@@ -299,7 +329,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             }
         });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -311,7 +341,12 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     @Override
     public void onRefresh() {
-
+        isLoadMore = false;
+        mPageCount = 1;
+        mTempPageCount = 2;
+        mAdapter.notifyDataSetChanged();
+        mAdapter.setLoadingView(R.layout.load_loading_layout);
+        mPresenter.loadListByStatus(mPageCount,PAGE_SIZE);
     }
 
     private void showPopSearch() {
@@ -343,5 +378,65 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         });
         popupWindow.update();
         return popupWindow;
+    }
+
+    @Override
+    public void setPresenter(MainContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public void showMainIndicator(final boolean active) {
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(active);
+            }
+        });
+    }
+
+    @Override
+    public void showMainError() {
+        if (isLoadMore) {
+            mAdapter.setLoadFailedView(R.layout.load_failed_layout);
+        } else {
+            llSorry.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void showNoData() {
+        if (isLoadMore) {
+            mAdapter.setLoadEndView(R.layout.load_end_layout);
+        } else {
+            llSorry.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void showMainSuccess(boolean isSuccess, String message) {
+        llSorry.setVisibility(View.GONE);
+        ArrayList<String> newArrays = new ArrayList<>();
+        newArrays.add(message);
+        if (isLoadMore) {
+            mTempPageCount++;
+            mAdapter.setLoadMoreData(newArrays);
+        } else {
+//            mAdapter.setNewData(tasks);
+            mAdapter.setNewDataNoError(newArrays);
+        }
+        if (newArrays.size() < PAGE_SIZE) {
+            mAdapter.setLoadEndView(R.layout.load_end_layout);
+        }
+    }
+
+    @Override
+    public void openOtherUi() {
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
     }
 }

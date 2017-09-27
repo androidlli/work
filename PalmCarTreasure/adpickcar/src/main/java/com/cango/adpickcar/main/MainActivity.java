@@ -30,5 +30,6 @@ public class MainActivity extends BaseActivity {
             transaction.add(R.id.fl_main_container, mainFragment);
             transaction.commit();
         }
+        new MainPresenter(mainFragment);
     }
 }
