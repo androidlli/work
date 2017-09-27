@@ -2,9 +2,12 @@ package com.cango.adpickcar.detail.iteminfo;
 
 
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseFragment;
+
+import butterknife.BindView;
 
 public class ItemInfoFragment extends BaseFragment {
     public static ItemInfoFragment getInstance() {
@@ -13,6 +16,9 @@ public class ItemInfoFragment extends BaseFragment {
         itemInfoFragment.setArguments(bundle);
         return itemInfoFragment;
     }
+
+    @BindView(R.id.nsv_item)
+    NestedScrollView nsvItem;
 
     @Override
     protected int initLayoutId() {
@@ -26,6 +32,5 @@ public class ItemInfoFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-
     }
 }

@@ -2,23 +2,30 @@ package com.cango.adpickcar.detail.basicinfo;
 
 
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseFragment;
+import com.cango.adpickcar.detail.DetailContract;
+import com.cango.adpickcar.detail.DetailFragment;
+import com.cango.adpickcar.detail.DetailPresenter;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 
 public class BasicInfoFragment extends BaseFragment {
+    public static final String KEY = "detail_presenter";
     public static BasicInfoFragment getInstance(){
         BasicInfoFragment basicInfoFragment = new BasicInfoFragment();
         Bundle bundle = new Bundle();
         basicInfoFragment.setArguments(bundle);
         return basicInfoFragment;
     }
+    @BindView(R.id.nsv_basic)
+    NestedScrollView nsvBasic;
     @BindView(R.id.sp_detail_drive_permit)
     Spinner spDrivepermit;
     @BindView(R.id.sp_detail_gps_screen)
@@ -37,6 +44,8 @@ public class BasicInfoFragment extends BaseFragment {
     Spinner spStatus;
     @BindView(R.id.sp_detail_approve_status)
     Spinner spApproveStatus;
+
+    private DetailPresenter presenter;
 
     @Override
     protected int initLayoutId() {
@@ -71,6 +80,6 @@ public class BasicInfoFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-
+        presenter = ((DetailFragment)getParentFragment()).mPresenter;
     }
 }

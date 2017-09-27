@@ -300,7 +300,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         for (int i = 0; i < 20; i++) {
             datas.add(i + "");
         }
-        mAdapter = new MainAdapter(mActivity, datas, false);
+        mAdapter = new MainAdapter(mActivity, datas, true);
         mAdapter.setLoadingView(R.layout.load_loading_layout);
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override

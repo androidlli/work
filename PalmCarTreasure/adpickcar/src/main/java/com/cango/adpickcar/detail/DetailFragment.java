@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class DetailFragment extends BaseFragment {
+public class DetailFragment extends BaseFragment implements DetailContract.View {
 
     public static DetailFragment getInstance() {
         DetailFragment detailFragment = new DetailFragment();
@@ -57,37 +57,37 @@ public class DetailFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_detail_basic_info:
-                if (currentPosition==0){
+                if (currentPosition == 0) {
                     return;
                 }
-                currentPosition=0;
+                currentPosition = 0;
                 SelectChildTitle(currentPosition);
                 hideFragments();
                 showFragment(currentPosition);
                 break;
             case R.id.ll_detail_item_info:
-                if (currentPosition==1){
+                if (currentPosition == 1) {
                     return;
                 }
-                currentPosition=1;
+                currentPosition = 1;
                 SelectChildTitle(currentPosition);
                 hideFragments();
                 showFragment(currentPosition);
                 break;
             case R.id.ll_detail_car_info:
-                if (currentPosition==2){
+                if (currentPosition == 2) {
                     return;
                 }
-                currentPosition=2;
+                currentPosition = 2;
                 SelectChildTitle(currentPosition);
                 hideFragments();
                 showFragment(currentPosition);
                 break;
             case R.id.ll_detail_image_info:
-                if (currentPosition==3){
+                if (currentPosition == 3) {
                     return;
                 }
-                currentPosition=3;
+                currentPosition = 3;
                 SelectChildTitle(currentPosition);
                 hideFragments();
                 showFragment(currentPosition);
@@ -96,10 +96,11 @@ public class DetailFragment extends BaseFragment {
     }
 
     private DetailActivity mActivity;
+    public DetailPresenter mPresenter;
     FragmentManager fm;
     private ArrayList<BaseFragment> mFragments = new ArrayList<>();
     private int currentPosition;
-    private int selectColor,noSelectColor;
+    private int selectColor, noSelectColor;
 
     @Override
     protected int initLayoutId() {
@@ -128,7 +129,7 @@ public class DetailFragment extends BaseFragment {
         fm = getChildFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         for (Fragment base : mFragments) {
-            ft.add(R.id.fl_detail_child_container, base, "basicinfo");
+            ft.add(R.id.fl_detail_child_container, base, base.getClass().getSimpleName());
         }
         ft.commit();
     }
@@ -154,6 +155,7 @@ public class DetailFragment extends BaseFragment {
     @Override
     protected void initData() {
         mActivity = (DetailActivity) getActivity();
+        mPresenter = new DetailPresenter();
         selectColor = getResources().getColor(R.color.colorPrimary);
         noSelectColor = getResources().getColor(R.color.ad888888);
     }
@@ -222,5 +224,39 @@ public class DetailFragment extends BaseFragment {
                 tvImage.setTextColor(selectColor);
                 break;
         }
+    }
+
+    @Override
+    public void setPresenter(DetailContract.Presenter presenter) {
+    }
+
+    @Override
+    public void showIndicator(boolean active) {
+
+    }
+
+    @Override
+    public void showError() {
+
+    }
+
+    @Override
+    public void showNoData() {
+
+    }
+
+    @Override
+    public void showSuccess(boolean isSuccess, String message) {
+
+    }
+
+    @Override
+    public void openOtherUi() {
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
     }
 }

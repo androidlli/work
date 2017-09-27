@@ -1,426 +1,433 @@
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.cango.adpickcar.detail.basicinfo.BasicInfoFragment">
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nsv_car"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="处置车辆编号" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
+                    style="@style/ADDetailCarText"
                     android:text="处置车辆编号" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="处置车辆编号" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/adeaeaea"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:background="@color/adeaeaea"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="申请编号" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="申请编号" />
+                    style="@style/ADDetailCarText"
+                    android:text="B1234567896443" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="B1234567896443" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="金融公司" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="金融公司" />
+                    style="@style/ADDetailCarText"
+                    android:text="北银消费" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="北银消费" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/adeaeaea"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:background="@color/adeaeaea"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="区域公司" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="区域公司" />
+                    style="@style/ADDetailCarText"
+                    android:text="灿谷GPS管理公司" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="灿谷GPS管理公司" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="VIN码" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="VIN码" />
+                    style="@style/ADDetailCarText"
+                    android:text="L14445062121" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="L14445062121" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/adeaeaea"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:background="@color/adeaeaea"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="客户姓名" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="客户姓名" />
+                    style="@style/ADDetailCarText"
+                    android:text="赵波" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="赵波" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="牌照类型" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="牌照类型" />
+                    style="@style/ADDetailCarText"
+                    android:text="个人" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="个人" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/adeaeaea"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:background="@color/adeaeaea"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="牌照号码" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="牌照号码" />
+                    style="@style/ADDetailCarText"
+                    android:text="皖F01234" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="皖F01234" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="车辆合格证号" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="车辆合格证号" />
+                    style="@style/ADDetailCarText"
+                    android:text="333333333" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="333333333" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/adeaeaea"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:background="@color/adeaeaea"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="出场年份" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="出场年份" />
+                    style="@style/ADDetailCarText"
+                    android:text="2222222" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="2222222" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="发动机号" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="发动机号" />
+                    style="@style/ADDetailCarText"
+                    android:text="2222222" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="2222222" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/adeaeaea"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:background="@color/adeaeaea"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="机动车登记证书号" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="机动车登记证书号" />
+                    style="@style/ADDetailCarText"
+                    android:text="12345678987654" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="12345678987654" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="品牌" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="品牌" />
+                    style="@style/ADDetailCarText"
+                    android:text="大众" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="大众" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/adeaeaea"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:background="@color/adeaeaea"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="车系" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="车系" />
+                    style="@style/ADDetailCarText"
+                    android:text="2105款 1.4T GTI" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="2105款 1.4T GTI" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="车型" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="车型" />
+                    style="@style/ADDetailCarText"
+                    android:text="2105款 1.4T GTI" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="2105款 1.4T GTI" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/adeaeaea"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:background="@color/adeaeaea"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="颜色" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="颜色" />
+                    style="@style/ADDetailCarText"
+                    android:text="糖果白" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="糖果白" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1">
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="车型描述" />
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/ADDetailETStyle"
-                    android:text="车型描述" />
+                    style="@style/ADDetailCarText"
+                    android:text="处置车辆编号" />
 
             </LinearLayout>
 
-            <TextView
-                style="@style/ADDetailCarText"
-                android:text="处置车辆编号" />
-
+            <Button
+                android:id="@+id/btn_login_signin"
+                android:layout_width="300dp"
+                android:layout_height="62dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="40dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/sign_in_icon"
+                android:gravity="top|center_horizontal"
+                android:paddingTop="16dp"
+                android:text="提 交"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
         </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
-        <Button
-            android:id="@+id/btn_login_signin"
-            android:layout_width="300dp"
-            android:layout_height="62dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="40dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/sign_in_icon"
-            android:gravity="top|center_horizontal"
-            android:paddingTop="16dp"
-            android:text="提 交"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-</android.support.v4.widget.NestedScrollView>
+    <include layout="@layout/sorry" />
+</RelativeLayout>
