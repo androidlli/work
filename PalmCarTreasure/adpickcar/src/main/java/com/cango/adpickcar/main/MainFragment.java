@@ -226,31 +226,12 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     public static String encrypt(String key, String src) throws Exception {
         // /src = Base64.encodeToString(src.getBytes(), Base64.DEFAULT);
         byte[] rawKey = toMakekey(key, keyLenght, defaultV).getBytes();// key.getBytes();
-
-
         //补全data
         byte[] appendBytes = src.getBytes("utf-8");
         long length = (appendBytes.length / 16 + 1) * 16 - appendBytes.length;
         byte[] newBytes = getNewBytes(appendBytes, length);
-//        while (appendBytes.length % 16 != 0) {
-//            ArrayList<Byte> arrayList = new ArrayList<>();
-//            for (byte bean : appendBytes) {
-//                arrayList.add(bean);
-//            }
-//            byte[] lengthBytes = (length + "").getBytes();
-//            for (byte bean : lengthBytes) {
-//                arrayList.add(bean);
-//            }
-//            appendBytes = new byte[arrayList.size()];
-//            for (int i = 0; i < arrayList.size(); i++) {
-//                appendBytes[i] = arrayList.get(i);
-//            }
-//        }
-
-
         byte[] result = encrypt(rawKey, newBytes);
         return Base64.encodeToString(result, Base64.DEFAULT);
-//        return toHex(result);
     }
 
     private static byte[] getNewBytes(byte[] appendBytes, long length) {
