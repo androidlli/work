@@ -10,23 +10,141 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- * <pre>
- *     author: Blankj
- *     blog  : http://blankj.com
- *     time  : 2016/08/02
- *     desc  : 加密解密相关的工具类
- * </pre>
- */
 public final class EncryptUtils {
 
     private EncryptUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
+    }
+
+    private final static String HEX = "0123456789ABCDEF";
+    private static final int keyLenght = 32;
+    private static final String defaultV = "0";
+
+    /**
+     * 加密
+     *
+     * @param key 密钥
+     * @param src 加密文本
+     * @return
+     * @throws Exception
+     */
+    public static String encrypt(String key, String src) throws Exception {
+        byte[] rawKey = toMakekey(key, keyLenght, defaultV).getBytes();// key.getBytes();
+        //补全data
+        byte[] appendBytes = src.getBytes("utf-8");
+        long length = (appendBytes.length / 16 + 1) * 16 - appendBytes.length;
+        byte[] newBytes = getNewBytes1(appendBytes, length);
+        byte[] result = encrypt(rawKey, newBytes);
+        return Base64.encodeToString(result, Base64.DEFAULT);
+    }
+
+    private static byte[] getNewBytes(byte[] appendBytes, long length) {
+        if (appendBytes.length % 16 != 0) {
+            ArrayList<Byte> arrayList = new ArrayList<>();
+            for (byte bean : appendBytes) {
+                arrayList.add(bean);
+            }
+            byte[] lengthBytes = (length + "").getBytes();
+            for (byte bean : lengthBytes) {
+                arrayList.add(bean);
+            }
+            appendBytes = new byte[arrayList.size()];
+            for (int i = 0; i < arrayList.size(); i++) {
+                appendBytes[i] = arrayList.get(i);
+            }
+            return getNewBytes(appendBytes, length);
+        } else {
+            return appendBytes;
+        }
+    }
+
+    private static byte[] getNewBytes1(byte[] appendBytes, long length) {
+        byte[] lengthBytes = (length + "").getBytes();
+        if (appendBytes.length % 16 != 0) {
+            appendBytes = unitByteArray(appendBytes, lengthBytes);
+            return getNewBytes1(appendBytes, length);
+        } else {
+            return appendBytes;
+        }
+
+    }
+
+    /**
+     * 合并byte数组
+     */
+    public static byte[] unitByteArray(byte[] byte1, byte[] byte2) {
+        byte[] unitByte = new byte[byte1.length + byte2.length];
+        System.arraycopy(byte1, 0, unitByte, 0, byte1.length);
+        System.arraycopy(byte2, 0, unitByte, byte1.length, byte2.length);
+        return unitByte;
+    }
+
+    /**
+     * 真正的加密过程
+     * 1.通过密钥得到一个密钥专用的对象SecretKeySpec
+     * 2.Cipher 加密算法，加密模式和填充方式三部分或指定加密算 (可以只用写算法然后用默认的其他方式)Cipher.getInstance("AES");
+     *
+     * @param key
+     * @param src
+     * @return
+     * @throws Exception
+     */
+    private static byte[] encrypt(byte[] key, byte[] src) throws Exception {
+        SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
+        Cipher cipher = Cipher.getInstance("AES/ECB/NoPadding");
+        //CBC模式需要使用IV
+//        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(new byte[cipher.getBlockSize()]));
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        byte[] encrypted = cipher.doFinal(src);
+        return encrypted;
+    }
+
+    /**
+     * 密钥key ,默认补的数字，补全16位数，以保证安全补全至少16位长度,android和ios对接通过
+     *
+     * @param str
+     * @param strLength
+     * @param val
+     * @return
+     */
+    private static String toMakekey(String str, int strLength, String val) {
+        int strLen = str.length();
+        if (strLen < strLength) {
+            while (strLen < strLength) {
+                StringBuffer buffer = new StringBuffer();
+                buffer.append(str).append(val);
+                str = buffer.toString();
+                strLen = str.length();
+            }
+        }
+        return str;
+    }
+
+    /**
+     * 二进制转字符,转成了16进制
+     * 0123456789abcdefg
+     *
+     * @param buf
+     * @return
+     */
+    public static String toHex(byte[] buf) {
+        if (buf == null)
+            return "";
+        StringBuffer result = new StringBuffer(2 * buf.length);
+        for (int i = 0; i < buf.length; i++) {
+            appendHex(result, buf[i]);
+        }
+        return result.toString();
+    }
+
+    private static void appendHex(StringBuffer sb, byte b) {
+        sb.append(HEX.charAt((b >> 4) & 0x0f)).append(HEX.charAt(b & 0x0f));
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -175,7 +293,7 @@ public final class EncryptUtils {
             e.printStackTrace();
             return null;
         } finally {
-            if (fis!=null){
+            if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e) {
@@ -583,8 +701,8 @@ public final class EncryptUtils {
      * <p>加密模式有：电子密码本模式ECB、加密块链模式CBC、加密反馈模式CFB、输出反馈模式OFB</p>
      * <p>填充方式有：NoPadding、ZerosPadding、PKCS5Padding</p>
      */
-    public static        String DES_Transformation = "DES/ECB/NoPadding";
-    private static final String DES_Algorithm      = "DES";
+    public static String DES_Transformation = "DES/ECB/NoPadding";
+    private static final String DES_Algorithm = "DES";
 
     /**
      * DES加密后转为Base64编码
@@ -662,8 +780,8 @@ public final class EncryptUtils {
      * <p>加密模式有：电子密码本模式ECB、加密块链模式CBC、加密反馈模式CFB、输出反馈模式OFB</p>
      * <p>填充方式有：NoPadding、ZerosPadding、PKCS5Padding</p>
      */
-    public static        String TripleDES_Transformation = "DESede/ECB/NoPadding";
-    private static final String TripleDES_Algorithm      = "DESede";
+    public static String TripleDES_Transformation = "DESede/ECB/NoPadding";
+    private static final String TripleDES_Algorithm = "DESede";
 
 
     /**
@@ -742,8 +860,8 @@ public final class EncryptUtils {
      * <p>加密模式有：电子密码本模式ECB、加密块链模式CBC、加密反馈模式CFB、输出反馈模式OFB</p>
      * <p>填充方式有：NoPadding、ZerosPadding、PKCS5Padding</p>
      */
-    public static        String AES_Transformation = "AES/ECB/NoPadding";
-    private static final String AES_Algorithm      = "AES";
+    public static String AES_Transformation = "AES/ECB/NoPadding";
+    private static final String AES_Algorithm = "AES";
 
 
     /**
