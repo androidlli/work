@@ -57,22 +57,22 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/iv_camera_prompt"
             android:layout_alignRight="@+id/iv_camera_prompt"
-            android:background="@android:color/white">
+            android:background="@drawable/translucent">
 
             <ImageView
                 android:id="@+id/iv_camera_prompt_left"
                 android:layout_width="150dp"
                 android:layout_height="100dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/timg" />
 
             <TextView
                 android:id="@+id/tv_camera_prompt_top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_toRightOf="@+id/iv_camera_prompt_left"
                 android:text="拍照要求："
                 android:textColor="@android:color/black" />
@@ -82,7 +82,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_camera_prompt_top"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@+id/iv_camera_prompt_left"
                 android:text="架子吱吱吱吱吱吱吱吱吱吱吱吱吱吱"

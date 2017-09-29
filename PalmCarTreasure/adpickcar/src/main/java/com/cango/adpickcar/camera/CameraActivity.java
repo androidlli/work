@@ -146,6 +146,16 @@ public class CameraActivity extends AppCompatActivity implements
         }
         ivPrompt.setOnClickListener(mOnClickListener);
         isAnimOpen = true;
+
+        RelativeLayout rlRoot = (RelativeLayout) findViewById(R.id.root);
+        rlRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isAnimOpen) {
+                    stopPrompt();
+                }
+            }
+        });
     }
 
     private void stopPrompt() {

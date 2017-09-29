@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/your_matchcode_holder"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true">
+
+        <EditText
+            android:id="@+id/your_matchcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:digits="1234567890qwertyuiopasdfghjklzxcvbnm "
+            android:hint="请设定匹配码"
+            android:maxLength="48"
+            android:saveEnabled="false" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:digits="1234567890qwertyuiopasdfghjklzxcvbnm "
+            android:hint="请码"
+            android:maxLength="48"
+            android:saveEnabled="false" />
+    </android.support.design.widget.TextInputLayout>
+</LinearLayout>

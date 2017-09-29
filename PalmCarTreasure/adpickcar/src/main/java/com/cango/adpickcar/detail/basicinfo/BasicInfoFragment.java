@@ -8,7 +8,6 @@ import android.widget.Spinner;
 
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseFragment;
-import com.cango.adpickcar.detail.DetailContract;
 import com.cango.adpickcar.detail.DetailFragment;
 import com.cango.adpickcar.detail.DetailPresenter;
 
@@ -18,12 +17,14 @@ import butterknife.BindView;
 
 public class BasicInfoFragment extends BaseFragment {
     public static final String KEY = "detail_presenter";
-    public static BasicInfoFragment getInstance(){
+
+    public static BasicInfoFragment getInstance() {
         BasicInfoFragment basicInfoFragment = new BasicInfoFragment();
         Bundle bundle = new Bundle();
         basicInfoFragment.setArguments(bundle);
         return basicInfoFragment;
     }
+
     @BindView(R.id.nsv_basic)
     NestedScrollView nsvBasic;
     @BindView(R.id.sp_detail_drive_permit)
@@ -80,6 +81,6 @@ public class BasicInfoFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-        presenter = ((DetailFragment)getParentFragment()).mPresenter;
+        presenter = ((DetailFragment) getParentFragment()).mPresenter;
     }
 }
