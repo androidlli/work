@@ -35,11 +35,13 @@ public final class EncryptUtils {
      * @throws Exception
      */
     public static String encrypt(String key, String src) throws Exception {
+        src+="#";
         byte[] rawKey = toMakekey(key, keyLenght, defaultV).getBytes();// key.getBytes();
         //补全data
         byte[] appendBytes = src.getBytes("utf-8");
-        long length = (appendBytes.length / 16 + 1) * 16 - appendBytes.length;
-        byte[] newBytes = getNewBytes1(appendBytes, length);
+//        long length = (appendBytes.length / 16 + 1) * 16 - appendBytes.length;
+
+        byte[] newBytes = getNewBytes1(appendBytes, "0".getBytes());
         byte[] result = encrypt(rawKey, newBytes);
         return Base64.encodeToString(result, Base64.DEFAULT);
     }
@@ -64,11 +66,10 @@ public final class EncryptUtils {
         }
     }
 
-    private static byte[] getNewBytes1(byte[] appendBytes, long length) {
-        byte[] lengthBytes = (length + "").getBytes();
+    private static byte[] getNewBytes1(byte[] appendBytes, byte[] zero) {
         if (appendBytes.length % 16 != 0) {
-            appendBytes = unitByteArray(appendBytes, lengthBytes);
-            return getNewBytes1(appendBytes, length);
+            appendBytes = unitByteArray(appendBytes, zero);
+            return getNewBytes1(appendBytes, zero);
         } else {
             return appendBytes;
         }
