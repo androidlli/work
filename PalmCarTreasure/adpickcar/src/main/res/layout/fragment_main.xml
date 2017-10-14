@@ -40,7 +40,7 @@
                         android:id="@+id/tv_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="仓库管理员"
+                        android:text="@string/main_title"
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -55,7 +55,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="13dp"
+                        android:layout_marginRight="15dp"
                         android:src="@drawable/search" />
                 </LinearLayout>
 
@@ -112,8 +112,8 @@
                             android:id="@+id/tv_main_first_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="20dp"
-                            android:layout_alignParentEnd="true" />
+                            android:layout_alignParentEnd="true"
+                            android:padding="20dp" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -145,8 +145,8 @@
                             android:id="@+id/tv_main_second_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="20dp"
-                            android:layout_alignParentEnd="true" />
+                            android:layout_alignParentEnd="true"
+                            android:padding="20dp" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -178,8 +178,8 @@
                             android:id="@+id/tv_main_third_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="20dp"
-                            android:layout_alignParentEnd="true" />
+                            android:layout_alignParentEnd="true"
+                            android:padding="20dp" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -211,8 +211,8 @@
                             android:id="@+id/tv_main_fourth_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="20dp"
-                            android:layout_alignParentEnd="true" />
+                            android:layout_alignParentEnd="true"
+                            android:padding="20dp" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -244,8 +244,8 @@
                             android:id="@+id/tv_main_fifth_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="20dp"
-                            android:layout_alignParentEnd="true" />
+                            android:layout_alignParentEnd="true"
+                            android:padding="20dp" />
                     </RelativeLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -254,17 +254,21 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/srl_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="50dp" >
+                android:layout_marginBottom="50dp">
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerview_main"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </android.support.v4.widget.SwipeRefreshLayout>
-            <include layout="@layout/sorry"/>
+
+            <include layout="@layout/sorry" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -299,7 +303,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#36000000"
-                android:visibility="gone"></FrameLayout>
+                android:visibility="gone" />
+            <include layout="@layout/avload_view"/>
         </RelativeLayout>
     </LinearLayout>
 
@@ -389,6 +394,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_sign_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -405,7 +411,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="11dp"
-                android:text="注销"
+                android:text="退出登录"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
         </LinearLayout>

@@ -50,11 +50,13 @@
                 android:src="@drawable/reset_password" />
 
             <EditText
+                android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
+                android:inputType="textPassword"
                 android:hint="原密码"
                 android:maxLines="1"
                 android:textColorHint="@color/ad888888"
@@ -81,12 +83,14 @@
                     android:src="@drawable/reset_password" />
 
                 <EditText
+                    android:id="@+id/et_new_password"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="7dp"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
                     android:hint="新密码"
+                    android:inputType="textPassword"
                     android:maxLines="1"
                     android:textColorHint="@color/ad888888"
                     android:textSize="14sp" />
@@ -110,12 +114,14 @@
                     android:src="@drawable/reset_password" />
 
                 <EditText
+                    android:id="@+id/et_confirm_password"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="7dp"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
                     android:hint="确认新密码"
+                    android:inputType="textPassword"
                     android:maxLines="1"
                     android:textColorHint="@color/ad888888"
                     android:textSize="14sp" />

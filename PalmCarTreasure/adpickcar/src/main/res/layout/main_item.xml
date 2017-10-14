@@ -14,9 +14,26 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/tv_ApplyCD"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="B0102243243453242"
+            android:textColor="@color/ad666666"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/iv_CarBrandPicURL"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/xx" />
+
+        <TextView
+            android:id="@+id/tv_CarBrandName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="奥迪"
             android:textColor="@color/ad666666"
             android:textSize="12sp" />
 
@@ -36,6 +53,7 @@
             android:src="@drawable/company_id" />
 
         <TextView
+            android:id="@+id/tv_TowingcoShortName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -50,6 +68,7 @@
             android:src="@drawable/employee_id" />
 
         <TextView
+            android:id="@+id/tv_CTMan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -75,6 +94,7 @@
             android:src="@drawable/name" />
 
         <TextView
+            android:id="@+id/tv_CustName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
@@ -90,6 +110,7 @@
 
         <!--android:background="@drawable/main_item_tv_stroke_bg"-->
         <TextView
+            android:id="@+id/tv_LicensePlateNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
@@ -107,6 +128,7 @@
             android:src="@drawable/color" />
 
         <TextView
+            android:id="@+id/tv_Color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"

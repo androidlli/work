@@ -109,4 +109,5 @@
         android:text="上海灿谷投资管理咨询服务有限公司"
         android:textColor="@color/adbcbcbc"
         android:textSize="9sp" />
+    <include layout="@layout/avload_view"/>
 </RelativeLayout>

@@ -1,6 +1,12 @@
 package com.cango.adpickcar.net;
 
+import android.text.TextUtils;
+
+import com.cango.adpickcar.ADApplication;
+import com.cango.adpickcar.api.Api;
+import com.cango.adpickcar.util.AppUtils;
 import com.cango.adpickcar.util.CommUtil;
+import com.cango.adpickcar.util.EncryptUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -60,7 +66,7 @@ public class NetManager {
     }
 
     public OkHttpClient getOkHttpClient() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
@@ -72,19 +78,29 @@ public class NetManager {
         builder.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                Request originalRequest = chain.request();
-//                String token = MtApplication.mSPUtils.getString(Api.TOKEN);
-//                String deviceToken = null;
-//                PushAgent pushAgent = PushAgent.getInstance(MtApplication.getmContext());
-//                if (pushAgent!=null)
-//                    deviceToken = pushAgent.getRegistrationId();
-//                if (CommUtil.checkIsNull(token))
-                return chain.proceed(originalRequest);
-//                Request request = chain.request().newBuilder()
-//                        .addHeader("Authorization", token)
-//                        .addHeader("DEVICETOKEN",deviceToken)
-//                        .build();
-//                return chain.proceed(request);
+                String appVersion = AppUtils.getVersionName(ADApplication.getmContext());
+                Request.Builder newBuilder = chain.request().newBuilder();
+                if (CommUtil.checkIsNull(appVersion)) {
+
+                } else {
+                    newBuilder.addHeader("APPVERSION", appVersion + "@" + Api.DEVICE_TYPE);
+                }
+                String token = ADApplication.mSPUtils.getString(Api.TOKEN);
+                String serverTime = ADApplication.mSPUtils.getString(Api.SERVERTIME);
+                if (CommUtil.checkIsNull(token) || CommUtil.checkIsNull(serverTime)) {
+
+                } else {
+                    String encryptString = null;
+                    try {
+                        encryptString = EncryptUtils.encrypt(Api.KEY, token + serverTime);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (!TextUtils.isEmpty(encryptString)) {
+                        newBuilder.addHeader("AUTHORIZATION", encryptString);
+                    }
+                }
+                return chain.proceed(newBuilder.build());
             }
         });
         return builder.build();

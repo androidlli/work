@@ -4,8 +4,10 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cango.adpickcar.R;
+import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.util.ToastUtils;
 import com.google.android.cameraview.CameraView;
 import com.orhanobut.logger.Logger;
@@ -42,6 +45,11 @@ import java.util.Date;
 public class CameraActivity extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback {
 
+    private static final String TYPE = "type";
+    /**
+     * 0 : from itemInfoFG -1: 通用的
+     */
+    private int currentType = -1;
     private static final String TAG = "MainActivity";
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -123,6 +131,9 @@ public class CameraActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        if (getIntent()!=null){
+            currentType = getIntent().getIntExtra(TYPE,-1);
+        }
         ivCancal = (ImageView) findViewById(R.id.iv_camera_cancal);
         ivFlash = (ImageView) findViewById(R.id.iv_camera_flash);
         ivResult = (ImageView) findViewById(R.id.iv_result);
@@ -145,7 +156,13 @@ public class CameraActivity extends AppCompatActivity implements
             fab.setOnClickListener(mOnClickListener);
         }
         ivPrompt.setOnClickListener(mOnClickListener);
-        isAnimOpen = true;
+
+        if (currentType == 0){
+            isAnimOpen = false;
+            rlCenter.setVisibility(View.GONE);
+        }else {
+            isAnimOpen = true;
+        }
 
         RelativeLayout rlRoot = (RelativeLayout) findViewById(R.id.root);
         rlRoot.setOnClickListener(new View.OnClickListener() {
@@ -266,10 +283,10 @@ public class CameraActivity extends AppCompatActivity implements
     }
 
     public void cameraOk(View view) {
-////        Intent intent = new Intent(CameraActivity.this, TrailerActivity.class);
-//        intent.putExtra("path", mPath);
-//        setResult(Activity.RESULT_OK, intent);
-//        finish();
+        Intent intent = new Intent(CameraActivity.this, DetailActivity.class);
+        intent.putExtra("path", mPath);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
     @Override

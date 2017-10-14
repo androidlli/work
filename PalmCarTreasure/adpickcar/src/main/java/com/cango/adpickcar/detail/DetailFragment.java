@@ -7,18 +7,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.R;
+import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.base.BaseFragment;
 import com.cango.adpickcar.detail.basicinfo.BasicInfoFragment;
 import com.cango.adpickcar.detail.carinfo.CarInfoFragment;
 import com.cango.adpickcar.detail.imageinfo.ImageInfoFragment;
 import com.cango.adpickcar.detail.iteminfo.ItemInfoFragment;
+import com.cango.adpickcar.main.MainFragment;
+import com.cango.adpickcar.model.BaseInfo;
+import com.cango.adpickcar.model.CarInfo;
+import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.util.BarUtil;
+import com.cango.adpickcar.util.ToastUtils;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 
@@ -27,15 +36,19 @@ import butterknife.OnClick;
 
 public class DetailFragment extends BaseFragment implements DetailContract.View {
 
-    public static DetailFragment getInstance() {
+    public static DetailFragment getInstance(CarTakeTaskList.DataBean.CarTakeTaskListBean carTakeTaskListBean, int type) {
         DetailFragment detailFragment = new DetailFragment();
         Bundle bundle = new Bundle();
+        bundle.putParcelable("CarTakeTaskListBean", carTakeTaskListBean);
+        bundle.putInt("Type", type);
         detailFragment.setArguments(bundle);
         return detailFragment;
     }
 
     @BindView(R.id.toolbar_detail)
     Toolbar mToolbar;
+    @BindView(R.id.tv_save)
+    TextView tvSave;
     @BindView(R.id.iv_detail_basic_info)
     ImageView ivBasic;
     @BindView(R.id.tv_detail_basic_info)
@@ -52,8 +65,11 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
     ImageView ivImage;
     @BindView(R.id.tv_detail_image_info)
     TextView tvImage;
+    @BindView(R.id.avl_login_indicator)
+    AVLoadingIndicatorView mLoadView;
 
-    @OnClick({R.id.ll_detail_basic_info, R.id.ll_detail_item_info, R.id.ll_detail_car_info, R.id.ll_detail_image_info})
+    @OnClick({R.id.ll_detail_basic_info, R.id.ll_detail_item_info, R.id.ll_detail_car_info, R.id.ll_detail_image_info,
+            R.id.tv_save})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_detail_basic_info:
@@ -92,13 +108,49 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 hideFragments();
                 showFragment(currentPosition);
                 break;
+            case R.id.tv_save:
+                switch (currentPosition) {
+                    //上传基本信息或者物品信息的对象
+                    case 0:
+                    case 1:
+                        mBaseInfo.getData().setUserID(ADApplication.mSPUtils.getString(Api.USERID));
+                        mPresenter.saveCarBasicItemInfo(true, mBaseInfo);
+                        break;
+                    //保存车辆信息
+                    case 2:
+                        mPresenter.saveCarInfo(true, ADApplication.mSPUtils.getString(Api.USERID),
+                                mCarTakeTaskListBean.getLicenseplateNO(), carInfoFragment.getIsErpMapping(),
+                                mCarTakeTaskListBean.getDisCarID() + "");
+                        break;
+                }
+                break;
         }
     }
 
+    /**
+     * 当前类型，为接车等,有些可以编辑有些不可以编辑
+     */
+    public int mCurrentType;
+    /**
+     * 详情是否可以编辑 false 不可编辑 true 可编辑
+     */
+    public boolean isEdit;
     private DetailActivity mActivity;
-    public DetailPresenter mPresenter;
+    public DetailContract.Presenter mPresenter;
     FragmentManager fm;
     private ArrayList<BaseFragment> mFragments = new ArrayList<>();
+    private BasicInfoFragment basicInfoFragment;
+    private ItemInfoFragment itemInfoFragment;
+    private CarInfoFragment carInfoFragment;
+    private ImageInfoFragment imageInfoFragment;
+    //保存基本信息和物品信息
+    private BaseInfo mBaseInfo;
+    //保存车辆信息
+    private CarInfo mCarInfo;
+    public CarTakeTaskList.DataBean.CarTakeTaskListBean mCarTakeTaskListBean;
+    /**
+     * 4个fragment的当前选中
+     */
     private int currentPosition;
     private int selectColor, noSelectColor;
 
@@ -109,19 +161,25 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
 
     @Override
     protected void initView() {
+        showIndicator(false);
         initToolbar();
         addChildFragment();
         currentPosition = 0;
         SelectChildTitle(currentPosition);
         hideFragments();
         showFragment(0);
+        if (isEdit) {
+            tvSave.setVisibility(View.VISIBLE);
+        } else {
+            tvSave.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void addChildFragment() {
-        BasicInfoFragment basicInfoFragment = BasicInfoFragment.getInstance();
-        ItemInfoFragment itemInfoFragment = ItemInfoFragment.getInstance();
-        CarInfoFragment carInfoFragment = CarInfoFragment.getInstance();
-        ImageInfoFragment imageInfoFragment = ImageInfoFragment.getInstance();
+        basicInfoFragment = BasicInfoFragment.getInstance();
+        itemInfoFragment = ItemInfoFragment.getInstance();
+        carInfoFragment = CarInfoFragment.getInstance();
+        imageInfoFragment = ImageInfoFragment.getInstance();
         mFragments.add(basicInfoFragment);
         mFragments.add(itemInfoFragment);
         mFragments.add(carInfoFragment);
@@ -155,9 +213,23 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
     @Override
     protected void initData() {
         mActivity = (DetailActivity) getActivity();
-        mPresenter = new DetailPresenter();
+        mCarTakeTaskListBean = getArguments().getParcelable("CarTakeTaskListBean");
+        mCurrentType = getArguments().getInt("Type");
         selectColor = getResources().getColor(R.color.colorPrimary);
         noSelectColor = getResources().getColor(R.color.ad888888);
+        if (mCurrentType != -1) {
+            switch (mCurrentType) {
+                case MainFragment.WEIJIECHE:
+                case MainFragment.WEITIJIAO:
+                case MainFragment.SHENHETUIHUI:
+                    isEdit = true;
+                    break;
+                case MainFragment.SHENHEZHON:
+                case MainFragment.SHENHETONGUO:
+                    isEdit = false;
+                    break;
+            }
+        }
     }
 
     private void initToolbar() {
@@ -228,11 +300,16 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
 
     @Override
     public void setPresenter(DetailContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     @Override
     public void showIndicator(boolean active) {
-
+        if (active) {
+            mLoadView.smoothToShow();
+        } else {
+            mLoadView.smoothToHide();
+        }
     }
 
     @Override
@@ -258,5 +335,77 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
     @Override
     public boolean isActive() {
         return isAdded();
+    }
+
+    @Override
+    public void showCarTakeStoreBaseInfo(BaseInfo baseInfo) {
+        basicInfoFragment.updateUI(baseInfo);
+    }
+
+    @Override
+    public void showBaseInfoError() {
+        basicInfoFragment.showError();
+    }
+
+    @Override
+    public void showBaseInfoNoData() {
+        basicInfoFragment.showNoData();
+    }
+
+    @Override
+    public void showItemInfo(BaseInfo baseInfo) {
+        mBaseInfo = baseInfo;
+        itemInfoFragment.updateUI(baseInfo);
+    }
+
+    @Override
+    public void showItemInfoError() {
+        itemInfoFragment.showError();
+    }
+
+    @Override
+    public void showItemInfoNoData() {
+        itemInfoFragment.showNoData();
+    }
+
+    @Override
+    public void showCarInfo(CarInfo carInfo) {
+        mCarInfo = carInfo;
+        carInfoFragment.updateUI(carInfo);
+    }
+
+    @Override
+    public void showCarInfoNoData() {
+        carInfoFragment.showNoData();
+    }
+
+    @Override
+    public void showCarInfoError() {
+        carInfoFragment.showError();
+    }
+
+    @Override
+    public void showSaveBasicItem(boolean isSuccess, String message) {
+        if (!TextUtils.isEmpty(message))
+            ToastUtils.showShort(message);
+        if (isSuccess) {
+            //刷新基本信息和物品信息
+            basicInfoFragment.getData();
+        } else {
+            basicInfoFragment.updateUI(mBaseInfo);
+            itemInfoFragment.updateUI(mBaseInfo);
+        }
+    }
+
+    @Override
+    public void showSaveCarInfo(boolean isSuccess, String message) {
+        if (!TextUtils.isEmpty(message))
+            ToastUtils.showShort(message);
+        if (isSuccess) {
+            //刷新基本信息和物品信息
+            carInfoFragment.getData();
+        } else {
+            carInfoFragment.updateUI(mCarInfo);
+        }
     }
 }

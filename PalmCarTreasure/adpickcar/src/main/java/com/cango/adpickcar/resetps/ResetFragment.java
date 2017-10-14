@@ -5,17 +5,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 
+import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.R;
+import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.base.BaseFragment;
 import com.cango.adpickcar.util.BarUtil;
+import com.cango.adpickcar.util.ToastUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,8 +35,25 @@ public class ResetFragment extends BaseFragment implements ResetPSContract.View 
 
     @BindView(R.id.toolbar_reset)
     Toolbar mToolbar;
+    @BindView(R.id.et_password)
+    EditText etPassword;
+    @BindView(R.id.et_new_password)
+    EditText etNewPassword;
+    @BindView(R.id.et_confirm_password)
+    EditText etConfirmPassword;
     @BindView(R.id.avl_login_indicator)
     AVLoadingIndicatorView mLoadView;
+
+    @OnClick({R.id.btn_login_signin})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_login_signin:
+                mPresenter.resetPS(true, ADApplication.mSPUtils.getString(Api.USERID), etPassword.getText().toString().trim(),
+                        etNewPassword.getText().toString().trim(), etConfirmPassword.getText().toString().trim());
+                break;
+        }
+    }
+
     ResetPSActivity mActivity;
     private ResetPSContract.Presenter mPresenter;
 
@@ -89,7 +110,11 @@ public class ResetFragment extends BaseFragment implements ResetPSContract.View 
 
     @Override
     public void showResetSuccess(boolean isSuccess, String message) {
-
+        if (!TextUtils.isEmpty(message))
+            ToastUtils.showShort(message);
+        if (isSuccess) {
+            mActivity.finish();
+        }
     }
 
     @Override

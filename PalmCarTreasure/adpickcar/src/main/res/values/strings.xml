@@ -5,7 +5,8 @@
     <string name="load_end_tip">已经全部加载完毕</string>
     <string name="load_loading_tip">努力加载中</string>
     <string name="load_failed_tip">点我再试试？</string>
-
+    <string name="read_phone_state">登录前必须获得读取手机状态</string>
+    <string name="setting_read_phone_state">请到设置中授权读取手机状态</string>
     <string name="camera_permission_confirmation">需要打开使用摄像头权限</string>
     <string name="camera_permission_not_granted">需要设备拥有摄像头</string>
     <string name="camera_is_opening">照相机正在启动</string>
@@ -17,6 +18,7 @@
     <string name="flash_off">Flash off</string>
     <string name="flash_on">Flash on</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_title">接&#160;&#160;车</string>
+    <string name="input_params_prompt">请输入查询内容</string>
 </resources>

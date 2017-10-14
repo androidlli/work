@@ -15,10 +15,11 @@
         android:gravity="center_vertical">
 
         <EditText
+            android:id="@+id/et_PlateNO"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="25dp"
-            android:layout_marginStart="25dp"
+            android:layout_marginEnd="21dp"
+            android:layout_marginStart="21dp"
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
             android:hint="车牌号码"
@@ -31,23 +32,40 @@
         android:layout_width="280dp"
         android:layout_height="42dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/login_et_bg_shape"
         android:gravity="center_vertical">
 
         <EditText
-            android:layout_width="match_parent"
+            android:id="@+id/et_Name"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginEnd="25dp"
-            android:layout_marginStart="25dp"
-            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:background="@drawable/login_et_bg_shape"
             android:gravity="center_vertical"
             android:hint="客户姓名"
             android:maxLines="1"
+            android:paddingEnd="21dp"
+            android:paddingStart="21dp"
+            android:textColorHint="@color/adbbbbbb"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/et_car_type"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/login_et_bg_shape"
+            android:gravity="center_vertical"
+            android:hint="车型"
+            android:maxLines="1"
+            android:paddingEnd="21dp"
+            android:paddingStart="21dp"
             android:textColorHint="@color/adbbbbbb"
             android:textSize="14sp" />
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_search"
         android:layout_width="300dp"
         android:layout_height="62dp"
         android:layout_marginBottom="20dp"

@@ -5,8 +5,12 @@ package com.cango.adpickcar.api;
  */
 
 public class Api {
-    public static final String BASE_URL = "http://192.168.121.112:89/api/";
-    public static final String ABOUT_URL = "http://192.168.121.112:89/tcapi/";
-
+    public static final String BASE_URL = "http://192.168.121.112:90";
+    public static final String TOKEN = "token";
+    public static final String SERVERTIME = "server_time";
     public static final String DEVICE_TYPE = "2";
+    public static final String KEY = "vtmsad###***";
+    public static final String USERID = "user_id";
+    public static final String PASSWORD = "password";
+    public static final String MOBILE = "mobile";
 }

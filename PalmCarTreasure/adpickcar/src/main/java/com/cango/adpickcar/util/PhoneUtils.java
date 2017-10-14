@@ -20,7 +20,6 @@ public class PhoneUtils {
     @SuppressLint("HardwareIds")
     public static String getIMEI(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        Logger.d(tm.getDeviceId());
         return tm != null ? tm.getDeviceId() : null;
     }
 }

@@ -34,6 +34,7 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/et_InCarDlvNO"
                     android:layout_width="0dp"
                     android:layout_height="34dp"
                     android:layout_weight="2"
@@ -70,10 +71,12 @@
                         android:layout_height="wrap_content">
 
                         <CheckBox
+                            android:id="@+id/cb1"
                             style="@style/ADDetailcheckoutStyle"
                             android:text=" 钥匙" />
 
                         <CheckBox
+                            android:id="@+id/cb2"
                             style="@style/ADDetailcheckoutStyle"
                             android:text=" 身份证" />
                     </LinearLayout>
@@ -84,10 +87,12 @@
                         android:layout_marginTop="9dp">
 
                         <CheckBox
+                            android:id="@+id/cb3"
                             style="@style/ADDetailcheckoutStyle"
                             android:text=" 行驶证" />
 
                         <CheckBox
+                            android:id="@+id/cb4"
                             style="@style/ADDetailcheckoutStyle"
                             android:text=" 驾驶证" />
                     </LinearLayout>
@@ -98,10 +103,12 @@
                         android:layout_marginTop="9dp">
 
                         <CheckBox
+                            android:id="@+id/cb5"
                             style="@style/ADDetailcheckoutStyle"
                             android:text=" 银行卡" />
 
                         <CheckBox
+                            android:id="@+id/cb6"
                             style="@style/ADDetailcheckoutStyle"
                             android:text=" 钱包" />
                     </LinearLayout>
@@ -112,10 +119,12 @@
                         android:layout_marginTop="9dp">
 
                         <CheckBox
+                            android:id="@+id/cb7"
                             style="@style/ADDetailcheckoutStyle"
                             android:text=" 现金" />
 
                         <CheckBox
+                            android:id="@+id/cb8"
                             style="@style/ADDetailcheckoutStyle"
                             android:text=" 衣物" />
                     </LinearLayout>
@@ -134,6 +143,7 @@
                     android:layout_weight="1" />
 
                 <EditText
+                    android:id="@+id/et_InCarList"
                     android:layout_width="0dp"
                     android:layout_height="91dp"
                     android:layout_weight="2"
@@ -163,6 +173,7 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/et_InCarNmb"
                     android:layout_width="0dp"
                     android:layout_height="34dp"
                     android:layout_weight="2"
@@ -189,6 +200,7 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/et_InCarDlvComp"
                     android:layout_width="0dp"
                     android:layout_height="34dp"
                     android:layout_weight="2"
@@ -197,21 +209,34 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_login_signin"
-                android:layout_width="300dp"
-                android:layout_height="62dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="40dp"
-                android:layout_marginTop="40dp"
-                android:background="@drawable/sign_in_icon"
-                android:gravity="top|center_horizontal"
-                android:paddingTop="16dp"
-                android:text="提 交"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="11dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="拍摄照片" />
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_item_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2" />
+            </LinearLayout>
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <include layout="@layout/sorry" />
+
+    <include layout="@layout/no_data" />
 </RelativeLayout>

@@ -43,7 +43,8 @@ public final class EncryptUtils {
 
         byte[] newBytes = getNewBytes1(appendBytes, "0".getBytes());
         byte[] result = encrypt(rawKey, newBytes);
-        return Base64.encodeToString(result, Base64.DEFAULT);
+//        return Base64.encodeToString(result, Base64.DEFAULT);
+        return Base64.encodeToString(result, Base64.NO_WRAP);
     }
 
     private static byte[] getNewBytes(byte[] appendBytes, long length) {

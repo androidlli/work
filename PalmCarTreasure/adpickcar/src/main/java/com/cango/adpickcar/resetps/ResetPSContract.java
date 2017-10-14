@@ -21,6 +21,12 @@ public interface ResetPSContract {
     }
 
     interface Presenter extends BasePresenter {
-        void resetPS();
+        /**
+         * UserID											用户姓名									string
+         * Password											用户密码									string
+         * NewPassword											用户新密码									string
+         * ConfirmPassword											用户确认密码									string
+         */
+        void resetPS(boolean showRefreshLoadingUI, String userId, String password, String newPassword, String confirmPassword);
     }
 }

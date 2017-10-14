@@ -14,10 +14,13 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,17 +28,21 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.R;
+import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.base.BaseFragment;
 import com.cango.adpickcar.baseAdapter.BaseHolder;
 import com.cango.adpickcar.baseAdapter.OnBaseItemClickListener;
 import com.cango.adpickcar.baseAdapter.OnLoadMoreListener;
 import com.cango.adpickcar.detail.DetailActivity;
+import com.cango.adpickcar.login.LoginActivity;
+import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.resetps.ResetPSActivity;
 import com.cango.adpickcar.util.BarUtil;
 import com.cango.adpickcar.util.CommUtil;
-import com.cango.adpickcar.util.EncryptUtils;
-import com.orhanobut.logger.Logger;
+import com.cango.adpickcar.util.ToastUtils;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 
@@ -45,7 +52,16 @@ import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
 public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, MainContract.View {
-    public static final String CURRENT_TYPE = "current_type";
+    /**
+     * 查询类型（1：未接车 2.未提交 3：审核中 4：审批退回 5.审批通过）
+     */
+    public static final int WEIJIECHE = 1;
+    public static final int WEITIJIAO = 2;
+    public static final int SHENHEZHON = 3;
+    public static final int SHENHETUIHUI = 4;
+    public static final int SHENHETONGUO = 5;
+    public int CURRENT_TYPE = -1;
+
 
     public static MainFragment getInstance() {
         MainFragment mainFragment = new MainFragment();
@@ -106,9 +122,11 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     RecyclerView mRecyclerView;
     @BindView(R.id.fl_shadow)
     FrameLayout flShadow;
+    @BindView(R.id.avl_login_indicator)
+    AVLoadingIndicatorView mLoadView;
 
     @OnClick({R.id.ll_modify_ps, R.id.ll_main_search, R.id.rl_main_first, R.id.rl_main_second, R.id.rl_main_third,
-            R.id.rl_main_fourth, R.id.rl_main_fifth})
+            R.id.rl_main_fourth, R.id.rl_main_fifth, R.id.ll_sign_off})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_modify_ps:
@@ -118,19 +136,54 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 showPopSearch();
                 break;
             case R.id.rl_main_first:
+                llMainSearch.setVisibility(View.VISIBLE);
                 selectTitleStatus(0);
+                if (CURRENT_TYPE != WEIJIECHE) {
+                    CURRENT_TYPE = WEIJIECHE;
+                    onRefresh();
+                } else {
+                    if (!TextUtils.isEmpty(mLicensePlateNO) || !TextUtils.isEmpty(mCustName) || !TextUtils.isEmpty(mCarBrandName)) {
+                        mLicensePlateNO = null;
+                        mCustName = null;
+                        mCarBrandName = null;
+                        onRefresh();
+                    }
+                }
                 break;
             case R.id.rl_main_second:
+                llMainSearch.setVisibility(View.INVISIBLE);
                 selectTitleStatus(1);
+                if (CURRENT_TYPE != WEITIJIAO) {
+                    CURRENT_TYPE = WEITIJIAO;
+                    onRefresh();
+                }
                 break;
             case R.id.rl_main_third:
+                llMainSearch.setVisibility(View.INVISIBLE);
                 selectTitleStatus(2);
+                if (CURRENT_TYPE != SHENHEZHON) {
+                    CURRENT_TYPE = SHENHEZHON;
+                    onRefresh();
+                }
                 break;
             case R.id.rl_main_fourth:
+                llMainSearch.setVisibility(View.INVISIBLE);
                 selectTitleStatus(3);
+                if (CURRENT_TYPE != SHENHETUIHUI) {
+                    CURRENT_TYPE = SHENHETUIHUI;
+                    onRefresh();
+                }
                 break;
             case R.id.rl_main_fifth:
+                llMainSearch.setVisibility(View.INVISIBLE);
                 selectTitleStatus(4);
+                if (CURRENT_TYPE != SHENHETONGUO) {
+                    CURRENT_TYPE = SHENHETONGUO;
+                    onRefresh();
+                }
+                break;
+            case R.id.ll_sign_off:
+                mPresenter.logout(true, ADApplication.mSPUtils.getString(Api.USERID));
                 break;
         }
     }
@@ -138,12 +191,16 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private MainActivity mActivity;
     private MainContract.Presenter mPresenter;
     private MainAdapter mAdapter;
-    private ArrayList<String> datas;
+    private ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> datas;
+    private int itemOnClickPosition;
     private Badge firstQV, secondQV, thirdQV, fourthQV, fifthQV;
     private int selectColor, noSelectColor;
     private int mPageCount = 1, mTempPageCount = 2;
     static int PAGE_SIZE = 10;
     private boolean isLoadMore;
+    //客户名称 客户车牌号
+    private String mCustName, mLicensePlateNO, mCarBrandName;
+
 
     @Override
     public void onDestroyView() {
@@ -162,6 +219,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
      */
     @Override
     protected void initView() {
+        showLoadView(false);
         int statusBarHeight = BarUtil.getStatusBarHeight(getActivity());
         int actionBarHeight = BarUtil.getActionBarHeight(getActivity());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -191,23 +249,18 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
         mDrawerLayout.addDrawerListener(mToggle);
 
-        initNum();
+        initNum(1, 2, 3, 4, 5);
         selectTitleStatus(0);
+        CURRENT_TYPE = WEIJIECHE;
         initRecyclerView();
-        try {
-            String ok = EncryptUtils.encrypt("123456", "123456");
-            Logger.d(ok);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
-    private void initNum() {
-        firstQV = new QBadgeView(mActivity).bindTarget(tvFirstNum).setBadgeNumber(1).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
-        secondQV = new QBadgeView(mActivity).bindTarget(tvSecondNum).setBadgeNumber(2).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
-        thirdQV = new QBadgeView(mActivity).bindTarget(tvThirdNum).setBadgeNumber(3).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
-        fourthQV = new QBadgeView(mActivity).bindTarget(tvFourthNum).setBadgeNumber(4).setBadgeTextColor(Color.WHITE).setShowShadow(false);
-        fifthQV = new QBadgeView(mActivity).bindTarget(tvFifthNum).setBadgeNumber(5).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
+    private void initNum(int first, int second, int third, int fourth, int fifth) {
+        firstQV = new QBadgeView(mActivity).bindTarget(tvFirstNum).setBadgeNumber(first).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
+        secondQV = new QBadgeView(mActivity).bindTarget(tvSecondNum).setBadgeNumber(second).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
+        thirdQV = new QBadgeView(mActivity).bindTarget(tvThirdNum).setBadgeNumber(third).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
+        fourthQV = new QBadgeView(mActivity).bindTarget(tvFourthNum).setBadgeNumber(fourth).setBadgeTextColor(Color.WHITE).setShowShadow(false);
+        fifthQV = new QBadgeView(mActivity).bindTarget(tvFifthNum).setBadgeNumber(fifth).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
     }
 
     private void selectTitleStatus(int position) {
@@ -304,9 +357,6 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         mSwipeRefreshLayout.setColorSchemeResources(R.color.red, R.color.green, R.color.blue);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         datas = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            datas.add(i + "");
-        }
         mAdapter = new MainAdapter(mActivity, datas, true);
         mAdapter.setLoadingView(R.layout.load_loading_layout);
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -317,26 +367,70 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 }
                 isLoadMore = true;
                 mPageCount = mTempPageCount;
-                mPresenter.loadListByStatus(mPageCount, PAGE_SIZE);
+                mPresenter.loadListByStatus(false, ADApplication.mSPUtils.getString(Api.USERID), mCustName,
+                        mLicensePlateNO, mCarBrandName, CURRENT_TYPE + "", mPageCount + "", PAGE_SIZE + "");
             }
         });
-        mAdapter.setOnItemClickListener(new OnBaseItemClickListener<String>() {
+        mAdapter.setOnItemClickListener(new OnBaseItemClickListener<CarTakeTaskList.DataBean.CarTakeTaskListBean>() {
             @Override
-            public void onItemClick(BaseHolder viewHolder, String data, int position) {
-                new AlertDialog.Builder(mActivity)
-                        .setTitle("确认接车")
-                        .setMessage("申请编号\r\n" + "客户姓名\r\n" + "车牌号码\r\n" + "颜色\r\n")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(mActivity, DetailActivity.class));
-                            }
-                        })
-                        .create().show();
+            public void onItemClick(BaseHolder viewHolder, final CarTakeTaskList.DataBean.CarTakeTaskListBean data, final int position) {
+                switch (CURRENT_TYPE) {
+                    case WEIJIECHE:
+                        new AlertDialog.Builder(mActivity)
+                                .setTitle("确认接车")
+                                .setMessage("申请编号：" + data.getApplyCD() + "\r\n" + "客户姓名：" + data.getCustName() + "\r\n" +
+                                        "车牌号码：" + data.getLicenseplateNO() + "\r\n" + "颜色：" + data.getColor())
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        itemOnClickPosition = position;
+                                        mPresenter.GetCarTakeTaskList(true, ADApplication.mSPUtils.getString(Api.USERID),
+                                                data.getCTTaskID() + "", data.getPlanctWhno(), data.getVin(), data.getCarID() + "");
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .create().show();
+                        break;
+                    case WEITIJIAO:
+                    case SHENHEZHON:
+                    case SHENHETONGUO:
+                        Intent intent = new Intent(mActivity, DetailActivity.class);
+                        intent.putExtra("CarTakeTaskListBean", data);
+                        intent.putExtra("Type", CURRENT_TYPE);
+                        startActivity(intent);
+                        break;
+                    case SHENHETUIHUI:
+                        new AlertDialog.Builder(mActivity)
+                                .setTitle("驳回原因")
+                                .setMessage(data.getReturnReason())
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(mActivity, DetailActivity.class);
+                                        intent.putExtra("CarTakeTaskListBean", data);
+                                        intent.putExtra("Type", CURRENT_TYPE);
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .create().show();
+                        break;
+                }
             }
         });
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
+        onRefresh();
     }
 
     @Override
@@ -351,9 +445,11 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         isLoadMore = false;
         mPageCount = 1;
         mTempPageCount = 2;
-        mAdapter.notifyDataSetChanged();
+        datas.clear();
         mAdapter.setLoadingView(R.layout.load_loading_layout);
-        mPresenter.loadListByStatus(mPageCount, PAGE_SIZE);
+        mAdapter.notifyDataSetChanged();
+        mPresenter.loadListByStatus(true, ADApplication.mSPUtils.getString(Api.USERID), mCustName,
+                mLicensePlateNO, mCarBrandName, CURRENT_TYPE + "", mPageCount + "", PAGE_SIZE + "");
     }
 
     private void showPopSearch() {
@@ -372,7 +468,28 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     public PopupWindow getPopupWindow(Context context, final int layoutId) {
         final PopupWindow popupWindow = new PopupWindow(mCardView.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
-        View popupView = LayoutInflater.from(context).inflate(layoutId, null);
+        final View popupView = LayoutInflater.from(context).inflate(layoutId, null);
+        final EditText etPlateNO = (EditText) popupView.findViewById(R.id.et_PlateNO);
+        final EditText etName = (EditText) popupView.findViewById(R.id.et_Name);
+        final EditText etCarType = (EditText) popupView.findViewById(R.id.et_car_type);
+        Button btn = (Button) popupView.findViewById(R.id.btn_search);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String plateNo = etPlateNO.getText().toString().trim();
+                String name = etName.getText().toString().trim();
+                String carType = etCarType.getText().toString().trim();
+                if (!TextUtils.isEmpty(plateNo) || !TextUtils.isEmpty(name) || !TextUtils.isEmpty(carType)) {
+                    mLicensePlateNO = plateNo;
+                    mCustName = name;
+                    mCarBrandName = carType;
+                    popupWindow.dismiss();
+                    onRefresh();
+                } else {
+                    ToastUtils.showShort(R.string.input_params_prompt);
+                }
+            }
+        });
         popupWindow.setContentView(popupView);
 //        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         popupWindow.setFocusable(true);
@@ -390,6 +507,14 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     public void setPresenter(MainContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public void showLoadView(boolean isShow) {
+        if (isShow)
+            mLoadView.smoothToShow();
+        else
+            mLoadView.smoothToHide();
     }
 
     @Override
@@ -421,20 +546,61 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     @Override
-    public void showMainSuccess(boolean isSuccess, String message) {
+    public void showMainTitle(CarTakeTaskList.DataBean dataBean) {
+        firstQV.setBadgeNumber(dataBean.getNoTakeCarCount());
+        secondQV.setBadgeNumber(dataBean.getNoCommitCount());
+        thirdQV.setBadgeNumber(dataBean.getCommitCount());
+        fourthQV.setBadgeNumber(dataBean.getApproveBackCount());
+        fifthQV.setBadgeNumber(dataBean.getApproveCount());
+    }
+
+    @Override
+    public void showMainTitleError() {
+        firstQV.setBadgeNumber(0);
+        secondQV.setBadgeNumber(0);
+        thirdQV.setBadgeNumber(0);
+        fourthQV.setBadgeNumber(0);
+        fifthQV.setBadgeNumber(0);
+    }
+
+    @Override
+    public void showMainSuccess(boolean isSuccess, ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> carTakeTaskListBeanList) {
         llSorry.setVisibility(View.GONE);
-        ArrayList<String> newArrays = new ArrayList<>();
-        newArrays.add(message);
         if (isLoadMore) {
             mTempPageCount++;
-            mAdapter.setLoadMoreData(newArrays);
+            mAdapter.setLoadMoreData(datas);
         } else {
-//            mAdapter.setNewData(tasks);
-            mAdapter.setNewDataNoError(newArrays);
+            mAdapter.setNewDataNoError(carTakeTaskListBeanList);
         }
-        if (newArrays.size() < PAGE_SIZE) {
+        if (carTakeTaskListBeanList.size() < PAGE_SIZE) {
             mAdapter.setLoadEndView(R.layout.load_end_layout);
         }
+    }
+
+    @Override
+    public void showLogout(boolean isSuccess, String message) {
+        if (isSuccess) {
+            startActivity(new Intent(mActivity, LoginActivity.class));
+            mActivity.finish();
+        }
+        if (!TextUtils.isEmpty(message))
+            ToastUtils.showShort(message);
+    }
+
+    @Override
+    public void showGetCarTake(boolean isSuccess, String message) {
+        if (isSuccess) {
+            //只有未接车才能确认接车
+            if (itemOnClickPosition < datas.size()) {
+                Intent intent = new Intent(mActivity, DetailActivity.class);
+                intent.putExtra("CarTakeTaskListBean", datas.get(itemOnClickPosition));
+                intent.putExtra("Type", CURRENT_TYPE);
+                startActivity(intent);
+            }
+            onRefresh();
+        }
+        if (!TextUtils.isEmpty(message))
+            ToastUtils.showShort(message);
     }
 
     @Override
