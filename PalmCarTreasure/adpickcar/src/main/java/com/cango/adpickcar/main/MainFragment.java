@@ -183,7 +183,10 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 }
                 break;
             case R.id.ll_sign_off:
-                mPresenter.logout(true, ADApplication.mSPUtils.getString(Api.USERID));
+                if (isDoLogout) {
+                    isDoLogout = false;
+                    mPresenter.logout(true, ADApplication.mSPUtils.getString(Api.USERID));
+                }
                 break;
         }
     }
@@ -200,6 +203,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private boolean isLoadMore;
     //客户名称 客户车牌号
     private String mCustName, mLicensePlateNO, mCarBrandName;
+    private boolean isDoLogout = true, isDoCarTakeStoreConfirm = true;
 
 
     @Override
@@ -384,8 +388,12 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         itemOnClickPosition = position;
-                                        mPresenter.GetCarTakeTaskList(true, ADApplication.mSPUtils.getString(Api.USERID),
-                                                data.getCTTaskID() + "", data.getPlanctWhno(), data.getVin(), data.getCarID() + "");
+                                        if (isDoCarTakeStoreConfirm) {
+                                            isDoCarTakeStoreConfirm = false;
+                                            mPresenter.GetCarTakeTaskList(true, ADApplication.mSPUtils.getString(Api.USERID),
+                                                    data.getCTTaskID() + "", data.getPlanctWhno(), data.getVin(), data.getCarID() + "");
+
+                                        }
                                     }
                                 })
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -568,7 +576,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         llSorry.setVisibility(View.GONE);
         if (isLoadMore) {
             mTempPageCount++;
-            mAdapter.setLoadMoreData(datas);
+            mAdapter.setLoadMoreData(carTakeTaskListBeanList);
         } else {
             mAdapter.setNewDataNoError(carTakeTaskListBeanList);
         }
@@ -579,6 +587,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     @Override
     public void showLogout(boolean isSuccess, String message) {
+        isDoLogout = true;
         if (isSuccess) {
             startActivity(new Intent(mActivity, LoginActivity.class));
             mActivity.finish();
@@ -589,6 +598,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     @Override
     public void showGetCarTake(boolean isSuccess, String message) {
+        isDoCarTakeStoreConfirm = true;
         if (isSuccess) {
             //只有未接车才能确认接车
             if (itemOnClickPosition < datas.size()) {

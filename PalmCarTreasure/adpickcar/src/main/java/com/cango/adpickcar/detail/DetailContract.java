@@ -5,6 +5,9 @@ import com.cango.adpickcar.base.BaseView;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarFilesInfo;
 import com.cango.adpickcar.model.CarInfo;
+import com.cango.adpickcar.model.PhotoResult;
+
+import java.io.File;
 
 /**
  * Created by cango on 2017/9/27.
@@ -52,6 +55,9 @@ public interface DetailContract {
 
         void showCarFilesInfoNoData();
 
+        void showSaveDisCarInfo(boolean isSuccess, PhotoResult photoResult);
+
+        void showDeleteDisCarInfo(boolean isSuccess, String message);
     }
 
     interface Presenter extends BasePresenter {
@@ -60,7 +66,7 @@ public interface DetailContract {
         void GetCarTakeStoreCarInfo(boolean showRefreshLoadingUI, String DisCarID);
 
         //保存
-        void saveCarBasicItemInfo(boolean showRefreshLoadingUI, BaseInfo baseInfo);
+        void saveCarBasicItemInfo(boolean showRefreshLoadingUI, BaseInfo.DataBean dataBean);
 
         /**
          * UserID											用户ID									string
@@ -71,5 +77,10 @@ public interface DetailContract {
         void saveCarInfo(boolean showRefreshLoadingUI, String UserID, String LicensePlateNo, String IsErpMapping, String DisCarID);
 
         void getCarFilesInfo(boolean showRefreshLoadingUI, String DisCarID);
+
+        void saveDisCarInfo(boolean showRefreshLoadingUI, String UserID, String DisCarID, String PicGroup,
+                            String SubCategory, String SubID, String PicFileID, File file);
+
+        void deleteDisCarFile(boolean showRefreshLoadingUI, String UserID, String PicFileID);
     }
 }

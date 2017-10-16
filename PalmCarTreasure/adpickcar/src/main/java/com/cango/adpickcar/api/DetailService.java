@@ -4,13 +4,19 @@ import com.cango.adpickcar.model.BaseData;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarFilesInfo;
 import com.cango.adpickcar.model.CarInfo;
+import com.cango.adpickcar.model.PhotoResult;
 import com.cango.adpickcar.model.ServerTime;
 
+import java.io.File;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -53,5 +59,14 @@ public interface DetailService {
     //获取影像信息
     @GET("api/cartake/getcartakestorecarfiles")
     Observable<CarFilesInfo> getCarFilesInfo(@Query("DisCarID") String DisCarID);
+
+    //上传文件
+    @POST("api/cartake/savediscarfile")
+    @Multipart
+    Observable<PhotoResult> saveDisCarFile(@Part("RequestContent") RequestBody requestContent, @Part MultipartBody.Part photo);
+
+    //删除文件
+    @POST("api/cartake/deletediscarfile")
+    Observable<BaseData> deleteDisCarFile(@Body Map<String, Object> requestContent);
 }
 

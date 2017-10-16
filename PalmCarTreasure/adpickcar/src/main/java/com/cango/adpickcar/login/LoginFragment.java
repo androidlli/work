@@ -52,8 +52,9 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login_signin:
-                isDoLogin = true;
-                openPermissions();
+                if (isDoLogin) {
+                    openPermissions();
+                }
                 break;
         }
     }
@@ -78,8 +79,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
     @Override
     protected void initView() {
         showLoginIndicator(false);
-        etUserName.setText("15221493160");
-        etPassword.setText("123456");
+        etUserName.setText("13601952324");
+        etPassword.setText("Cango123456");
         openPermissions();
     }
 
@@ -103,11 +104,12 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
 
     @Override
     public void showLoginError() {
-
+        isDoLogin = true;
     }
 
     @Override
     public void showLoginSuccess(boolean isSuccess, String message) {
+        isDoLogin = true;
         if (isSuccess) {
             startActivity(new Intent(mActivity, MainActivity.class));
             mActivity.finish();

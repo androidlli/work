@@ -48,7 +48,6 @@ public class CarFilesInfo {
         private List<SurfaceFileListBean> SurfaceFileList;
         private List<SurfaceFileListBean> DetailList;
         private List<SurfaceFileListBean> SupplementList;
-        private List<SurfaceFileListBean> TakeCarList;
 
         public List<SurfaceFileListBean> getSurfaceFileList() {
             return SurfaceFileList;
@@ -72,14 +71,6 @@ public class CarFilesInfo {
 
         public void setSupplementList(List<SurfaceFileListBean> SupplementList) {
             this.SupplementList = SupplementList;
-        }
-
-        public List<SurfaceFileListBean> getTakeCarList() {
-            return TakeCarList;
-        }
-
-        public void setTakeCarList(List<SurfaceFileListBean> TakeCarList) {
-            this.TakeCarList = TakeCarList;
         }
 
         public static class SurfaceFileListBean {

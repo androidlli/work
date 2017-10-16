@@ -94,7 +94,7 @@ public class BaseInfo {
         private int UCarID;
         private int CTTaskID;
         private int KeyNmb;
-        private int MileAgeReg;
+        private String MileAgeReg;
         private String CarInfoDesc;
 
         public String getHasDrvLic() {
@@ -167,11 +167,13 @@ public class BaseInfo {
             this.KeyNmb = KeyNmb;
         }
 
-        public int getMileAgeReg() {
+        public String getMileAgeReg() {
             return MileAgeReg;
         }
 
-        public void setMileAgeReg(int MileAgeReg) {
+        public void setMileAgeReg(String MileAgeReg) {
+            if (CommUtil.checkIsNull(MileAgeReg))
+                MileAgeReg = "";
             this.MileAgeReg = MileAgeReg;
         }
 

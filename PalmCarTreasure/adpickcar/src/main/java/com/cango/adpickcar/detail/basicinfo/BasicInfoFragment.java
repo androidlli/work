@@ -89,7 +89,7 @@ public class BasicInfoFragment extends BaseFragment {
         isEdit = ((DetailFragment) getParentFragment()).isEdit;
     }
 
-    public void getData(){
+    public void getData() {
         presenter.GetCarTakeStoreBaseInfo(true, mCarTakeTaskListBean.getCTSID() + "", mCarTakeTaskListBean.getDisCarID() + "");
     }
 
@@ -176,7 +176,11 @@ public class BasicInfoFragment extends BaseFragment {
             numAdapter.setDropDownViewResource(R.layout.my_drop_down_item);
             spNum.setAdapter(numAdapter);
             if (dataBean.getKeyNmb() >= 0) {
-                spNum.setSelection(dataBean.getKeyNmb() - 1);
+                for (String bean : spNumDatas) {
+                    if (bean.equals(dataBean.getKeyNmb()+"")) {
+                        spNum.setSelection(spNumDatas.indexOf(bean));
+                    }
+                }
             } else {
             }
         } else {
@@ -205,7 +209,7 @@ public class BasicInfoFragment extends BaseFragment {
         GPSScreenAdapter.setDropDownViewResource(R.layout.my_drop_down_item);
         spGPSScreen.setAdapter(GPSScreenAdapter);
         for (BaseInfo.DataBean.BaseSpinnerListBean bean : hasDriverCardListBeanArrayList) {
-            if (bean.getId().equals(dataBean.getHasDrvLic())) {
+            if (bean.getId().equals(dataBean.getCustGpsScan())) {
                 spGPSScreen.setSelection(hasDriverCardListBeanArrayList.indexOf(bean));
             }
         }
@@ -253,7 +257,7 @@ public class BasicInfoFragment extends BaseFragment {
         carPaperAdapter.setDropDownViewResource(R.layout.my_drop_down_item);
         spCarPaper.setAdapter(carPaperAdapter);
         for (BaseInfo.DataBean.BaseSpinnerListBean bean : carInfoExamListBeanArrayList) {
-            if (bean.getId().equals(dataBean.getLocker())) {
+            if (bean.getId().equals(dataBean.getCarinfoExam())) {
                 spCarPaper.setSelection(carInfoExamListBeanArrayList.indexOf(bean));
             }
         }
@@ -283,7 +287,7 @@ public class BasicInfoFragment extends BaseFragment {
         statusAdapter.setDropDownViewResource(R.layout.my_drop_down_item);
         spStatus.setAdapter(statusAdapter);
         for (BaseInfo.DataBean.BaseSpinnerListBean bean : statusListBeanArrayList) {
-            if (bean.getId().equals(dataBean.getCarState())) {
+            if (bean.getId().equals(dataBean.getStatus())) {
                 spStatus.setSelection(statusListBeanArrayList.indexOf(bean));
             }
         }
@@ -311,6 +315,94 @@ public class BasicInfoFragment extends BaseFragment {
         nsvBasic.setVisibility(View.GONE);
         llSorry.setVisibility(View.GONE);
         llNoData.setVisibility(View.VISIBLE);
+    }
 
+    public String getMileAgeReg() {
+        mBaseInfo.getData().setMileAgeReg(etMileAgeReg.getText().toString().trim());
+        return etMileAgeReg.getText().toString().trim();
+    }
+
+    public String getCarInfoDesc() {
+        mBaseInfo.getData().setCarInfoDesc(etCarInfoDesc.getText().toString().trim());
+        return etCarInfoDesc.getEditableText().toString().trim();
+    }
+
+    public String getSPNum() {
+        String num = (String) spNum.getSelectedItem();
+        Logger.d(num);
+        mBaseInfo.getData().setKeyNmb(Integer.parseInt(num));
+        return num;
+    }
+
+    public String getHasCard() {
+        String card = switchCard.isChecked() ? "1" : "0";
+        mBaseInfo.getData().setHasDrvLic(card);
+        return card;
+    }
+
+    public String getGPSScreen() {
+        BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spGPSScreen.getSelectedItem();
+        mBaseInfo.getData().setCustGpsScan(bean.getId());
+        return bean.getValue();
+    }
+
+    public String getGPSInstall() {
+        BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spGPSInstall.getSelectedItem();
+        mBaseInfo.getData().setHxGpsInstall(bean.getId());
+        return bean.getValue();
+    }
+
+    public String getBatteryPowerSupply() {
+        BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spBatteryPowerSupply.getSelectedItem();
+        mBaseInfo.getData().setBatteryPower(bean.getId());
+        return bean.getValue();
+    }
+
+    public String getLocks() {
+        BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spLocks.getSelectedItem();
+        mBaseInfo.getData().setLocker(bean.getId());
+        return bean.getValue();
+    }
+
+    public String getCarPager() {
+        BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spCarPaper.getSelectedItem();
+        mBaseInfo.getData().setCarinfoExam(bean.getId());
+        return bean.getValue();
+    }
+
+    public String getAntitowing() {
+        String antitow = etAntitowing.getText().toString().trim();
+        mBaseInfo.getData().setAntitowing(antitow);
+        return antitow;
+    }
+
+    public String getRegMemo() {
+        String regMemo = etRegMemo.getText().toString().trim();
+        mBaseInfo.getData().setRegMemo(regMemo);
+        return regMemo;
+    }
+
+    public String getWhPosition() {
+        String whPosition = etWhPosition.getText().toString().trim();
+        mBaseInfo.getData().setWhPosition(whPosition);
+        return whPosition;
+    }
+
+    public String getCarStatus(){
+        BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spCarStatus.getSelectedItem();
+        mBaseInfo.getData().setCarState(bean.getId());
+        return bean.getValue();
+    }
+
+    public String getStatus(){
+        BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spStatus.getSelectedItem();
+        mBaseInfo.getData().setStatus(bean.getId());
+        return bean.getValue();
+    }
+
+    public String getApproveStatus(){
+        BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spApproveStatus.getSelectedItem();
+        mBaseInfo.getData().setAuditFlag(bean.getId());
+        return bean.getValue();
     }
 }

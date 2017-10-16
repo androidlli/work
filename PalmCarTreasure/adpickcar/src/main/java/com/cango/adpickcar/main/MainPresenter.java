@@ -368,6 +368,7 @@ public class MainPresenter implements MainContract.Presenter {
                     protected void _onError() {
                         if (mView.isActive()) {
                             mView.showLoadView(false);
+                            mView.showLogout(false,null);
                         }
                     }
                 });
@@ -406,7 +407,7 @@ public class MainPresenter implements MainContract.Presenter {
                         if (mView.isActive()) {
                             mView.showLoadView(false);
                             boolean isSuccess = o.getCode().equals("200");
-                            mView.showLogout(isSuccess, o.getMsg());
+                            mView.showGetCarTake(isSuccess, o.getMsg());
                         }
                     }
 
@@ -414,6 +415,7 @@ public class MainPresenter implements MainContract.Presenter {
                     protected void _onError() {
                         if (mView.isActive()) {
                             mView.showLoadView(false);
+                            mView.showGetCarTake(false,null);
                         }
                     }
                 });

@@ -23,16 +23,21 @@ import com.cango.adpickcar.detail.imageinfo.ImageInfoFragment;
 import com.cango.adpickcar.detail.iteminfo.ItemInfoFragment;
 import com.cango.adpickcar.main.MainFragment;
 import com.cango.adpickcar.model.BaseInfo;
+import com.cango.adpickcar.model.CarFilesInfo;
 import com.cango.adpickcar.model.CarInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
+import com.cango.adpickcar.model.PhotoResult;
 import com.cango.adpickcar.util.BarUtil;
 import com.cango.adpickcar.util.ToastUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 public class DetailFragment extends BaseFragment implements DetailContract.View {
 
@@ -80,6 +85,8 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 SelectChildTitle(currentPosition);
                 hideFragments();
                 showFragment(currentPosition);
+                basicInfoFragment.getData();
+                tvSave.setText("保存");
                 break;
             case R.id.ll_detail_item_info:
                 if (currentPosition == 1) {
@@ -89,6 +96,8 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 SelectChildTitle(currentPosition);
                 hideFragments();
                 showFragment(currentPosition);
+                itemInfoFragment.getData();
+                tvSave.setText("保存");
                 break;
             case R.id.ll_detail_car_info:
                 if (currentPosition == 2) {
@@ -98,6 +107,8 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 SelectChildTitle(currentPosition);
                 hideFragments();
                 showFragment(currentPosition);
+                carInfoFragment.getData();
+                tvSave.setText("保存");
                 break;
             case R.id.ll_detail_image_info:
                 if (currentPosition == 3) {
@@ -107,20 +118,27 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 SelectChildTitle(currentPosition);
                 hideFragments();
                 showFragment(currentPosition);
+                imageInfoFragment.getData();
+                tvSave.setText("提交");
                 break;
             case R.id.tv_save:
                 switch (currentPosition) {
                     //上传基本信息或者物品信息的对象
                     case 0:
                     case 1:
-                        mBaseInfo.getData().setUserID(ADApplication.mSPUtils.getString(Api.USERID));
-                        mPresenter.saveCarBasicItemInfo(true, mBaseInfo);
+                        if (checkBasicAndItemParamsMust()) {
+                            mBaseInfo.getData().setUserID(ADApplication.mSPUtils.getString(Api.USERID));
+                            mPresenter.saveCarBasicItemInfo(true, mBaseInfo.getData());
+                        }
                         break;
                     //保存车辆信息
                     case 2:
                         mPresenter.saveCarInfo(true, ADApplication.mSPUtils.getString(Api.USERID),
-                                mCarTakeTaskListBean.getLicenseplateNO(), carInfoFragment.getIsErpMapping(),
+                                carInfoFragment.getLicenseplateNO(), carInfoFragment.getIsErpMapping(),
                                 mCarTakeTaskListBean.getDisCarID() + "");
+                        break;
+                    //提交
+                    case 3:
                         break;
                 }
                 break;
@@ -147,12 +165,28 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
     private BaseInfo mBaseInfo;
     //保存车辆信息
     private CarInfo mCarInfo;
+    //保存影像信息
+    private CarFilesInfo mCarFilesInfo;
     public CarTakeTaskList.DataBean.CarTakeTaskListBean mCarTakeTaskListBean;
     /**
      * 4个fragment的当前选中
      */
     private int currentPosition;
     private int selectColor, noSelectColor;
+
+    /**
+     * 上传图片类型，0：物品信息里面的图片，1：车辆拍照的图片
+     */
+    private int mFromType = -1;
+    /**
+     * 删除图片的类型，0：物品信息里面的图片,1:车辆拍照的图片
+     */
+    private int mDeleteType = -1;
+
+    /**
+     * 车辆拍照内的子布局的图片，0:外观照，1：详细照，2：补充照
+     */
+    private int mSubType = -1;
 
     @Override
     protected int initLayoutId() {
@@ -407,5 +441,130 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
         } else {
             carInfoFragment.updateUI(mCarInfo);
         }
+    }
+
+    @Override
+    public void showCarFilesInfo(CarFilesInfo carFilesInfo) {
+        mCarFilesInfo = carFilesInfo;
+        imageInfoFragment.updateUI(carFilesInfo);
+    }
+
+    @Override
+    public void showCarFilesInfoError() {
+        imageInfoFragment.showError();
+    }
+
+    @Override
+    public void showCarFilesInfoNoData() {
+        imageInfoFragment.showNoData();
+    }
+
+    @Override
+    public void showSaveDisCarInfo(boolean isSuccess, PhotoResult photoResult) {
+        if (isSuccess) {
+            if (mFromType == 0) {
+                itemInfoFragment.updateAddPhoto(photoResult);
+            } else if (mFromType == 1) {
+                if (mSubType == 0) {
+                    imageInfoFragment.updateAddFacadePhoto(photoResult);
+                } else if (mSubType == 1) {
+                    imageInfoFragment.updateAddPartPhoto(photoResult);
+                } else if (mSubType == 2) {
+                    imageInfoFragment.updateAddSupplePhoto(photoResult);
+                } else {
+
+                }
+            }
+        } else {
+            if (!TextUtils.isEmpty(photoResult.getMsg())) {
+                ToastUtils.showShort(photoResult.getMsg());
+            }
+        }
+    }
+
+    @Override
+    public void showDeleteDisCarInfo(boolean isSuccess, String message) {
+        if (isSuccess) {
+            if (mDeleteType == 0) {
+                itemInfoFragment.updateDeletePhoto();
+            } else if (mDeleteType == 1) {
+                if (mSubType == 0) {
+                    imageInfoFragment.updateDelteFacadePhoto();
+                } else if (mSubType == 1) {
+                    imageInfoFragment.updateDeltePartPhoto();
+                } else if (mSubType == 2) {
+                    imageInfoFragment.updateDelteSupplePhoto();
+                } else {
+
+                }
+            }
+        } else {
+            if (!TextUtils.isEmpty(message)) {
+                ToastUtils.showShort(message);
+            }
+        }
+    }
+
+    private boolean checkBasicAndItemParamsMust() {
+        boolean check = false;
+        if (!TextUtils.isEmpty(basicInfoFragment.getMileAgeReg()) && !TextUtils.isEmpty(basicInfoFragment.getCarInfoDesc()) &&
+                !TextUtils.isEmpty(basicInfoFragment.getSPNum()) && !TextUtils.isEmpty(basicInfoFragment.getHasCard()) &&
+                !TextUtils.isEmpty(basicInfoFragment.getGPSScreen()) && !TextUtils.isEmpty(basicInfoFragment.getGPSInstall()) &&
+                !TextUtils.isEmpty(basicInfoFragment.getBatteryPowerSupply()) && !TextUtils.isEmpty(basicInfoFragment.getLocks()) &&
+                !TextUtils.isEmpty(basicInfoFragment.getCarPager())) {
+            check = true;
+        }
+        basicInfoFragment.getAntitowing();
+        basicInfoFragment.getRegMemo();
+        basicInfoFragment.getWhPosition();
+        basicInfoFragment.getCarStatus();
+        basicInfoFragment.getStatus();
+        basicInfoFragment.getApproveStatus();
+
+        itemInfoFragment.getCarDlvNO();
+        itemInfoFragment.getInCarList();
+        itemInfoFragment.getInCarNmb();
+        itemInfoFragment.getInCarDlvComp();
+        return check;
+    }
+
+    public void zipPicture(int fromType, int subType, String mImgPath, final String UserID, final String DisCarID, final String PicGroup, final String SubCategory,
+                           final String SubID, final String PicFileID) {
+        mFromType = fromType;
+        mSubType = subType;
+        File file = new File(mImgPath);
+        Luban.get(mActivity)
+                .load(file)                     //传人要压缩的图片
+                .putGear(Luban.THIRD_GEAR)      //设定压缩档次，默认三挡
+                .setCompressListener(new OnCompressListener() { //设置回调
+
+                    @Override
+                    public void onStart() {
+                        // TODO 压缩开始前调用，可以在方法内启动 loading UI
+                        if (isAdded()) {
+                            showIndicator(true);
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess(File file) {
+                        // TODO 压缩成功后调用，返回压缩后的图片文件
+                        mPresenter.saveDisCarInfo(true, UserID, DisCarID, PicGroup, SubCategory, SubID, PicFileID, file);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // TODO 当压缩过去出现问题时调用
+                        if (isAdded()) {
+                            showIndicator(false);
+                        }
+                    }
+                }).launch();    //启动压缩
+    }
+
+    public void DeletePhoto(int type, int subType, boolean showRefreshLoadingUI, String UserID, String PicFileID) {
+        mDeleteType = type;
+        mSubType = subType;
+        mPresenter.deleteDisCarFile(showRefreshLoadingUI, UserID, PicFileID);
     }
 }

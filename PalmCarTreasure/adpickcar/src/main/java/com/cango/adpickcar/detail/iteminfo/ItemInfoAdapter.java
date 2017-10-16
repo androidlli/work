@@ -6,9 +6,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.R;
+import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.baseAdapter.BaseAdapter;
 import com.cango.adpickcar.baseAdapter.BaseHolder;
+import com.cango.adpickcar.detail.DetailFragment;
 import com.cango.adpickcar.model.BaseInfo;
 
 import java.util.List;
@@ -19,13 +22,17 @@ import java.util.List;
 
 public class ItemInfoAdapter extends BaseAdapter<BaseInfo.DataBean.InPicFileListBean> {
     boolean isEdit;
-    public ItemInfoAdapter(Context context, List<BaseInfo.DataBean.InPicFileListBean> datas, boolean isOpenLoadMore) {
+    DetailFragment detailFragment;
+
+    public ItemInfoAdapter(Context context, List<BaseInfo.DataBean.InPicFileListBean> datas, boolean isOpenLoadMore, DetailFragment detailFragment) {
         super(context, datas, isOpenLoadMore);
+        this.detailFragment = detailFragment;
     }
 
-    public void setIsEdit(boolean isEdit){
+    public void setIsEdit(boolean isEdit) {
         this.isEdit = isEdit;
     }
+
     @Override
     protected int getItemLayoutId() {
         return R.layout.item_info_item_image;
@@ -45,12 +52,13 @@ public class ItemInfoAdapter extends BaseAdapter<BaseInfo.DataBean.InPicFileList
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isEdit){
-                    int removeIndex = mDatas.indexOf(data);
-                    mDatas.remove(removeIndex);
-                    ItemInfoAdapter.this.notifyItemRemoved(removeIndex);
-                    ItemInfoAdapter.this.notifyItemRangeChanged(removeIndex, mDatas.size());
-                }else {
+                if (isEdit) {
+//                    int removeIndex = mDatas.indexOf(data);
+//                    mDatas.remove(removeIndex);
+//                    ItemInfoAdapter.this.notifyItemRemoved(removeIndex);
+//                    ItemInfoAdapter.this.notifyItemRangeChanged(removeIndex, mDatas.size());
+                    detailFragment.DeletePhoto(0,-1, true, ADApplication.mSPUtils.getString(Api.USERID), data.getPicFileID() + "");
+                } else {
 
                 }
             }

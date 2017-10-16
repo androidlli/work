@@ -48,14 +48,18 @@ public class ResetFragment extends BaseFragment implements ResetPSContract.View 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login_signin:
-                mPresenter.resetPS(true, ADApplication.mSPUtils.getString(Api.USERID), etPassword.getText().toString().trim(),
-                        etNewPassword.getText().toString().trim(), etConfirmPassword.getText().toString().trim());
+                if (isDoChangePassword) {
+                    isDoChangePassword = false;
+                    mPresenter.resetPS(true, ADApplication.mSPUtils.getString(Api.USERID), etPassword.getText().toString().trim(),
+                            etNewPassword.getText().toString().trim(), etConfirmPassword.getText().toString().trim());
+                }
                 break;
         }
     }
 
     ResetPSActivity mActivity;
     private ResetPSContract.Presenter mPresenter;
+    private boolean isDoChangePassword = true;
 
     @Override
     protected int initLayoutId() {
@@ -105,11 +109,12 @@ public class ResetFragment extends BaseFragment implements ResetPSContract.View 
 
     @Override
     public void showResetError() {
-
+        isDoChangePassword = true;
     }
 
     @Override
     public void showResetSuccess(boolean isSuccess, String message) {
+        isDoChangePassword = true;
         if (!TextUtils.isEmpty(message))
             ToastUtils.showShort(message);
         if (isSuccess) {

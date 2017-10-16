@@ -38,9 +38,10 @@ public class CommUtil {
         return encrypt;
     }
 
-    public static String setParamsToJsonByEncrypt(Object object){
+    public static String setParamsToJsonByEncrypt(Object object) {
         String encrypt = null;
         String source = new Gson().toJson(object);
+//        Logger.d(source);
         try {
             encrypt = EncryptUtils.encrypt(Api.KEY, source);
         } catch (Exception e) {

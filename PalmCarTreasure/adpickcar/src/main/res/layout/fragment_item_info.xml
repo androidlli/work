@@ -40,6 +40,8 @@
                     android:layout_weight="2"
                     android:background="@drawable/detail_et_bg_2"
                     android:gravity="center_vertical"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -150,7 +152,7 @@
                     android:background="@drawable/detail_et_bg_2"
                     android:gravity="start"
                     android:hint="其 它"
-                    android:padding="3dp"
+                    android:padding="5dp"
                     android:textColorHint="@color/ad666666"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -179,6 +181,9 @@
                     android:layout_weight="2"
                     android:background="@drawable/detail_et_bg_2"
                     android:gravity="center_vertical"
+                    android:inputType="number"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -206,6 +211,8 @@
                     android:layout_weight="2"
                     android:background="@drawable/detail_et_bg_2"
                     android:gravity="center_vertical"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
                     android:textSize="14sp" />
             </LinearLayout>
 

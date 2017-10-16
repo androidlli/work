@@ -112,7 +112,7 @@ public class CarInfoFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-        getData();
+//        getData();
     }
 
     public void getData() {
@@ -169,6 +169,12 @@ public class CarInfoFragment extends BaseFragment {
     }
 
     public String getIsErpMapping() {
+        mCarInfo.getData().setIsErpMapping(switchIsERPMapping.isChecked() ? "1" : "0");
         return switchIsERPMapping.isChecked() ? "1" : "0";
+    }
+
+    public String getLicenseplateNO() {
+        mCarInfo.getData().setLicensePlateNo(tvPhotoNumber.getText().toString().trim());
+        return tvPhotoNumber.getText().toString().trim();
     }
 }

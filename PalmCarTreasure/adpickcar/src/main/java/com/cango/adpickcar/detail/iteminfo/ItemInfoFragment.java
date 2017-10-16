@@ -14,24 +14,28 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.R;
+import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.base.BaseFragment;
 import com.cango.adpickcar.baseAdapter.BaseHolder;
 import com.cango.adpickcar.baseAdapter.OnBaseItemClickListener;
 import com.cango.adpickcar.camera.CameraActivity;
 import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.detail.DetailFragment;
+import com.cango.adpickcar.detail.DetailPresenter;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
+import com.cango.adpickcar.model.PhotoResult;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import butterknife.BindView;
 
 public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener {
     private static final int REQUEST_IMAGE_CAPTURE_INFO = 1;
+    private String photoPath;
 
     public static ItemInfoFragment getInstance() {
         ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
@@ -74,7 +78,10 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
     LinearLayout llNoData;
 
     private DetailActivity mActivity;
+    private DetailFragment detailFragment;
+    private DetailPresenter presenter;
     private ArrayList<BaseInfo.DataBean.InPicFileListBean> datas;
+    private int currentPosition;
     private ItemInfoAdapter mAdapter;
     private CarTakeTaskList.DataBean.CarTakeTaskListBean mCarTakeTaskListBean;
     private boolean isEdit;
@@ -98,18 +105,23 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         cb8.setOnCheckedChangeListener(this);
     }
 
+    public void getData() {
+        presenter.GetCarTakeStoreBaseInfo(true, mCarTakeTaskListBean.getCTSID() + "", mCarTakeTaskListBean.getDisCarID() + "");
+    }
+
     private void initRecyclerView() {
         datas = new ArrayList<>();
         BaseInfo.DataBean.InPicFileListBean lastBean = new BaseInfo.DataBean.InPicFileListBean();
         lastBean.setPicFileID(-1);
         datas.add(lastBean);
-        mAdapter = new ItemInfoAdapter(mActivity, datas, false);
+        mAdapter = new ItemInfoAdapter(mActivity, datas, false, detailFragment);
         mAdapter.setIsEdit(isEdit);
         mAdapter.setOnItemClickListener(new OnBaseItemClickListener<BaseInfo.DataBean.InPicFileListBean>() {
             @Override
             public void onItemClick(BaseHolder viewHolder, BaseInfo.DataBean.InPicFileListBean data, int position) {
                 if (isEdit) {
                     if (data.getPicFileID() == -1) {
+                        currentPosition = position;
                         Intent cameraIntent = new Intent(mActivity, CameraActivity.class);
                         cameraIntent.putExtra("type", 0);
                         startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE_INFO);
@@ -125,25 +137,21 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
     @Override
     protected void initData() {
         mActivity = (DetailActivity) getActivity();
+        detailFragment = (DetailFragment) getParentFragment();
+        presenter = (DetailPresenter) ((DetailFragment) getParentFragment()).mPresenter;
         mCarTakeTaskListBean = ((DetailFragment) getParentFragment()).mCarTakeTaskListBean;
         isEdit = ((DetailFragment) getParentFragment()).isEdit;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String photoPath = null;
         if (requestCode == REQUEST_IMAGE_CAPTURE_INFO) {
             if (resultCode == Activity.RESULT_OK) {
                 photoPath = data.getStringExtra("path");
                 if (!TextUtils.isEmpty(photoPath)) {
-                    Collections.reverse(datas);
-                    BaseInfo.DataBean.InPicFileListBean bean = new BaseInfo.DataBean.InPicFileListBean();
-                    bean.setPicPath(photoPath);
-                    datas.add(bean);
-                    Collections.reverse(datas);
-                    mAdapter.notifyDataSetChanged();
+                    detailFragment.zipPicture(0, -1,photoPath, ADApplication.mSPUtils.getString(Api.USERID),
+                            mCarTakeTaskListBean.getDisCarID() + "", "25", null, null, null);
                 }
-
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 if (photoPath != null) {
@@ -152,6 +160,26 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
                 }
             }
         }
+    }
+
+    public void updateAddPhoto(PhotoResult photoResult) {
+//        getData();
+        //局部刷新
+        PhotoResult.DataBean result = photoResult.getData();
+        BaseInfo.DataBean.InPicFileListBean bean = new BaseInfo.DataBean.InPicFileListBean();
+        bean.setPicFileID(result.getPicFileID());
+        bean.setPicPath(result.getPicPath());
+        bean.setThumbPath(result.getThumbPath());
+        datas.add(currentPosition, bean);
+        mAdapter.notifyItemInserted(currentPosition);
+        mAdapter.notifyItemChanged(currentPosition);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void updateDeletePhoto() {
+        datas.remove(currentPosition);
+        mAdapter.notifyItemRemoved(currentPosition);
+        mAdapter.notifyItemRangeChanged(currentPosition, datas.size());
     }
 
     public void updateUI(BaseInfo baseInfo) {
@@ -223,6 +251,21 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         etInCarList.setText(dataBean.getInCarList());
         etInCarNmb.setText(dataBean.getInCarNmb() + "");
         etInCarDlvComp.setText(dataBean.getInCarDlvComp());
+
+        datas.clear();
+        if (isEdit) {
+            datas.addAll(mBaseInfo.getData().getInPicFileList());
+            BaseInfo.DataBean.InPicFileListBean lastBean = new BaseInfo.DataBean.InPicFileListBean();
+            lastBean.setPicFileID(-1);
+            if (isEdit) {
+                datas.add(lastBean);
+            } else {
+            }
+            mAdapter.notifyDataSetChanged();
+        } else {
+            datas.addAll(mBaseInfo.getData().getInPicFileList());
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     public void showError() {
@@ -235,6 +278,30 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         nsvItem.setVisibility(View.GONE);
         llSorry.setVisibility(View.GONE);
         llNoData.setVisibility(View.VISIBLE);
+    }
+
+    public String getCarDlvNO() {
+        String carDlvNO = etInCarDlvNO.getText().toString().trim();
+        mBaseInfo.getData().setInCarDlvNO(carDlvNO);
+        return carDlvNO;
+    }
+
+    public String getInCarList() {
+        String inCarList = etInCarList.getText().toString().trim();
+        mBaseInfo.getData().setInCarList(inCarList);
+        return inCarList;
+    }
+
+    public String getInCarNmb() {
+        String inCarNmb = etInCarNmb.getText().toString().trim();
+        mBaseInfo.getData().setInCarNmb(Integer.parseInt(inCarNmb));
+        return inCarNmb;
+    }
+
+    public String getInCarDlvComp() {
+        String inCarDlvComp = etInCarDlvComp.getText().toString().trim();
+        mBaseInfo.getData().setInCarDlvComp(inCarDlvComp);
+        return inCarDlvComp;
     }
 
     @Override
@@ -267,4 +334,5 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
                 break;
         }
     }
+
 }

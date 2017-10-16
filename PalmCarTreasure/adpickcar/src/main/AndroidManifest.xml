@@ -30,7 +30,7 @@
         </activity>
         <activity
             android:name=".login.LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".resetps.ResetPSActivity"
             android:screenOrientation="portrait" />

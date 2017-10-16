@@ -17,12 +17,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.R;
+import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.base.BaseFragment;
 import com.cango.adpickcar.baseAdapter.BaseAdapter;
 import com.cango.adpickcar.baseAdapter.BaseHolder;
@@ -30,6 +33,12 @@ import com.cango.adpickcar.baseAdapter.GridSpacingItemDecoration;
 import com.cango.adpickcar.baseAdapter.OnBaseItemClickListener;
 import com.cango.adpickcar.camera.CameraActivity;
 import com.cango.adpickcar.detail.DetailActivity;
+import com.cango.adpickcar.detail.DetailFragment;
+import com.cango.adpickcar.detail.DetailPresenter;
+import com.cango.adpickcar.model.CarFilesInfo;
+import com.cango.adpickcar.model.CarTakeTaskList;
+import com.cango.adpickcar.model.PhotoResult;
+import com.cango.adpickcar.util.CommUtil;
 import com.cango.adpickcar.util.SizeUtil;
 
 import java.io.File;
@@ -50,11 +59,21 @@ public class ParticularFragment extends BaseFragment {
 
     @BindView(R.id.rv_particular)
     RecyclerView mRecyclerView;
+    @BindView(R.id.ll_no_data)
+    LinearLayout llNoData;
+    @BindView(R.id.ll_sorry)
+    LinearLayout llSorry;
 
     private DetailActivity mActivity;
-    private ArrayList<String> mDatas;
+    private DetailFragment detailFragment;
+    private DetailPresenter presenter;
+    private CarTakeTaskList.DataBean.CarTakeTaskListBean mCarTakeTaskListBean;
+    private CarFilesInfo mCarFilesInfo;
+    private boolean isEdit;
+    private ArrayList<CarFilesInfo.DataBean.SurfaceFileListBean> mDatas;
     private ParticularFragment.ParticularAdapter mAdapter;
     private int currentPostion;
+    private boolean isOver;
 
     @Override
     protected int initLayoutId() {
@@ -69,12 +88,14 @@ public class ParticularFragment extends BaseFragment {
     private void initRecyclerView() {
         mDatas = new ArrayList<>();
         mAdapter = new ParticularFragment.ParticularAdapter(mActivity, mDatas, false);
-        mAdapter.setOnItemClickListener(new OnBaseItemClickListener<String>() {
+        mAdapter.setOnItemClickListener(new OnBaseItemClickListener<CarFilesInfo.DataBean.SurfaceFileListBean>() {
             @Override
-            public void onItemClick(BaseHolder viewHolder, String data, int position) {
-                currentPostion = position;
-                Intent cameraIntent = new Intent(mActivity, CameraActivity.class);
-                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE_PARTICULAR);
+            public void onItemClick(BaseHolder viewHolder, CarFilesInfo.DataBean.SurfaceFileListBean data, int position) {
+                if (!isEdit)
+                    return;
+//                currentPostion = position;
+//                Intent cameraIntent = new Intent(mActivity, CameraActivity.class);
+//                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE_PARTICULAR);
             }
         });
         mRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
@@ -85,6 +106,69 @@ public class ParticularFragment extends BaseFragment {
     @Override
     protected void initData() {
         mActivity = (DetailActivity) getActivity();
+        detailFragment = (DetailFragment) getParentFragment().getParentFragment();
+        presenter = (DetailPresenter) ((DetailFragment) (getParentFragment().getParentFragment())).mPresenter;
+        mCarTakeTaskListBean = ((DetailFragment) (getParentFragment().getParentFragment())).mCarTakeTaskListBean;
+        isEdit = ((DetailFragment) (getParentFragment().getParentFragment())).isEdit;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!isOver) {
+            isOver = true;
+            updateUI(((ImageInfoFragment) getParentFragment()).mCarFilesInfo);
+        }
+    }
+
+
+    public void updateUI(CarFilesInfo carFilesInfo) {
+        mCarFilesInfo = carFilesInfo;
+        if (CommUtil.checkIsNull(mCarFilesInfo.getData().getDetailList())) {
+            showNoData();
+        } else {
+            mDatas.addAll(carFilesInfo.getData().getDetailList());
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void showError() {
+        mRecyclerView.setVisibility(View.GONE);
+        llSorry.setVisibility(View.VISIBLE);
+        llNoData.setVisibility(View.GONE);
+    }
+
+    public void showNoData() {
+        mRecyclerView.setVisibility(View.GONE);
+        llSorry.setVisibility(View.GONE);
+        llNoData.setVisibility(View.VISIBLE);
+    }
+
+    public void updateAddPhoto(PhotoResult photoResult) {
+        //更新有subname的图片地址
+        CarFilesInfo.DataBean.SurfaceFileListBean bean = mDatas.get(currentPostion);
+        bean.setPicFileID(photoResult.getData().getPicFileID());
+        bean.setPicPath(photoResult.getData().getPicPath());
+        bean.setThumbPath(photoResult.getData().getThumbPath());
+        mAdapter.notifyItemChanged(currentPostion);
+    }
+
+    public void updateDeletePhoto() {
+        CarFilesInfo.DataBean.SurfaceFileListBean bean = mDatas.get(currentPostion);
+        if (bean.getPicFileID() == -1) {
+            //类型是拍摄更多图片的按钮
+        } else if (TextUtils.isEmpty(bean.getSubName())) {
+            //类型拍摄更多后的图片
+            mDatas.remove(currentPostion);
+            mAdapter.notifyItemRemoved(currentPostion);
+            mAdapter.notifyItemRangeChanged(currentPostion, mDatas.size());
+        } else {
+            //类型是有btn按钮的图片
+            bean.setPicFileID(0);
+            bean.setPicPath("");
+            bean.setThumbPath("");
+            mAdapter.notifyItemChanged(currentPostion);
+        }
     }
 
     @Override
@@ -94,8 +178,12 @@ public class ParticularFragment extends BaseFragment {
             if (resultCode == Activity.RESULT_OK) {
                 photoPath = data.getStringExtra("path");
                 if (!TextUtils.isEmpty(photoPath)) {
-                    mDatas.set(currentPostion, photoPath);
-                    mAdapter.notifyItemChanged(currentPostion);
+//                    mDatas.get(currentPostion).setPicPath(photoPath);
+//                    mAdapter.notifyItemChanged(currentPostion);
+                    CarFilesInfo.DataBean.SurfaceFileListBean bean = mDatas.get(currentPostion);
+                    detailFragment.zipPicture(1, 1, photoPath, ADApplication.mSPUtils.getString(Api.USERID),
+                            mCarTakeTaskListBean.getDisCarID() + "", "20", bean.getSubCategory(),
+                            bean.getSubID(), bean.getPicFileID() + "");
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -107,11 +195,11 @@ public class ParticularFragment extends BaseFragment {
         }
     }
 
-    public class ParticularAdapter extends BaseAdapter<String> {
+    public class ParticularAdapter extends BaseAdapter<CarFilesInfo.DataBean.SurfaceFileListBean> {
         CenterCrop centerCrop;
         ParticularFragment.GlideRoundTransform glideRoundTransform;
 
-        public ParticularAdapter(Context context, List<String> datas, boolean isOpenLoadMore) {
+        public ParticularAdapter(Context context, List<CarFilesInfo.DataBean.SurfaceFileListBean> datas, boolean isOpenLoadMore) {
             super(context, datas, isOpenLoadMore);
             centerCrop = new CenterCrop(mContext);
             glideRoundTransform = new ParticularFragment.GlideRoundTransform(mContext, 5);
@@ -123,12 +211,13 @@ public class ParticularFragment extends BaseFragment {
         }
 
         @Override
-        protected void convert(BaseHolder holder, String data) {
+        protected void convert(final BaseHolder holder, final CarFilesInfo.DataBean.SurfaceFileListBean data) {
             ImageView ivContent = holder.getView(R.id.iv_image_card_item);
             Button btnPrompt = holder.getView(R.id.btn_image_prompt);
             ImageView ivClose = holder.getView(R.id.iv_image_close);
-            if (!TextUtils.isEmpty(data) && data.length() > 1) {
-                Glide.with(mContext).load(data)
+            btnPrompt.setText(data.getSubName());
+            if (!TextUtils.isEmpty(data.getPicPath())) {
+                Glide.with(mContext).load(data.getPicPath())
                         .placeholder(R.drawable.photosimg)
 //                    .error(R.drawable.placeholder_big)
                         .transform(centerCrop, glideRoundTransform)
@@ -142,6 +231,36 @@ public class ParticularFragment extends BaseFragment {
             }
             btnPrompt.setVisibility(View.VISIBLE);
             ivClose.setVisibility(View.VISIBLE);
+            btnPrompt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isEdit)
+                        return;
+                    currentPostion = holder.getAdapterPosition();
+                    Intent cameraIntent = new Intent(mActivity, CameraActivity.class);
+                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE_PARTICULAR);
+                }
+            });
+            ivClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    if (data.getPicFileID() == -1) {
+//                        //类型是拍摄更多图片的按钮
+//                    } else if (TextUtils.isEmpty(data.getSubName())) {
+//                        //类型拍摄更多后的图片
+//                        int deletePosition = holder.getAdapterPosition();
+//                        mDatas.remove(deletePosition);
+//                        mAdapter.notifyItemRemoved(deletePosition);
+//                    } else {
+//                        //类型是有btn按钮的图片
+//                        int changePosition = holder.getAdapterPosition();
+//                        mDatas.get(changePosition).setPicPath("");
+//                        mAdapter.notifyItemChanged(changePosition);
+//                    }
+                    currentPostion = holder.getAdapterPosition();
+                    detailFragment.DeletePhoto(1, 1, true, ADApplication.mSPUtils.getString(Api.USERID), data.getPicFileID() + "");
+                }
+            });
         }
     }
 

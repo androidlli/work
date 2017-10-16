@@ -7,14 +7,19 @@ import com.cango.adpickcar.model.BaseData;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarFilesInfo;
 import com.cango.adpickcar.model.CarInfo;
+import com.cango.adpickcar.model.PhotoResult;
 import com.cango.adpickcar.model.ServerTime;
 import com.cango.adpickcar.net.NetManager;
 import com.cango.adpickcar.net.RxSubscriber;
 import com.cango.adpickcar.util.CommUtil;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,7 +33,8 @@ import rx.schedulers.Schedulers;
 public class DetailPresenter implements DetailContract.Presenter {
     private DetailContract.View mView;
     private DetailService mService;
-    private Subscription subscription1, subscription2, subscription3, subscription4, subscription5;
+    private Subscription subscription1, subscription2, subscription3, subscription4, subscription5, subscription6,
+            subscription7;
 
     public DetailPresenter(DetailContract.View view) {
         mView = view;
@@ -53,6 +59,10 @@ public class DetailPresenter implements DetailContract.Presenter {
             subscription4.unsubscribe();
         if (!CommUtil.checkIsNull(subscription5))
             subscription5.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription6))
+            subscription6.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription7))
+            subscription7.unsubscribe();
     }
 
     @Override
@@ -145,7 +155,7 @@ public class DetailPresenter implements DetailContract.Presenter {
     }
 
     @Override
-    public void saveCarBasicItemInfo(boolean showRefreshLoadingUI, final BaseInfo baseInfo) {
+    public void saveCarBasicItemInfo(boolean showRefreshLoadingUI, final BaseInfo.DataBean databean) {
         if (mView.isActive()) {
             mView.showIndicator(showRefreshLoadingUI);
         }
@@ -158,7 +168,7 @@ public class DetailPresenter implements DetailContract.Presenter {
                             ADApplication.mSPUtils.put(Api.SERVERTIME, serverTime.getData().getServerTime());
                         }
                         Map<String, Object> paramsMap;
-                        String encrypt = CommUtil.setParamsToJsonByEncrypt(baseInfo);
+                        String encrypt = CommUtil.setParamsToJsonByEncrypt(databean);
                         paramsMap = new HashMap<>();
                         paramsMap.put("RequestContent", encrypt);
                         return mService.saveCarBasicItemInfo(paramsMap);
@@ -278,5 +288,104 @@ public class DetailPresenter implements DetailContract.Presenter {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void saveDisCarInfo(boolean showRefreshLoadingUI, final String UserID, final String DisCarID, final String PicGroup,
+                               final String SubCategory, final String SubID, final String PicFileID, final File file) {
+        subscription6 = mService.getServerTime()
+                .flatMap(new Func1<ServerTime, Observable<PhotoResult>>() {
+                    @Override
+                    public Observable<PhotoResult> call(ServerTime serverTime) {
+                        boolean isSuccess = serverTime.getCode().equals("200");
+                        if (isSuccess) {
+                            ADApplication.mSPUtils.put(Api.SERVERTIME, serverTime.getData().getServerTime());
+                        }
+                        Map<String, Object> paramsMap = new HashMap<>();
+                        paramsMap.put("UserID", UserID);
+                        paramsMap.put("DisCarID", DisCarID);
+                        paramsMap.put("PicGroup", PicGroup);
+                        paramsMap.put("SubCategory", SubCategory);
+                        paramsMap.put("SubID", SubID);
+                        paramsMap.put("PicFileID", PicFileID);
+                        String encrypt = CommUtil.getParmasMapToJsonByEncrypt(paramsMap);
+                        RequestBody RequestContent = RequestBody.create(null, encrypt);
+                        RequestBody photoBody = RequestBody.create(MediaType.parse("image/*"), file);
+                        MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), photoBody);
+                        return mService.saveDisCarFile(RequestContent, part);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new RxSubscriber<PhotoResult>() {
+                    @Override
+                    protected void _onNext(PhotoResult o) {
+                        if (mView.isActive()) {
+                            mView.showIndicator(false);
+                            deleteImageFile(file);
+                            boolean isSuccess = o.getCode().equals("200");
+                            mView.showSaveDisCarInfo(isSuccess, o);
+                        }
+                    }
+
+                    @Override
+                    protected void _onError() {
+                        if (mView.isActive()) {
+                            mView.showIndicator(false);
+                            mView.showSaveDisCarInfo(false, null);
+                            deleteImageFile(file);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void deleteDisCarFile(boolean showRefreshLoadingUI, final String UserID, final String PicFileID) {
+        if (mView.isActive()) {
+            mView.showIndicator(showRefreshLoadingUI);
+        }
+        subscription7 = mService.getServerTime()
+                .flatMap(new Func1<ServerTime, Observable<BaseData>>() {
+                    @Override
+                    public Observable<BaseData> call(ServerTime serverTime) {
+                        boolean isSuccess = serverTime.getCode().equals("200");
+                        if (isSuccess) {
+                            ADApplication.mSPUtils.put(Api.SERVERTIME, serverTime.getData().getServerTime());
+                        }
+                        Map<String, Object> paramsMap = new HashMap<>();
+                        paramsMap.put("UserID", UserID);
+                        paramsMap.put("PicFileID", PicFileID);
+                        String encrypt = CommUtil.getParmasMapToJsonByEncrypt(paramsMap);
+                        paramsMap = new HashMap<>();
+                        paramsMap.put("RequestContent", encrypt);
+                        return mService.deleteDisCarFile(paramsMap);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new RxSubscriber<BaseData>() {
+                    @Override
+                    protected void _onNext(BaseData o) {
+                        if (mView.isActive()) {
+                            mView.showIndicator(false);
+                            boolean isSuccess = o.getCode().equals("200");
+                            mView.showDeleteDisCarInfo(isSuccess, o.getMsg());
+                        }
+                    }
+
+                    @Override
+                    protected void _onError() {
+                        if (mView.isActive()) {
+                            mView.showIndicator(false);
+                            mView.showDeleteDisCarInfo(false, null);
+                        }
+                    }
+                });
+    }
+
+    private boolean deleteImageFile(File file) {
+        if (file.exists())
+            return file.delete();
+        return false;
     }
 }
