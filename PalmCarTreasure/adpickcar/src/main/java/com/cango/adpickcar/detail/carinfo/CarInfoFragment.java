@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -89,6 +90,7 @@ public class CarInfoFragment extends BaseFragment {
                                         ToastUtils.showShort("请输入内容");
                                     } else {
                                         tvPhotoNumber.setText(input);
+                                        detailFragment.saveCarInfo();
                                     }
                                 }
                             })
@@ -100,6 +102,7 @@ public class CarInfoFragment extends BaseFragment {
     }
 
     private DetailActivity mActivity;
+    private DetailFragment detailFragment;
     private DetailPresenter presenter;
     private CarTakeTaskList.DataBean.CarTakeTaskListBean mCarTakeTaskListBean;
     private boolean isEdit;
@@ -122,6 +125,7 @@ public class CarInfoFragment extends BaseFragment {
     @Override
     protected void initData() {
         mActivity = (DetailActivity) getActivity();
+        detailFragment = (DetailFragment) getParentFragment();
         presenter = (DetailPresenter) ((DetailFragment) getParentFragment()).mPresenter;
         mCarTakeTaskListBean = ((DetailFragment) getParentFragment()).mCarTakeTaskListBean;
         isEdit = ((DetailFragment) getParentFragment()).isEdit;
@@ -154,6 +158,13 @@ public class CarInfoFragment extends BaseFragment {
         tvEngineno.setText(dataBean.getEngineNO());
         tvCarRegno.setText(dataBean.getCarRegNO());
         tvCarModelText.setText(dataBean.getCarModelText());
+
+        switchIsERPMapping.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                detailFragment.saveCarInfo();
+            }
+        });
     }
 
     public void showError() {

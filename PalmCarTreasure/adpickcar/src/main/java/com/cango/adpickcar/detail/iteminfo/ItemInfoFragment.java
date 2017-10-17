@@ -92,6 +92,7 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
     private CarTakeTaskList.DataBean.CarTakeTaskListBean mCarTakeTaskListBean;
     private boolean isEdit;
     private BaseInfo mBaseInfo;
+    private String spaceText;
 
     @Override
     protected int initLayoutId() {
@@ -147,6 +148,7 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         presenter = (DetailPresenter) ((DetailFragment) getParentFragment()).mPresenter;
         mCarTakeTaskListBean = ((DetailFragment) getParentFragment()).mCarTakeTaskListBean;
         isEdit = ((DetailFragment) getParentFragment()).isEdit;
+        spaceText = getResources().getString(R.string.space_text);
     }
 
     @Override
@@ -230,28 +232,28 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         for (int i = 0; i < carUsualListBeanArrayList.size(); i++) {
             BaseInfo.DataBean.CarUsualListBean bean = carUsualListBeanArrayList.get(i);
             if (i == 0) {
-                cb1.setText(bean.getUsualName());
+                cb1.setText(spaceText + bean.getUsualName());
                 cb1.setChecked(bean.getIsChecked().equals("1"));
             } else if (i == 1) {
-                cb2.setText(bean.getUsualName());
+                cb2.setText(spaceText + bean.getUsualName());
                 cb2.setChecked(bean.getIsChecked().equals("1"));
             } else if (i == 2) {
-                cb3.setText(bean.getUsualName());
+                cb3.setText(spaceText + bean.getUsualName());
                 cb3.setChecked(bean.getIsChecked().equals("1"));
             } else if (i == 3) {
-                cb4.setText(bean.getUsualName());
+                cb4.setText(spaceText + bean.getUsualName());
                 cb4.setChecked(bean.getIsChecked().equals("1"));
             } else if (i == 4) {
-                cb5.setText(bean.getUsualName());
+                cb5.setText(spaceText + bean.getUsualName());
                 cb5.setChecked(bean.getIsChecked().equals("1"));
             } else if (i == 5) {
-                cb6.setText(bean.getUsualName());
+                cb6.setText(spaceText + bean.getUsualName());
                 cb6.setChecked(bean.getIsChecked().equals("1"));
             } else if (i == 6) {
-                cb7.setText(bean.getUsualName());
+                cb7.setText(spaceText + bean.getUsualName());
                 cb7.setChecked(bean.getIsChecked().equals("1"));
             } else if (i == 7) {
-                cb8.setText(bean.getUsualName());
+                cb8.setText(spaceText + bean.getUsualName());
                 cb8.setChecked(bean.getIsChecked().equals("1"));
             }
         }

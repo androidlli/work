@@ -80,6 +80,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     DrawerLayout mDrawerLayout;
     @BindView(R.id.rl_drawer)
     RelativeLayout rlDrawer;
+    @BindView(R.id.tv_user_mobile)
+    TextView tvUserMobile;
     @BindView(R.id.rl_main_head)
     RelativeLayout rlHead;
     @BindView(R.id.toolbar_main)
@@ -132,7 +134,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     AVLoadingIndicatorView mLoadView;
 
     @OnClick({R.id.ll_modify_ps, R.id.ll_main_search, R.id.rl_main_first, R.id.rl_main_second, R.id.rl_main_third,
-            R.id.rl_main_fourth, R.id.rl_main_fifth, R.id.ll_sign_off})
+            R.id.rl_main_fourth, R.id.rl_main_fifth, R.id.ll_sign_off, R.id.rl_drawer})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_modify_ps:
@@ -193,6 +195,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                     isDoLogout = false;
                     mPresenter.logout(true, ADApplication.mSPUtils.getString(Api.USERID));
                 }
+                break;
+            case R.id.rl_drawer:
                 break;
         }
     }
@@ -262,6 +266,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         initNum(0, 0, 0, 0, 0);
         selectTitleStatus(0);
         CURRENT_TYPE = WEIJIECHE;
+        tvUserMobile.setText(ADApplication.mSPUtils.getString(Api.MOBILE));
         initRecyclerView();
     }
 

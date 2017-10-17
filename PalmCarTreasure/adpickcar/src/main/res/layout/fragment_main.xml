@@ -324,6 +324,7 @@
             android:src="@drawable/head_portrait" />
 
         <TextView
+            android:id="@+id/tv_user_mobile"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignBottom="@+id/iv_main_head_portrait"
@@ -331,7 +332,6 @@
             android:layout_marginStart="13dp"
             android:layout_toEndOf="@+id/iv_main_head_portrait"
             android:gravity="center_vertical"
-            android:text="13818181818"
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 

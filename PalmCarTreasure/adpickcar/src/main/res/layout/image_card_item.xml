@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@color/adeaeaea">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/iv_image_card_item"
-        android:layout_width="146dp"
-        android:layout_height="85dp"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@color/adeaeaea">
 
-    <Button
-        android:id="@+id/btn_image_prompt"
-        android:layout_width="93dp"
-        android:layout_height="30dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="81dp"
-        android:background="@drawable/yingxiang_icon"
-        android:text="车辆左前45度"
-        android:textColor="@android:color/white"
-        android:textSize="13sp" />
+        <ImageView
+            android:id="@+id/iv_image_card_item"
+            android:layout_width="146dp"
+            android:layout_height="85dp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp" />
 
-    <ImageView
-        android:id="@+id/iv_image_close"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="146dp"
-        android:background="@drawable/xx" />
+        <Button
+            android:id="@+id/btn_image_prompt"
+            android:layout_width="93dp"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="81dp"
+            android:background="@drawable/yingxiang_icon"
+            android:text="车辆左前45度"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/iv_image_close"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="146dp"
+            android:background="@drawable/xx" />
+    </RelativeLayout>
 
 </RelativeLayout>

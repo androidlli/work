@@ -89,6 +89,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 hideFragments();
                 showFragment(currentPosition);
                 basicInfoFragment.getData();
+                tvSave.setVisibility(View.VISIBLE);
                 tvSave.setText("保存");
                 break;
             case R.id.ll_detail_item_info:
@@ -100,6 +101,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 hideFragments();
                 showFragment(currentPosition);
                 itemInfoFragment.getData();
+                tvSave.setVisibility(View.VISIBLE);
                 tvSave.setText("保存");
                 break;
             case R.id.ll_detail_car_info:
@@ -111,7 +113,9 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 hideFragments();
                 showFragment(currentPosition);
                 carInfoFragment.getData();
-                tvSave.setText("保存");
+                //杨丽杨说这里不要保存
+//                tvSave.setText("保存");
+                tvSave.setVisibility(View.INVISIBLE);
                 break;
             case R.id.ll_detail_image_info:
                 if (currentPosition == 3) {
@@ -122,6 +126,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 hideFragments();
                 showFragment(currentPosition);
                 imageInfoFragment.getData();
+                tvSave.setVisibility(View.VISIBLE);
                 tvSave.setText("提交");
                 break;
             case R.id.tv_save:
@@ -139,12 +144,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                         break;
                     //保存车辆信息
                     case 2:
-                        if (isDoSaveCarInfo) {
-                            isDoSaveCarInfo = false;
-                            mPresenter.saveCarInfo(true, ADApplication.mSPUtils.getString(Api.USERID),
-                                    carInfoFragment.getLicenseplateNO(), carInfoFragment.getIsErpMapping(),
-                                    mCarTakeTaskListBean.getDisCarID() + "");
-                        }
+                        saveCarInfo();
                         break;
                     //提交
                     case 3:
@@ -158,6 +158,15 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                         break;
                 }
                 break;
+        }
+    }
+
+    public void saveCarInfo() {
+        if (isDoSaveCarInfo) {
+            isDoSaveCarInfo = false;
+            mPresenter.saveCarInfo(true, ADApplication.mSPUtils.getString(Api.USERID),
+                    carInfoFragment.getLicenseplateNO(), carInfoFragment.getIsErpMapping(),
+                    mCarTakeTaskListBean.getDisCarID() + "");
         }
     }
 

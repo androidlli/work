@@ -71,7 +71,6 @@ public class LoginPresenter implements LoginContract.Presenter {
                                 ADApplication.mSPUtils.put(Api.TOKEN, o.getData().getToken());
 //                                ADApplication.mSPUtils.put(Api.USERID, o.getData().getUserID());
                                 //暂时写死，有数据
-                                ADApplication.mSPUtils.put(Api.USERID, "1");
                                 ADApplication.mSPUtils.put(Api.PASSWORD, Password);
                                 ADApplication.mSPUtils.put(Api.MOBILE, o.getData().getMobile());
                             } else {
