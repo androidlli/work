@@ -88,7 +88,12 @@
                         style="@style/ADDetailETStyle"
                         android:text="车型是否与ERP相同" />
 
-                    <Switch
+                    <!--<Switch-->
+                        <!--android:id="@+id/switch_isERPMapping"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginStart="10dp" />-->
+                    <android.support.v7.widget.SwitchCompat
                         android:id="@+id/switch_isERPMapping"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

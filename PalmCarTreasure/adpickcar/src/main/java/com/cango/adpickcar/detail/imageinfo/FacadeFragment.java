@@ -101,6 +101,7 @@ public class FacadeFragment extends BaseFragment {
                     fromType = 1;
                     currentPostion = position;
                     Intent cameraIntent = new Intent(mActivity, CameraActivity.class);
+                    cameraIntent.putExtra("type", 0);
                     startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE_FACADE);
                 }
             }
@@ -292,7 +293,11 @@ public class FacadeFragment extends BaseFragment {
                 } else {
                     btnPrompt.setVisibility(View.INVISIBLE);
                 }
-                ivClose.setVisibility(View.VISIBLE);
+                if (!TextUtils.isEmpty(data.getPicPath())) {
+                    ivClose.setVisibility(View.VISIBLE);
+                } else {
+                    ivClose.setVisibility(View.INVISIBLE);
+                }
             }
             btnPrompt.setOnClickListener(new View.OnClickListener() {
                 @Override

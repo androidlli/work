@@ -3,12 +3,12 @@ package com.cango.adpickcar.detail.basicinfo;
 
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseFragment;
@@ -16,7 +16,6 @@ import com.cango.adpickcar.detail.DetailFragment;
 import com.cango.adpickcar.detail.DetailPresenter;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
@@ -39,7 +38,7 @@ public class BasicInfoFragment extends BaseFragment {
     @BindView(R.id.sp_detail_num)
     Spinner spNum;
     @BindView(R.id.switch_has_card)
-    Switch switchCard;
+    SwitchCompat switchCard;
     @BindView(R.id.sp_detail_gps_screen)
     Spinner spGPSScreen;
     @BindView(R.id.sp_detail_gps_install)
@@ -106,6 +105,14 @@ public class BasicInfoFragment extends BaseFragment {
             etRegMemo.setFocusableInTouchMode(true);
             etWhPosition.setFocusable(true);
             etWhPosition.setFocusableInTouchMode(true);
+            spStatus.setClickable(false);
+            spStatus.setFocusable(false);
+            spStatus.setFocusableInTouchMode(false);
+            spStatus.setEnabled(false);
+            spApproveStatus.setClickable(false);
+            spApproveStatus.setFocusable(false);
+            spApproveStatus.setFocusableInTouchMode(false);
+            spApproveStatus.setEnabled(false);
         } else {
             etMileAgeReg.setFocusable(false);
             etMileAgeReg.setFocusableInTouchMode(false);
@@ -177,7 +184,7 @@ public class BasicInfoFragment extends BaseFragment {
             spNum.setAdapter(numAdapter);
             if (dataBean.getKeyNmb() >= 0) {
                 for (String bean : spNumDatas) {
-                    if (bean.equals(dataBean.getKeyNmb()+"")) {
+                    if (bean.equals(dataBean.getKeyNmb() + "")) {
                         spNum.setSelection(spNumDatas.indexOf(bean));
                     }
                 }
@@ -387,19 +394,19 @@ public class BasicInfoFragment extends BaseFragment {
         return whPosition;
     }
 
-    public String getCarStatus(){
+    public String getCarStatus() {
         BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spCarStatus.getSelectedItem();
         mBaseInfo.getData().setCarState(bean.getId());
         return bean.getValue();
     }
 
-    public String getStatus(){
+    public String getStatus() {
         BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spStatus.getSelectedItem();
         mBaseInfo.getData().setStatus(bean.getId());
         return bean.getValue();
     }
 
-    public String getApproveStatus(){
+    public String getApproveStatus() {
         BaseInfo.DataBean.BaseSpinnerListBean bean = (BaseInfo.DataBean.BaseSpinnerListBean) spApproveStatus.getSelectedItem();
         mBaseInfo.getData().setAuditFlag(bean.getId());
         return bean.getValue();

@@ -131,7 +131,12 @@
                     android:layout_height="34dp"
                     android:layout_weight="2">
 
-                    <Switch
+                    <!--<Switch-->
+                        <!--android:id="@+id/switch_has_card"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentEnd="true" />-->
+                    <android.support.v7.widget.SwitchCompat
                         android:id="@+id/switch_has_card"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -307,7 +312,7 @@
 
                     <TextView
                         style="@style/ADDetailETStyle"
-                        android:text="其他反馈措施" />
+                        android:text="其他反拖措施" />
 
                 </LinearLayout>
 

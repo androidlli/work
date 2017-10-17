@@ -360,6 +360,11 @@ public class MainPresenter implements MainContract.Presenter {
                         if (mView.isActive()) {
                             mView.showLoadView(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            ADApplication.mSPUtils.clear();
+//                            ADApplication.mSPUtils.put(Api.TOKEN, o.getData().getToken());
+//                            ADApplication.mSPUtils.put(Api.USERID, o.getData().getUserID());
+//                            ADApplication.mSPUtils.put(Api.PASSWORD, Password);
+//                            ADApplication.mSPUtils.put(Api.MOBILE, o.getData().getMobile());
                             mView.showLogout(isSuccess, o.getMsg());
                         }
                     }

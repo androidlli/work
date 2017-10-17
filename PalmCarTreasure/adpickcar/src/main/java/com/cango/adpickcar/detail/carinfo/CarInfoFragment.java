@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -39,7 +40,7 @@ public class CarInfoFragment extends BaseFragment {
     @BindView(R.id.tv_CarModelName)
     TextView tvCarModelName;
     @BindView(R.id.switch_isERPMapping)
-    Switch switchIsERPMapping;
+    SwitchCompat switchIsERPMapping;
     @BindView(R.id.tv_carSeriesName)
     TextView tvCarSeriesName;
     @BindView(R.id.tv_color)

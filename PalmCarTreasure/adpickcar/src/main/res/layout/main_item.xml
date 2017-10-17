@@ -19,12 +19,12 @@
             android:layout_height="wrap_content"
             android:text="B0102243243453242"
             android:textColor="@color/ad666666"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/iv_CarBrandPicURL"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="10dp"
             android:src="@drawable/xx" />
 
@@ -35,7 +35,7 @@
             android:layout_marginStart="10dp"
             android:text="奥迪"
             android:textColor="@color/ad666666"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -100,7 +100,7 @@
             android:layout_marginStart="6dp"
             android:text="王勇华"
             android:textColor="@color/colorPrimary"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <ImageView
             android:layout_width="7dp"
@@ -118,7 +118,7 @@
             android:maxLines="1"
             android:text="吉BKN3399"
             android:textColor="@color/colorPrimary"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <!--android:background="@drawable/main_item_tv_full_bg"-->
         <ImageView
@@ -136,7 +136,7 @@
             android:maxLines="1"
             android:text="摩卡棕"
             android:textColor="@color/colorPrimary"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <ImageView

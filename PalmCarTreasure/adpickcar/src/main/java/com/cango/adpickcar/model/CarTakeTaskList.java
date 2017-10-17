@@ -152,7 +152,7 @@ public class CarTakeTaskList {
             private String CTMobile;
             private String CTPlace;
             private String PlanctWhno;
-            private String LicenseplateNO;
+            private String LicensePlateNo;
             private String Vin;
             private String Color;
             private String CarBrandName;
@@ -263,13 +263,14 @@ public class CarTakeTaskList {
             }
 
             public String getLicenseplateNO() {
-                return LicenseplateNO;
+                return LicensePlateNo;
             }
 
-            public void setLicenseplateNO(String LicenseplateNO) {
-                if (CommUtil.checkIsNull(LicenseplateNO))
-                    LicenseplateNO = "";
-                this.LicenseplateNO = LicenseplateNO;
+            public void setLicenseplateNO(String licenseplateNO) {
+                if (CommUtil.checkIsNull(licenseplateNO)) {
+                    licenseplateNO = "";
+                }
+                this.LicensePlateNo = licenseplateNO;
             }
 
             public String getVin() {
@@ -339,7 +340,7 @@ public class CarTakeTaskList {
                 dest.writeString(this.CTMobile);
                 dest.writeString(this.CTPlace);
                 dest.writeString(this.PlanctWhno);
-                dest.writeString(this.LicenseplateNO);
+                dest.writeString(this.LicensePlateNo);
                 dest.writeString(this.Vin);
                 dest.writeString(this.Color);
                 dest.writeString(this.CarBrandName);
@@ -362,7 +363,7 @@ public class CarTakeTaskList {
                 this.CTMobile = in.readString();
                 this.CTPlace = in.readString();
                 this.PlanctWhno = in.readString();
-                this.LicenseplateNO = in.readString();
+                this.LicensePlateNo = in.readString();
                 this.Vin = in.readString();
                 this.Color = in.readString();
                 this.CarBrandName = in.readString();

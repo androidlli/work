@@ -230,7 +230,11 @@ public class ParticularFragment extends BaseFragment {
                         .into(ivContent);
             }
             btnPrompt.setVisibility(View.VISIBLE);
-            ivClose.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(data.getPicPath())) {
+                ivClose.setVisibility(View.VISIBLE);
+            } else {
+                ivClose.setVisibility(View.INVISIBLE);
+            }
             btnPrompt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

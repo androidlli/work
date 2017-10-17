@@ -394,10 +394,10 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
                         currentPosition = holder.getAdapterPosition();
                         detailFragment.DeletePhoto(0, -1, true, ADApplication.mSPUtils.getString(Api.USERID), data.getPicFileID() + "");
                     } else {
-
                     }
                 }
             });
+
         }
     }
 }
