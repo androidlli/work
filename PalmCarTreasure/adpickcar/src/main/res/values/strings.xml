@@ -22,4 +22,8 @@
     <string name="main_title">接&#160;&#160;车</string>
     <string name="input_params_prompt">请输入查询内容</string>
     <string name="space_text">&#160;&#160;</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

@@ -13,4 +13,6 @@
     <color name="adbbbbbb">#bbbbbb</color>
     <color name="adbcbcbc">#bcbcbc</color>
     <color name="adeaeaea">#eaeaea</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>
