@@ -8,9 +8,9 @@ import android.view.View;
 
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseActivity;
-import com.cango.adpickcar.main.MainFragment;
 import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.util.CommUtil;
+import com.cango.adpickcar.util.SoftHideKeyBoardUtil;
 
 public class DetailActivity extends BaseActivity {
 
@@ -26,10 +26,10 @@ public class DetailActivity extends BaseActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
         CarTakeTaskList.DataBean.CarTakeTaskListBean carTakeTaskListBean = getIntent().getParcelableExtra("CarTakeTaskListBean");
-        int type = getIntent().getIntExtra("Type",-1);
+        int type = getIntent().getIntExtra("Type", -1);
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.fl_detail_container);
         if (CommUtil.checkIsNull(detailFragment)) {
-            detailFragment = DetailFragment.getInstance(carTakeTaskListBean,type);
+            detailFragment = DetailFragment.getInstance(carTakeTaskListBean, type);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.fl_detail_container, detailFragment);
             transaction.commit();

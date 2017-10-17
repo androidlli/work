@@ -265,7 +265,7 @@ public class FacadeFragment extends BaseFragment {
             if (data.getPicFileID() == -1) {
                 Glide.with(mContext).load(R.drawable.morephotos)
                         .placeholder(R.drawable.photosimg)
-//                    .error(R.drawable.placeholder_big)
+                        .error(R.drawable.loadfailure)
                         .transform(glideRoundTransform)
                         .into(ivContent);
                 btnPrompt.setVisibility(View.INVISIBLE);
@@ -274,7 +274,7 @@ public class FacadeFragment extends BaseFragment {
                 if (!TextUtils.isEmpty(data.getPicPath())) {
                     Glide.with(mContext).load(data.getPicPath())
                             .placeholder(R.drawable.photosimg)
-//                    .error(R.drawable.placeholder_big)
+                            .error(R.drawable.loadfailure)
                             .transform(centerCrop, glideRoundTransform)
                             .into(ivContent);
                     //防止自己添加的图片有btn
@@ -282,7 +282,7 @@ public class FacadeFragment extends BaseFragment {
                 } else {
                     Glide.with(mContext).load(R.drawable.photosimg)
                             .placeholder(R.drawable.photosimg)
-//                    .error(R.drawable.placeholder_big)
+                            .error(R.drawable.loadfailure)
                             .transform(centerCrop, glideRoundTransform)
                             .into(ivContent);
                 }

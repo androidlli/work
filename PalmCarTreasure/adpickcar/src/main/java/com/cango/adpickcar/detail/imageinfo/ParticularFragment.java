@@ -219,13 +219,13 @@ public class ParticularFragment extends BaseFragment {
             if (!TextUtils.isEmpty(data.getPicPath())) {
                 Glide.with(mContext).load(data.getPicPath())
                         .placeholder(R.drawable.photosimg)
-//                    .error(R.drawable.placeholder_big)
+                        .error(R.drawable.loadfailure)
                         .transform(centerCrop, glideRoundTransform)
                         .into(ivContent);
             } else {
                 Glide.with(mContext).load(R.drawable.photosimg)
                         .placeholder(R.drawable.photosimg)
-//                    .error(R.drawable.placeholder_big)
+                        .error(R.drawable.loadfailure)
                         .transform(centerCrop, glideRoundTransform)
                         .into(ivContent);
             }

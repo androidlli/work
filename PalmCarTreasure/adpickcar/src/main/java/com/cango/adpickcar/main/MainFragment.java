@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -635,21 +636,20 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
 
     //接受详情提交后返回成功，然后首页刷新
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPushTrailerEvent(RefreshMainEvent event) {
-        Logger.d("ok");
+    public void onRefreshMainEvent(RefreshMainEvent event) {
         onRefresh();
     }
 }

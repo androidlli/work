@@ -32,6 +32,7 @@ import com.cango.adpickcar.detail.DetailPresenter;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.model.PhotoResult;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -126,6 +127,7 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         mAdapter.setOnItemClickListener(new OnBaseItemClickListener<BaseInfo.DataBean.InPicFileListBean>() {
             @Override
             public void onItemClick(BaseHolder viewHolder, BaseInfo.DataBean.InPicFileListBean data, int position) {
+                Logger.d("adapterPosition = " + viewHolder.getAdapterPosition() + "----position = " + position);
                 if (isEdit) {
                     if (data.getPicFileID() == -1) {
                         currentPosition = position;
@@ -370,7 +372,11 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
                 iv.setImageResource(R.drawable.addphoto);
                 btn.setVisibility(View.INVISIBLE);
             } else {
-                Glide.with(mContext).load(data.getPicPath()).into(iv);
+                Glide.with(mContext)
+                        .load(data.getPicPath())
+                        .placeholder(R.drawable.loadfailure)
+                        .error(R.drawable.loadfailure)
+                        .into(iv);
                 btn.setVisibility(View.VISIBLE);
             }
             btn.setOnClickListener(new View.OnClickListener() {
