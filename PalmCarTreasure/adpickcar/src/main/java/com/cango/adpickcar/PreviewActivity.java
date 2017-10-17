@@ -1,6 +1,7 @@
 package com.cango.adpickcar;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.cango.adpickcar.base.BaseActivity;
@@ -21,5 +22,11 @@ public class PreviewActivity extends BaseActivity {
                 .placeholder(R.drawable.loadfailure)
                 .error(R.drawable.loadfailure)
                 .into(mPhotoView);
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PreviewActivity.this.finish();
+            }
+        });
     }
 }

@@ -5,15 +5,16 @@
     >
     <ImageView
         android:id="@+id/iv_item_info"
-        android:layout_width="63dp"
-        android:layout_height="63dp"
-        android:layout_margin="8dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:scaleType="centerCrop"
         android:src="@drawable/addphoto"/>
     <Button
         android:id="@+id/btn_item_info"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_marginStart="63dp"
+        android:layout_marginStart="52dp"
         android:background="@drawable/xx" />
 </RelativeLayout>

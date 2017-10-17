@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.cango.adpickcar.ADApplication;
+import com.cango.adpickcar.PreviewActivity;
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.base.BaseFragment;
@@ -32,7 +33,6 @@ import com.cango.adpickcar.detail.DetailPresenter;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.model.PhotoResult;
-import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -127,13 +127,17 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         mAdapter.setOnItemClickListener(new OnBaseItemClickListener<BaseInfo.DataBean.InPicFileListBean>() {
             @Override
             public void onItemClick(BaseHolder viewHolder, BaseInfo.DataBean.InPicFileListBean data, int position) {
-                Logger.d("adapterPosition = " + viewHolder.getAdapterPosition() + "----position = " + position);
                 if (isEdit) {
-                    if (data.getPicFileID() == -1) {
-                        currentPosition = position;
+                    BaseInfo.DataBean.InPicFileListBean inPicFileListBean = datas.get(viewHolder.getAdapterPosition());
+                    if (inPicFileListBean.getPicFileID() == -1) {
+                        currentPosition = viewHolder.getAdapterPosition();
                         Intent cameraIntent = new Intent(mActivity, CameraActivity.class);
                         cameraIntent.putExtra("type", 0);
                         startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE_INFO);
+                    } else {
+//                        Intent intent = new Intent(mActivity, PreviewActivity.class);
+//                        intent.putExtra("preview_path", inPicFileListBean.getPicPath());
+//                        startActivity(intent);
                     }
                 } else {
                 }
@@ -183,7 +187,7 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         datas.add(currentPosition, bean);
         mAdapter.notifyItemInserted(currentPosition);
         mAdapter.notifyItemChanged(currentPosition);
-        mAdapter.notifyDataSetChanged();
+//        mAdapter.notifyDataSetChanged();
     }
 
     public void updateDeletePhoto() {

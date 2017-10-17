@@ -281,6 +281,14 @@ public class CameraActivity extends AppCompatActivity implements
         ivResult.setVisibility(View.GONE);
         ivNo.setVisibility(View.GONE);
         ivOk.setVisibility(View.GONE);
+
+        if (currentType == 0) {
+            isAnimOpen = false;
+            rlCenter.setVisibility(View.GONE);
+            ivShadow.setVisibility(View.GONE);
+        } else {
+            isAnimOpen = true;
+        }
     }
 
     public void cameraOk(View view) {
