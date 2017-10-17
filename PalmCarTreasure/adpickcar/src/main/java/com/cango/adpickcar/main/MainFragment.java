@@ -38,11 +38,17 @@ import com.cango.adpickcar.baseAdapter.OnLoadMoreListener;
 import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.login.LoginActivity;
 import com.cango.adpickcar.model.CarTakeTaskList;
+import com.cango.adpickcar.model.EventModel.RefreshMainEvent;
 import com.cango.adpickcar.resetps.ResetPSActivity;
 import com.cango.adpickcar.util.BarUtil;
 import com.cango.adpickcar.util.CommUtil;
 import com.cango.adpickcar.util.ToastUtils;
+import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -253,7 +259,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
         mDrawerLayout.addDrawerListener(mToggle);
 
-        initNum(1, 2, 3, 4, 5);
+        initNum(0, 0, 0, 0, 0);
         selectTitleStatus(0);
         CURRENT_TYPE = WEIJIECHE;
         initRecyclerView();
@@ -621,5 +627,24 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     public boolean isActive() {
         return isAdded();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    //接受详情提交后返回成功，然后首页刷新
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPushTrailerEvent(RefreshMainEvent event) {
+        Logger.d("ok");
+        onRefresh();
     }
 }

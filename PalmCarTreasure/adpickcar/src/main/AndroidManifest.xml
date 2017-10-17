@@ -21,35 +21,28 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".main.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".login.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resetps.ResetPSActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".detail.DetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
+        <activity
+            android:name=".camera.CameraActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".TestActivity" />
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".resetps.ResetPSActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".detail.DetailActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan" />
-
-        <activity
-            android:name=".camera.CameraActivity"
-            android:screenOrientation="landscape">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
-        <activity android:name=".TestActivity" />
     </application>
 
 </manifest>

@@ -26,10 +26,13 @@ import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarFilesInfo;
 import com.cango.adpickcar.model.CarInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
+import com.cango.adpickcar.model.EventModel.RefreshMainEvent;
 import com.cango.adpickcar.model.PhotoResult;
 import com.cango.adpickcar.util.BarUtil;
 import com.cango.adpickcar.util.ToastUtils;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -127,18 +130,31 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                     case 0:
                     case 1:
                         if (checkBasicAndItemParamsMust()) {
-                            mBaseInfo.getData().setUserID(ADApplication.mSPUtils.getString(Api.USERID));
-                            mPresenter.saveCarBasicItemInfo(true, mBaseInfo.getData());
+                            if (isDoSaveCarBasicItemInfo) {
+                                isDoSaveCarBasicItemInfo = false;
+                                mBaseInfo.getData().setUserID(ADApplication.mSPUtils.getString(Api.USERID));
+                                mPresenter.saveCarBasicItemInfo(true, mBaseInfo.getData());
+                            }
                         }
                         break;
                     //保存车辆信息
                     case 2:
-                        mPresenter.saveCarInfo(true, ADApplication.mSPUtils.getString(Api.USERID),
-                                carInfoFragment.getLicenseplateNO(), carInfoFragment.getIsErpMapping(),
-                                mCarTakeTaskListBean.getDisCarID() + "");
+                        if (isDoSaveCarInfo) {
+                            isDoSaveCarInfo = false;
+                            mPresenter.saveCarInfo(true, ADApplication.mSPUtils.getString(Api.USERID),
+                                    carInfoFragment.getLicenseplateNO(), carInfoFragment.getIsErpMapping(),
+                                    mCarTakeTaskListBean.getDisCarID() + "");
+                        }
                         break;
                     //提交
                     case 3:
+                        if (checkBasicAndItemParamsMust()) {
+                            if (isDoSubmitCarTakeStore) {
+                                isDoSubmitCarTakeStore = false;
+                                mBaseInfo.getData().setUserID(ADApplication.mSPUtils.getString(Api.USERID));
+                                mPresenter.submitCarTakeStore(true, mBaseInfo.getData());
+                            }
+                        }
                         break;
                 }
                 break;
@@ -173,6 +189,9 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
      */
     private int currentPosition;
     private int selectColor, noSelectColor;
+    private boolean isDoSaveCarBasicItemInfo = true;
+    private boolean isDoSaveCarInfo = true;
+    private boolean isDoSubmitCarTakeStore = true;
 
     /**
      * 上传图片类型，0：物品信息里面的图片，1：车辆拍照的图片
@@ -420,6 +439,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
 
     @Override
     public void showSaveBasicItem(boolean isSuccess, String message) {
+        isDoSaveCarBasicItemInfo = true;
         if (!TextUtils.isEmpty(message))
             ToastUtils.showShort(message);
         if (isSuccess) {
@@ -433,6 +453,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
 
     @Override
     public void showSaveCarInfo(boolean isSuccess, String message) {
+        isDoSaveCarInfo = true;
         if (!TextUtils.isEmpty(message))
             ToastUtils.showShort(message);
         if (isSuccess) {
@@ -461,6 +482,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
 
     @Override
     public void showSaveDisCarInfo(boolean isSuccess, PhotoResult photoResult) {
+        isDoSaveDisCarFile = true;
         if (isSuccess) {
             if (mFromType == 0) {
                 itemInfoFragment.updateAddPhoto(photoResult);
@@ -484,6 +506,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
 
     @Override
     public void showDeleteDisCarInfo(boolean isSuccess, String message) {
+        isDoDeleteDisCarFile = true;
         if (isSuccess) {
             if (mDeleteType == 0) {
                 itemInfoFragment.updateDeletePhoto();
@@ -505,6 +528,20 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
         }
     }
 
+    @Override
+    public void showSubmitCarTakeStore(boolean isSuccess, String message) {
+        isDoSubmitCarTakeStore = true;
+        if (!TextUtils.isEmpty(message))
+            ToastUtils.showShort(message);
+        if (isSuccess) {
+            EventBus.getDefault().post(new RefreshMainEvent("showSubmitCarTakeStore"));
+            mActivity.finish();
+        } else {
+            basicInfoFragment.updateUI(mBaseInfo);
+            itemInfoFragment.updateUI(mBaseInfo);
+        }
+    }
+
     private boolean checkBasicAndItemParamsMust() {
         boolean check = false;
         if (!TextUtils.isEmpty(basicInfoFragment.getMileAgeReg()) && !TextUtils.isEmpty(basicInfoFragment.getCarInfoDesc()) &&
@@ -513,6 +550,8 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 !TextUtils.isEmpty(basicInfoFragment.getBatteryPowerSupply()) && !TextUtils.isEmpty(basicInfoFragment.getLocks()) &&
                 !TextUtils.isEmpty(basicInfoFragment.getCarPager())) {
             check = true;
+        }else {
+            ToastUtils.showShort("输入信息不完整");
         }
         basicInfoFragment.getAntitowing();
         basicInfoFragment.getRegMemo();
@@ -528,8 +567,14 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
         return check;
     }
 
+    private boolean isDoSaveDisCarFile = true;
+
     public void zipPicture(int fromType, int subType, String mImgPath, final String UserID, final String DisCarID, final String PicGroup, final String SubCategory,
                            final String SubID, final String PicFileID) {
+        if (!isDoSaveDisCarFile) {
+            return;
+        }
+        isDoSaveDisCarFile = false;
         mFromType = fromType;
         mSubType = subType;
         File file = new File(mImgPath);
@@ -557,12 +602,19 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                         // TODO 当压缩过去出现问题时调用
                         if (isAdded()) {
                             showIndicator(false);
+                            isDoSaveDisCarFile = true;
                         }
                     }
                 }).launch();    //启动压缩
     }
 
+    private boolean isDoDeleteDisCarFile = true;
+
     public void DeletePhoto(int type, int subType, boolean showRefreshLoadingUI, String UserID, String PicFileID) {
+        if (!isDoDeleteDisCarFile) {
+            return;
+        }
+        isDoDeleteDisCarFile = false;
         mDeleteType = type;
         mSubType = subType;
         mPresenter.deleteDisCarFile(showRefreshLoadingUI, UserID, PicFileID);

@@ -34,7 +34,7 @@ public class DetailPresenter implements DetailContract.Presenter {
     private DetailContract.View mView;
     private DetailService mService;
     private Subscription subscription1, subscription2, subscription3, subscription4, subscription5, subscription6,
-            subscription7;
+            subscription7,subscription8;
 
     public DetailPresenter(DetailContract.View view) {
         mView = view;
@@ -63,6 +63,8 @@ public class DetailPresenter implements DetailContract.Presenter {
             subscription6.unsubscribe();
         if (!CommUtil.checkIsNull(subscription7))
             subscription7.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription8))
+            subscription8.unsubscribe();
     }
 
     @Override
@@ -378,6 +380,49 @@ public class DetailPresenter implements DetailContract.Presenter {
                         if (mView.isActive()) {
                             mView.showIndicator(false);
                             mView.showDeleteDisCarInfo(false, null);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void submitCarTakeStore(boolean showRefreshLoadingUI, final BaseInfo.DataBean dataBean) {
+        if (mView.isActive()) {
+            mView.showIndicator(showRefreshLoadingUI);
+        }
+        subscription8 = mService.getServerTime()
+                .flatMap(new Func1<ServerTime, Observable<BaseData>>() {
+                    @Override
+                    public Observable<BaseData> call(ServerTime serverTime) {
+                        boolean isSuccess = serverTime.getCode().equals("200");
+                        if (isSuccess) {
+                            ADApplication.mSPUtils.put(Api.SERVERTIME, serverTime.getData().getServerTime());
+                        }
+                        Map<String, Object> paramsMap;
+                        String encrypt = CommUtil.setParamsToJsonByEncrypt(dataBean);
+                        paramsMap = new HashMap<>();
+                        paramsMap.put("RequestContent", encrypt);
+                        return mService.submitCarTakeStore(paramsMap);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new RxSubscriber<BaseData>() {
+                    @Override
+                    protected void _onNext(BaseData o) {
+                        if (mView.isActive()) {
+                            mView.showIndicator(false);
+                            boolean isSuccess = o.getCode().equals("200");
+                            mView.showSubmitCarTakeStore(isSuccess, o.getMsg());
+                        }
+                    }
+
+                    @Override
+                    protected void _onError() {
+                        if (mView.isActive()) {
+                            mView.showIndicator(false);
+                            //如果网络异常呢，那么将重置
+                            mView.showSubmitCarTakeStore(false, null);
                         }
                     }
                 });

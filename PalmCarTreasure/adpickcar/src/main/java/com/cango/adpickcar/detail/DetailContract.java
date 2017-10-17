@@ -58,6 +58,8 @@ public interface DetailContract {
         void showSaveDisCarInfo(boolean isSuccess, PhotoResult photoResult);
 
         void showDeleteDisCarInfo(boolean isSuccess, String message);
+
+        void showSubmitCarTakeStore(boolean isSuccess, String message);
     }
 
     interface Presenter extends BasePresenter {
@@ -82,5 +84,7 @@ public interface DetailContract {
                             String SubCategory, String SubID, String PicFileID, File file);
 
         void deleteDisCarFile(boolean showRefreshLoadingUI, String UserID, String PicFileID);
+
+        void submitCarTakeStore(boolean showRefreshLoadingUI, BaseInfo.DataBean dataBean);
     }
 }

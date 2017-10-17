@@ -329,7 +329,6 @@ public class BasicInfoFragment extends BaseFragment {
 
     public String getSPNum() {
         String num = (String) spNum.getSelectedItem();
-        Logger.d(num);
         mBaseInfo.getData().setKeyNmb(Integer.parseInt(num));
         return num;
     }

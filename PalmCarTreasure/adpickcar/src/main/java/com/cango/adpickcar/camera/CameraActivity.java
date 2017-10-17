@@ -32,7 +32,6 @@ import com.cango.adpickcar.R;
 import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.util.ToastUtils;
 import com.google.android.cameraview.CameraView;
-import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -77,7 +76,7 @@ public class CameraActivity extends AppCompatActivity implements
     private int mCurrentFlash;
 
     private CameraView mCameraView;
-    private ImageView ivCancal, ivFlash, ivNo, ivOk, ivResult;
+    private ImageView ivCancal, ivFlash, ivNo, ivOk, ivResult, ivShadow;
     private ImageView fab;
     private RelativeLayout rlLeft, rlCenter, rlRight, rlPrompt;
     private ImageView ivPrompt;
@@ -131,9 +130,10 @@ public class CameraActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        if (getIntent()!=null){
-            currentType = getIntent().getIntExtra(TYPE,-1);
+        if (getIntent() != null) {
+            currentType = getIntent().getIntExtra(TYPE, -1);
         }
+        ivShadow = (ImageView) findViewById(R.id.iv_shadow);
         ivCancal = (ImageView) findViewById(R.id.iv_camera_cancal);
         ivFlash = (ImageView) findViewById(R.id.iv_camera_flash);
         ivResult = (ImageView) findViewById(R.id.iv_result);
@@ -157,10 +157,11 @@ public class CameraActivity extends AppCompatActivity implements
         }
         ivPrompt.setOnClickListener(mOnClickListener);
 
-        if (currentType == 0){
+        if (currentType == 0) {
             isAnimOpen = false;
             rlCenter.setVisibility(View.GONE);
-        }else {
+            ivShadow.setVisibility(View.GONE);
+        } else {
             isAnimOpen = true;
         }
 

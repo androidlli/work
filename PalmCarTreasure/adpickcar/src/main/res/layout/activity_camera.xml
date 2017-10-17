@@ -16,6 +16,7 @@
         android:background="@android:color/black" />
 
     <ImageView
+        android:id="@+id/iv_shadow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/camera_bg" />
@@ -53,18 +54,21 @@
 
         <RelativeLayout
             android:id="@+id/rl_camera_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
             android:layout_above="@+id/iv_camera_prompt"
-            android:layout_alignRight="@+id/iv_camera_prompt"
-            android:background="@drawable/translucent">
+            android:layout_alignRight="@+id/iv_camera_prompt">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/translucent"/>
 
             <ImageView
                 android:id="@+id/iv_camera_prompt_left"
                 android:layout_width="150dp"
                 android:layout_height="100dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_centerVertical="true"
                 android:src="@drawable/timg" />
 
             <TextView
@@ -72,14 +76,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_toRightOf="@+id/iv_camera_prompt_left"
                 android:text="拍照要求："
                 android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/tv_camera_prompt_bottom"
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_camera_prompt_top"
                 android:layout_marginStart="10dp"
@@ -87,6 +91,7 @@
                 android:layout_toRightOf="@+id/iv_camera_prompt_left"
                 android:text="架子吱吱吱吱吱吱吱吱吱吱吱吱吱吱"
                 android:textColor="@android:color/black" />
+
         </RelativeLayout>
 
         <ImageView

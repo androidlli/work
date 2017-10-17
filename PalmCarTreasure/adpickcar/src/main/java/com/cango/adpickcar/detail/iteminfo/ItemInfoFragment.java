@@ -2,6 +2,7 @@ package com.cango.adpickcar.detail.iteminfo;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
@@ -9,15 +10,19 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.base.BaseFragment;
+import com.cango.adpickcar.baseAdapter.BaseAdapter;
 import com.cango.adpickcar.baseAdapter.BaseHolder;
 import com.cango.adpickcar.baseAdapter.OnBaseItemClickListener;
 import com.cango.adpickcar.camera.CameraActivity;
@@ -30,6 +35,7 @@ import com.cango.adpickcar.model.PhotoResult;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -81,7 +87,7 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
     private DetailFragment detailFragment;
     private DetailPresenter presenter;
     private ArrayList<BaseInfo.DataBean.InPicFileListBean> datas;
-    private int currentPosition;
+    public int currentPosition;
     private ItemInfoAdapter mAdapter;
     private CarTakeTaskList.DataBean.CarTakeTaskListBean mCarTakeTaskListBean;
     private boolean isEdit;
@@ -149,7 +155,7 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
             if (resultCode == Activity.RESULT_OK) {
                 photoPath = data.getStringExtra("path");
                 if (!TextUtils.isEmpty(photoPath)) {
-                    detailFragment.zipPicture(0, -1,photoPath, ADApplication.mSPUtils.getString(Api.USERID),
+                    detailFragment.zipPicture(0, -1, photoPath, ADApplication.mSPUtils.getString(Api.USERID),
                             mCarTakeTaskListBean.getDisCarID() + "", "25", null, null, null);
                 }
             }
@@ -180,6 +186,7 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         datas.remove(currentPosition);
         mAdapter.notifyItemRemoved(currentPosition);
         mAdapter.notifyItemRangeChanged(currentPosition, datas.size());
+
     }
 
     public void updateUI(BaseInfo baseInfo) {
@@ -335,4 +342,50 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         }
     }
 
+    public class ItemInfoAdapter extends BaseAdapter<BaseInfo.DataBean.InPicFileListBean> {
+        boolean isEdit;
+        DetailFragment detailFragment;
+
+        public ItemInfoAdapter(Context context, List<BaseInfo.DataBean.InPicFileListBean> datas, boolean isOpenLoadMore, DetailFragment detailFragment) {
+            super(context, datas, isOpenLoadMore);
+            this.detailFragment = detailFragment;
+        }
+
+        public void setIsEdit(boolean isEdit) {
+            this.isEdit = isEdit;
+        }
+
+        @Override
+        protected int getItemLayoutId() {
+            return R.layout.item_info_item_image;
+        }
+
+        @Override
+        protected void convert(final BaseHolder holder, final BaseInfo.DataBean.InPicFileListBean data) {
+            ImageView iv = holder.getView(R.id.iv_item_info);
+            Button btn = holder.getView(R.id.btn_item_info);
+            if (data.getPicFileID() == -1) {
+                iv.setImageResource(R.drawable.addphoto);
+                btn.setVisibility(View.INVISIBLE);
+            } else {
+                Glide.with(mContext).load(data.getPicPath()).into(iv);
+                btn.setVisibility(View.VISIBLE);
+            }
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isEdit) {
+//                    int removeIndex = mDatas.indexOf(data);
+//                    mDatas.remove(removeIndex);
+//                    ItemInfoAdapter.this.notifyItemRemoved(removeIndex);
+//                    ItemInfoAdapter.this.notifyItemRangeChanged(removeIndex, mDatas.size());
+                        currentPosition = holder.getAdapterPosition();
+                        detailFragment.DeletePhoto(0, -1, true, ADApplication.mSPUtils.getString(Api.USERID), data.getPicFileID() + "");
+                    } else {
+
+                    }
+                }
+            });
+        }
+    }
 }

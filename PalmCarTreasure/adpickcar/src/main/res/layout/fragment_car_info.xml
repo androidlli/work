@@ -34,8 +34,7 @@
 
                 <TextView
                     android:id="@+id/tv_CarBrandName"
-                    style="@style/ADDetailCarText"
-                    android:text="大众" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -63,8 +62,7 @@
 
                     <TextView
                         android:id="@+id/tv_CarModelName"
-                        style="@style/ADDetailCarText"
-                        android:text="2105款 1.4T GTI" />
+                        style="@style/ADDetailCarText" />
 
                 </LinearLayout>
 
@@ -119,8 +117,7 @@
 
                 <TextView
                     android:id="@+id/tv_carSeriesName"
-                    style="@style/ADDetailCarText"
-                    android:text="2105款 1.4T GTI" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -143,8 +140,7 @@
 
                 <TextView
                     android:id="@+id/tv_color"
-                    style="@style/ADDetailCarText"
-                    android:text="糖果白" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -168,8 +164,7 @@
 
                 <TextView
                     android:id="@+id/tv_discarno"
-                    style="@style/ADDetailCarText"
-                    android:text="处置车辆编号" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -192,8 +187,7 @@
 
                 <TextView
                     android:id="@+id/tv_applycd"
-                    style="@style/ADDetailCarText"
-                    android:text="B1234567896443" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -217,8 +211,7 @@
 
                 <TextView
                     android:id="@+id/tv_fininstid"
-                    style="@style/ADDetailCarText"
-                    android:text="北银消费" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -241,8 +234,7 @@
 
                 <TextView
                     android:id="@+id/tv_orgid"
-                    style="@style/ADDetailCarText"
-                    android:text="灿谷GPS管理公司" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -266,8 +258,7 @@
 
                 <TextView
                     android:id="@+id/tv_vin"
-                    style="@style/ADDetailCarText"
-                    android:text="L14445062121" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -290,8 +281,7 @@
 
                 <TextView
                     android:id="@+id/tv_custname"
-                    style="@style/ADDetailCarText"
-                    android:text="赵波" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -315,8 +305,7 @@
 
                 <TextView
                     android:id="@+id/tv_licenseplatetype"
-                    style="@style/ADDetailCarText"
-                    android:text="个人" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -339,8 +328,7 @@
 
                 <TextView
                     android:id="@+id/tv_photo_number"
-                    style="@style/ADDetailCarText"
-                    android:text="皖F01234" />
+                    style="@style/ADDetailCarText" />
 
                 <TextView
                     android:id="@+id/tv_car_info_alter"
@@ -372,8 +360,7 @@
 
                 <TextView
                     android:id="@+id/tv_carcertno"
-                    style="@style/ADDetailCarText"
-                    android:text="333333333" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -396,8 +383,7 @@
 
                 <TextView
                     android:id="@+id/tv_mfyear"
-                    style="@style/ADDetailCarText"
-                    android:text="2222222" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -421,8 +407,7 @@
 
                 <TextView
                     android:id="@+id/tv_engineno"
-                    style="@style/ADDetailCarText"
-                    android:text="2222222" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -445,8 +430,7 @@
 
                 <TextView
                     android:id="@+id/tv_carregno"
-                    style="@style/ADDetailCarText"
-                    android:text="12345678987654" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 
@@ -471,8 +455,7 @@
 
                 <TextView
                     android:id="@+id/tv_carmodeltext"
-                    style="@style/ADDetailCarText"
-                    android:text="处置车辆编号" />
+                    style="@style/ADDetailCarText" />
 
             </LinearLayout>
 

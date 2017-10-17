@@ -52,9 +52,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login_signin:
-                if (isDoLogin) {
-                    openPermissions();
-                }
+                isDoLogin = true;
+                openPermissions();
                 break;
         }
     }

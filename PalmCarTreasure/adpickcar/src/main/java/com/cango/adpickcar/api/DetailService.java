@@ -68,5 +68,9 @@ public interface DetailService {
     //删除文件
     @POST("api/cartake/deletediscarfile")
     Observable<BaseData> deleteDisCarFile(@Body Map<String, Object> requestContent);
+
+    //提交接车入库信息
+    @POST("api/cartake/submitcartakestore")
+    Observable<BaseData> submitCarTakeStore(@Body Map<String, Object> requestContent);
 }
 
