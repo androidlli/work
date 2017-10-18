@@ -3,9 +3,11 @@ package com.cango.adpickcar.login;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
+import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseActivity;
 import com.cango.adpickcar.util.CommUtil;
+import com.orhanobut.logger.Logger;
 
 public class LoginActivity extends BaseActivity {
 
@@ -21,5 +23,7 @@ public class LoginActivity extends BaseActivity {
             transaction.commit();
         }
         new LoginPresenter(loginFragment);
+        ADApplication.clearExceptLastActivitys();
+        Logger.d(ADApplication.activityList.size());
     }
 }

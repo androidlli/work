@@ -77,6 +77,10 @@ public class ResetPSPresenter implements ResetPSContract.Presenter {
                         if (mView.isActive()) {
                             mView.showResetIndicator(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())){
+                                mView.openOtherUi();
+                                return;
+                            }
                             if (isSuccess) {
                                 ADApplication.mSPUtils.put(Api.PASSWORD, newPassword);
                             }

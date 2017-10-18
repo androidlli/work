@@ -1,6 +1,7 @@
 package com.cango.adpickcar.resetps;
 
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,11 +10,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.base.BaseFragment;
+import com.cango.adpickcar.login.LoginActivity;
 import com.cango.adpickcar.util.BarUtil;
 import com.cango.adpickcar.util.ToastUtils;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -124,7 +127,9 @@ public class ResetFragment extends BaseFragment implements ResetPSContract.View 
 
     @Override
     public void openOtherUi() {
-
+        ToastUtils.showShort("认证失败，请重新登录");
+        ADApplication.mSPUtils.clear();
+        startActivity(new Intent(mActivity, LoginActivity.class));
     }
 
     @Override

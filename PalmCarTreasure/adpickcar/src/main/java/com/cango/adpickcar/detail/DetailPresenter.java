@@ -92,6 +92,10 @@ public class DetailPresenter implements DetailContract.Presenter {
                         if (mView.isActive()) {
                             mView.showIndicator(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())){
+                                mView.openOtherUi();
+                                return;
+                            }
                             if (isSuccess) {
                                 mView.showCarTakeStoreBaseInfo(o);
                                 mView.showItemInfo(o);
@@ -138,6 +142,10 @@ public class DetailPresenter implements DetailContract.Presenter {
                         if (mView.isActive()) {
                             mView.showIndicator(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())){
+                                mView.openOtherUi();
+                                return;
+                            }
                             if (isSuccess) {
                                 mView.showCarInfo(o);
                             } else {
@@ -184,6 +192,10 @@ public class DetailPresenter implements DetailContract.Presenter {
                         if (mView.isActive()) {
                             mView.showIndicator(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())){
+                                mView.openOtherUi();
+                                return;
+                            }
                             mView.showSaveBasicItem(isSuccess, o.getMsg());
                         }
                     }
@@ -232,6 +244,10 @@ public class DetailPresenter implements DetailContract.Presenter {
                         if (mView.isActive()) {
                             mView.showIndicator(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())){
+                                mView.openOtherUi();
+                                return;
+                            }
                             mView.showSaveCarInfo(isSuccess, o.getMsg());
                         }
                     }
@@ -271,6 +287,10 @@ public class DetailPresenter implements DetailContract.Presenter {
                         if (mView.isActive()) {
                             mView.showIndicator(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())){
+                                mView.openOtherUi();
+                                return;
+                            }
                             if (isSuccess) {
                                 if (o.getData() != null)
                                     mView.showCarFilesInfo(o);
@@ -326,6 +346,10 @@ public class DetailPresenter implements DetailContract.Presenter {
                             mView.showIndicator(false);
                             deleteImageFile(file);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())){
+                                mView.openOtherUi();
+                                return;
+                            }
                             mView.showSaveDisCarInfo(isSuccess, o);
                         }
                     }
@@ -371,6 +395,10 @@ public class DetailPresenter implements DetailContract.Presenter {
                         if (mView.isActive()) {
                             mView.showIndicator(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())){
+                                mView.openOtherUi();
+                                return;
+                            }
                             mView.showDeleteDisCarInfo(isSuccess, o.getMsg());
                         }
                     }
@@ -413,6 +441,10 @@ public class DetailPresenter implements DetailContract.Presenter {
                         if (mView.isActive()) {
                             mView.showIndicator(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())){
+                                mView.openOtherUi();
+                                return;
+                            }
                             mView.showSubmitCarTakeStore(isSuccess, o.getMsg());
                         }
                     }

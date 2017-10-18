@@ -55,6 +55,8 @@ public class MainPresenter implements MainContract.Presenter {
             subscription5.unsubscribe();
         if (!CommUtil.checkIsNull(subscription6))
             subscription6.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription7))
+            subscription7.unsubscribe();
     }
 
     @Override
@@ -85,6 +87,15 @@ public class MainPresenter implements MainContract.Presenter {
                                 if (mView.isActive()) {
                                     mView.showMainIndicator(false);
                                     boolean isSuccess = o.getCode().equals("200");
+                                    if (CommUtil.handingCodeLogin(o.getCode())) {
+                                        mView.openOtherUi();
+                                        return;
+                                    }
+                                    o.setCode("211");
+                                    if ("211".equals(o.getCode())) {
+                                        mView.updateApk();
+                                        return;
+                                    }
                                     if (isSuccess) {
                                         CarTakeTaskList.DataBean dataBean = o.getData();
                                         if (!CommUtil.checkIsNull(dataBean)) {
@@ -138,6 +149,10 @@ public class MainPresenter implements MainContract.Presenter {
                                 if (mView.isActive()) {
                                     mView.showMainIndicator(false);
                                     boolean isSuccess = o.getCode().equals("200");
+                                    if (CommUtil.handingCodeLogin(o.getCode())) {
+                                        mView.openOtherUi();
+                                        return;
+                                    }
                                     if (isSuccess) {
                                         CarTakeTaskList.DataBean dataBean = o.getData();
                                         if (!CommUtil.checkIsNull(dataBean)) {
@@ -191,6 +206,10 @@ public class MainPresenter implements MainContract.Presenter {
                                 if (mView.isActive()) {
                                     mView.showMainIndicator(false);
                                     boolean isSuccess = o.getCode().equals("200");
+                                    if (CommUtil.handingCodeLogin(o.getCode())) {
+                                        mView.openOtherUi();
+                                        return;
+                                    }
                                     if (isSuccess) {
                                         CarTakeTaskList.DataBean dataBean = o.getData();
                                         if (!CommUtil.checkIsNull(dataBean)) {
@@ -244,6 +263,10 @@ public class MainPresenter implements MainContract.Presenter {
                                 if (mView.isActive()) {
                                     mView.showMainIndicator(false);
                                     boolean isSuccess = o.getCode().equals("200");
+                                    if (CommUtil.handingCodeLogin(o.getCode())) {
+                                        mView.openOtherUi();
+                                        return;
+                                    }
                                     if (isSuccess) {
                                         CarTakeTaskList.DataBean dataBean = o.getData();
                                         if (!CommUtil.checkIsNull(dataBean)) {
@@ -297,6 +320,10 @@ public class MainPresenter implements MainContract.Presenter {
                                 if (mView.isActive()) {
                                     mView.showMainIndicator(false);
                                     boolean isSuccess = o.getCode().equals("200");
+                                    if (CommUtil.handingCodeLogin(o.getCode())) {
+                                        mView.openOtherUi();
+                                        return;
+                                    }
                                     if (isSuccess) {
                                         CarTakeTaskList.DataBean dataBean = o.getData();
                                         if (!CommUtil.checkIsNull(dataBean)) {
@@ -360,11 +387,11 @@ public class MainPresenter implements MainContract.Presenter {
                         if (mView.isActive()) {
                             mView.showLoadView(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())) {
+                                mView.openOtherUi();
+                                return;
+                            }
                             ADApplication.mSPUtils.clear();
-//                            ADApplication.mSPUtils.put(Api.TOKEN, o.getData().getToken());
-//                            ADApplication.mSPUtils.put(Api.USERID, o.getData().getUserID());
-//                            ADApplication.mSPUtils.put(Api.PASSWORD, Password);
-//                            ADApplication.mSPUtils.put(Api.MOBILE, o.getData().getMobile());
                             mView.showLogout(isSuccess, o.getMsg());
                         }
                     }
@@ -373,7 +400,7 @@ public class MainPresenter implements MainContract.Presenter {
                     protected void _onError() {
                         if (mView.isActive()) {
                             mView.showLoadView(false);
-                            mView.showLogout(false,null);
+                            mView.showLogout(false, null);
                         }
                     }
                 });
@@ -412,6 +439,10 @@ public class MainPresenter implements MainContract.Presenter {
                         if (mView.isActive()) {
                             mView.showLoadView(false);
                             boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())) {
+                                mView.openOtherUi();
+                                return;
+                            }
                             mView.showGetCarTake(isSuccess, o.getMsg());
                         }
                     }
@@ -420,7 +451,7 @@ public class MainPresenter implements MainContract.Presenter {
                     protected void _onError() {
                         if (mView.isActive()) {
                             mView.showLoadView(false);
-                            mView.showGetCarTake(false,null);
+                            mView.showGetCarTake(false, null);
                         }
                     }
                 });

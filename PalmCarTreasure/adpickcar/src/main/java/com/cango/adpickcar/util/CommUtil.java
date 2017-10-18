@@ -1,5 +1,6 @@
 package com.cango.adpickcar.util;
 
+import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.api.Api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -48,5 +49,13 @@ public class CommUtil {
             e.printStackTrace();
         }
         return encrypt;
+    }
+
+    public static boolean handingCodeLogin(String code){
+        boolean isReturn = false;
+        if ("212".equals(code)){
+            isReturn = true;
+        }
+        return isReturn;
     }
 }

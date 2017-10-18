@@ -1,11 +1,13 @@
 package com.cango.adpickcar.main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -36,6 +38,7 @@ import com.cango.adpickcar.base.BaseFragment;
 import com.cango.adpickcar.baseAdapter.BaseHolder;
 import com.cango.adpickcar.baseAdapter.OnBaseItemClickListener;
 import com.cango.adpickcar.baseAdapter.OnLoadMoreListener;
+import com.cango.adpickcar.customview.UpdateFragment;
 import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.login.LoginActivity;
 import com.cango.adpickcar.model.CarTakeTaskList;
@@ -52,13 +55,17 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
-public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, MainContract.View {
+public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, MainContract.View, EasyPermissions.PermissionCallbacks {
     /**
      * 查询类型（1：未接车 2.未提交 3：审核中 4：审批退回 5.审批通过）
      */
@@ -627,12 +634,28 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     @Override
     public void openOtherUi() {
-
+        ToastUtils.showShort("认证失败，请重新登录");
+        ADApplication.mSPUtils.clear();
+        startActivity(new Intent(mActivity, LoginActivity.class));
     }
 
     @Override
     public boolean isActive() {
         return isAdded();
+    }
+
+    @Override
+    public void updateApk() {
+        openPermissions();
+    }
+
+
+    /**
+     * 显示更新dialog
+     */
+    private void showUpdateDialog() {
+        UpdateFragment updateFragment = new UpdateFragment();
+        updateFragment.show(getChildFragmentManager(), updateFragment.getClass().getSimpleName());
     }
 
     @Override
@@ -651,5 +674,48 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRefreshMainEvent(RefreshMainEvent event) {
         onRefresh();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    private static final int REQUEST_STORAGE_GROUP = 1100;
+
+    @AfterPermissionGranted(REQUEST_STORAGE_GROUP)
+    private void openPermissions() {
+        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(getContext(), perms)) {
+            showUpdateDialog();
+        } else {
+            EasyPermissions.requestPermissions(this, getString(R.string.request_storage_group), REQUEST_STORAGE_GROUP, perms);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        Logger.d("onPermissionsGranted");
+        showUpdateDialog();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        if (requestCode == REQUEST_STORAGE_GROUP) {
+            new AppSettingsDialog.Builder(this)
+                    .setRequestCode(REQUEST_STORAGE_GROUP)
+                    .setTitle("权限获取失败")
+                    .setRationale(R.string.setting_request_storage_group)
+                    .build().show();
+        }
+//    }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_STORAGE_GROUP) {
+            openPermissions();
+        }
     }
 }

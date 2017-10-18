@@ -1,6 +1,7 @@
 package com.cango.adpickcar.detail;
 
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import com.cango.adpickcar.detail.basicinfo.BasicInfoFragment;
 import com.cango.adpickcar.detail.carinfo.CarInfoFragment;
 import com.cango.adpickcar.detail.imageinfo.ImageInfoFragment;
 import com.cango.adpickcar.detail.iteminfo.ItemInfoFragment;
+import com.cango.adpickcar.login.LoginActivity;
 import com.cango.adpickcar.main.MainFragment;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarFilesInfo;
@@ -391,7 +393,9 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
 
     @Override
     public void openOtherUi() {
-
+        ToastUtils.showShort("认证失败，请重新登录");
+        ADApplication.mSPUtils.clear();
+        startActivity(new Intent(mActivity, LoginActivity.class));
     }
 
     @Override
@@ -559,7 +563,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 !TextUtils.isEmpty(basicInfoFragment.getBatteryPowerSupply()) && !TextUtils.isEmpty(basicInfoFragment.getLocks()) &&
                 !TextUtils.isEmpty(basicInfoFragment.getCarPager())) {
             check = true;
-        }else {
+        } else {
             ToastUtils.showShort("输入信息不完整");
         }
         basicInfoFragment.getAntitowing();

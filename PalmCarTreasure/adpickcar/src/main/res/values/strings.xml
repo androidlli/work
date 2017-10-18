@@ -7,6 +7,8 @@
     <string name="load_failed_tip">点我再试试？</string>
     <string name="read_phone_state">登录前必须获得读取手机状态</string>
     <string name="setting_read_phone_state">请到设置中授权读取手机状态</string>
+    <string name="request_storage_group">必须授权存储空间的权限</string>
+    <string name="setting_request_storage_group">请到设置中授权存储空间的权限</string>
     <string name="camera_permission_confirmation">需要打开使用摄像头权限</string>
     <string name="camera_permission_not_granted">需要设备拥有摄像头</string>
     <string name="camera_is_opening">照相机正在启动</string>

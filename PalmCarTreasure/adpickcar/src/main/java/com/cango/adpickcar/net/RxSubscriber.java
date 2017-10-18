@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.cango.adpickcar.ADApplication;
 
 import java.io.IOException;
+import java.net.HttpRetryException;
 
 import rx.Subscriber;
 

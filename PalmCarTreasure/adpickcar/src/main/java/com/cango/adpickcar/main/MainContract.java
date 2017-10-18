@@ -33,6 +33,8 @@ public interface MainContract {
         void openOtherUi();
 
         boolean isActive();
+
+        void updateApk();
     }
 
     interface Presenter extends BasePresenter {
