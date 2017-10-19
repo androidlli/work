@@ -94,7 +94,7 @@ public class CarInfo {
         private String CarBrandName;
         private String CarSeriesName;
         private String CarModelName;
-        private List<ModelListBean> modelList;
+        private List<ModelListBean> CarModelList;
 
 
         public int getDisCarID() {
@@ -326,11 +326,11 @@ public class CarInfo {
         }
 
         public List<ModelListBean> getModelList() {
-            return modelList;
+            return CarModelList;
         }
 
         public void setModelList(List<ModelListBean> modelList) {
-            this.modelList = modelList;
+            this.CarModelList = CarModelList;
         }
 
         public static class ModelListBean {

@@ -4,11 +4,13 @@ package com.cango.adpickcar.detail.basicinfo;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.SwitchCompat;
+import android.text.Html;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.base.BaseFragment;
@@ -33,6 +35,8 @@ public class BasicInfoFragment extends BaseFragment {
     NestedScrollView nsvBasic;
     @BindView(R.id.et_MileAgeReg)
     EditText etMileAgeReg;
+    @BindView(R.id.tv_all)
+    TextView tvAll;
     @BindView(R.id.et_carInfoDesc)
     EditText etCarInfoDesc;
     @BindView(R.id.sp_detail_num)
@@ -78,6 +82,7 @@ public class BasicInfoFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+        tvAll.setText(Html.fromHtml("车况描述及其他反拖措施<font color='#ff0000'>*"));
         getData();
     }
 

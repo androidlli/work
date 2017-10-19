@@ -23,6 +23,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -130,6 +132,8 @@ public class CameraActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera);
         if (getIntent() != null) {
             currentType = getIntent().getIntExtra(TYPE, -1);
@@ -178,7 +182,9 @@ public class CameraActivity extends AppCompatActivity implements
     }
 
     private void stopPrompt() {
-        rlPrompt.setVisibility(View.GONE);
+        rlPrompt.setVisibility(View.INVISIBLE);
+        rlPrompt.setPivotX(rlPrompt.getWidth());
+        rlPrompt.setPivotY(rlPrompt.getHeight());
         ObjectAnimator anim = ObjectAnimator//
                 .ofFloat(rlPrompt, "scaleX", 1.0F, 0.0F)
                 .setDuration(100);
@@ -288,7 +294,7 @@ public class CameraActivity extends AppCompatActivity implements
             rlCenter.setVisibility(View.GONE);
             ivShadow.setVisibility(View.GONE);
         } else {
-            isAnimOpen = true;
+            isAnimOpen = false;
         }
     }
 
@@ -299,22 +305,34 @@ public class CameraActivity extends AppCompatActivity implements
         finish();
     }
 
+    boolean isFirst = true;
+
     @Override
     protected void onResume() {
+        if (isFirst) {
+            isFirst = false;
+            stopPrompt();
+        }
         super.onResume();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             mCameraView.start();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.CAMERA)) {
+                Manifest.permission.CAMERA)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             ConfirmationDialogFragment
                     .newInstance(R.string.camera_permission_confirmation,
-                            new String[]{Manifest.permission.CAMERA},
+                            new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             REQUEST_CAMERA_PERMISSION,
                             R.string.camera_permission_not_granted)
                     .show(getSupportFragmentManager(), FRAGMENT_DIALOG);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA,
+                            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_CAMERA_PERMISSION);
         }
     }
@@ -343,7 +361,7 @@ public class CameraActivity extends AppCompatActivity implements
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CAMERA_PERMISSION:
-                if (permissions.length != 1 || grantResults.length != 1) {
+                if (permissions.length != 3 || grantResults.length != 3) {
                     throw new RuntimeException("Error on requesting camera permission.");
                 }
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {

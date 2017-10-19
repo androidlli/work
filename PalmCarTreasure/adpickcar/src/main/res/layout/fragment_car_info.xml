@@ -28,12 +28,59 @@
 
                     <TextView
                         style="@style/ADDetailETStyle"
+                        android:text="车型描述" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_carmodeltext"
+                    style="@style/ADDetailCarText" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
                         android:text="品牌" />
 
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_CarBrandName"
+                    style="@style/ADDetailCarText" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/adeaeaea"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/ADDetailETStyle"
+                        android:text="车系" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_carSeriesName"
                     style="@style/ADDetailCarText" />
 
             </LinearLayout>
@@ -116,8 +163,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/adeaeaea"
-                android:padding="12dp">
+                android:padding="12dp"
+                android:background="@color/adeaeaea">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -127,14 +174,22 @@
 
                     <TextView
                         style="@style/ADDetailETStyle"
-                        android:text="车系" />
+                        android:text="牌照号码" />
 
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tv_carSeriesName"
+                    android:id="@+id/tv_photo_number"
                     style="@style/ADDetailCarText" />
 
+                <TextView
+                    android:id="@+id/tv_car_info_alter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="修改"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -338,38 +393,6 @@
 
                     <TextView
                         style="@style/ADDetailETStyle"
-                        android:text="牌照号码" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tv_photo_number"
-                    style="@style/ADDetailCarText" />
-
-                <TextView
-                    android:id="@+id/tv_car_info_alter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="修改"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/adeaeaea"
-                android:padding="12dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1">
-
-                    <TextView
-                        style="@style/ADDetailETStyle"
                         android:text="车辆合格证号" />
 
                 </LinearLayout>
@@ -383,6 +406,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/adeaeaea"
                 android:padding="12dp">
 
                 <LinearLayout
@@ -406,7 +430,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/adeaeaea"
                 android:padding="12dp">
 
                 <LinearLayout
@@ -427,10 +450,16 @@
 
             </LinearLayout>
 
+
+
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp">
+                android:padding="12dp"
+                android:background="@color/adeaeaea"
+                android:layout_marginBottom="50dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -446,31 +475,6 @@
 
                 <TextView
                     android:id="@+id/tv_carregno"
-                    style="@style/ADDetailCarText" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
-                android:background="@color/adeaeaea"
-                android:padding="12dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1">
-
-                    <TextView
-                        style="@style/ADDetailETStyle"
-                        android:text="车型描述" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tv_carmodeltext"
                     style="@style/ADDetailCarText" />
 
             </LinearLayout>

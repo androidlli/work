@@ -60,10 +60,11 @@
                     android:layout_weight="1">
 
                     <TextView
+                        android:id="@+id/tv_all"
                         style="@style/ADDetailETStyle"
-                        android:text="车况描述" />
+                        android:text="车况描述及其他反拖措施" />
 
-                    <TextView style="@style/ADDetailStarStyle" />
+                    <!--<TextView style="@style/ADDetailStarStyle" />-->
                 </LinearLayout>
 
                 <EditText
@@ -300,6 +301,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp">
@@ -328,6 +330,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp">
@@ -356,6 +359,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp">

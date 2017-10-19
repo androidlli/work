@@ -17,13 +17,13 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ADApplication.addActivity(this);
-        Logger.d(ADApplication.activityList.size());
+//        Logger.d(ADApplication.activityList.size());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         ADApplication.clearLastActivity();
-        Logger.d(ADApplication.activityList.size());
+//        Logger.d(ADApplication.activityList.size());
     }
 }
