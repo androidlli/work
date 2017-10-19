@@ -60,9 +60,20 @@
 
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tv_CarModelName"
-                        style="@style/ADDetailCarText" />
+                    <!--<TextView-->
+                    <!--android:id="@+id/tv_CarModelName"-->
+                    <!--style="@style/ADDetailCarText" />-->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="34dp"
+                        android:layout_weight="2"
+                        android:background="@drawable/detail_et_bg_2">
+
+                        <Spinner
+                            android:id="@+id/sp_carmodelname"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -89,10 +100,10 @@
                         android:text="车型是否与ERP相同" />
 
                     <!--<Switch-->
-                        <!--android:id="@+id/switch_isERPMapping"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginStart="10dp" />-->
+                    <!--android:id="@+id/switch_isERPMapping"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginStart="10dp" />-->
                     <android.support.v7.widget.SwitchCompat
                         android:id="@+id/switch_isERPMapping"
                         android:layout_width="wrap_content"

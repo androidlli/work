@@ -32,6 +32,7 @@ import com.cango.adpickcar.R;
 import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.util.ToastUtils;
 import com.google.android.cameraview.CameraView;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -111,20 +112,20 @@ public class CameraActivity extends AppCompatActivity implements
         }
     };
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }
-    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            View decorView = getWindow().getDecorView();
+//            decorView.setSystemUiVisibility(
+//                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -320,8 +321,8 @@ public class CameraActivity extends AppCompatActivity implements
 
     @Override
     protected void onPause() {
-        super.onPause();
         mCameraView.stop();
+        super.onPause();
     }
 
     @Override
@@ -396,12 +397,12 @@ public class CameraActivity extends AppCompatActivity implements
                         os = new FileOutputStream(file);
                         os.write(data);
                         os.close();
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateCameraDo();
-                            }
-                        });
+//                        mHandler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                updateCameraDo();
+//                            }
+//                        });
                     } catch (IOException e) {
                         Log.w(TAG, "Cannot write to " + file, e);
                     } finally {
@@ -413,8 +414,14 @@ public class CameraActivity extends AppCompatActivity implements
                             }
                         }
                         if (isOk) {
-
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateCameraDo();
+                                }
+                            });
                         } else {
+                            ToastUtils.showShort("图片解码异常");
 //                            Intent intent = new Intent(CameraActivity.this, TrailerActivity.class);
 //                            setResult(Activity.RESULT_CANCELED, intent);
 //                            finish();
@@ -427,7 +434,7 @@ public class CameraActivity extends AppCompatActivity implements
     };
 
     private void updateCameraDo() {
-        Glide.with(this).load(mPath).into(ivResult);
+        Logger.d("updateCameraDo" + mPath);
         fab.setVisibility(View.GONE);
         rlLeft.setVisibility(View.GONE);
         rlCenter.setVisibility(View.GONE);
@@ -435,6 +442,7 @@ public class CameraActivity extends AppCompatActivity implements
         ivResult.setVisibility(View.VISIBLE);
         ivNo.setVisibility(View.VISIBLE);
         ivOk.setVisibility(View.VISIBLE);
+        Glide.with(this).load(mPath).into(ivResult);
     }
 
     private File createImageFile() throws IOException {

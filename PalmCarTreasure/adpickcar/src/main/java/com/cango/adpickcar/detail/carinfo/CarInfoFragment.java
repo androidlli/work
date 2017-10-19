@@ -7,9 +7,11 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -18,9 +20,12 @@ import com.cango.adpickcar.base.BaseFragment;
 import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.detail.DetailFragment;
 import com.cango.adpickcar.detail.DetailPresenter;
+import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.util.ToastUtils;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -37,8 +42,8 @@ public class CarInfoFragment extends BaseFragment {
     NestedScrollView nsvCar;
     @BindView(R.id.tv_CarBrandName)
     TextView tvCarBrandName;
-    @BindView(R.id.tv_CarModelName)
-    TextView tvCarModelName;
+    @BindView(R.id.sp_carmodelname)
+    Spinner spCarModelName;
     @BindView(R.id.switch_isERPMapping)
     SwitchCompat switchIsERPMapping;
     @BindView(R.id.tv_carSeriesName)
@@ -139,10 +144,14 @@ public class CarInfoFragment extends BaseFragment {
             switchIsERPMapping.setEnabled(false);
             switchIsERPMapping.setFocusable(false);
             switchIsERPMapping.setFocusableInTouchMode(false);
+            spCarModelName.setClickable(false);
+            spCarModelName.setFocusable(false);
+            spCarModelName.setFocusableInTouchMode(false);
+            spCarModelName.setEnabled(false);
         }
         CarInfo.DataBean dataBean = mCarInfo.getData();
         tvCarBrandName.setText(dataBean.getCarBrandName());
-        tvCarModelName.setText(dataBean.getCarModelName());
+//        tvCarModelName.setText(dataBean.getCarModelName());
         switchIsERPMapping.setChecked(dataBean.getIsErpMapping().equals("1"));
         tvCarSeriesName.setText(dataBean.getCarSeriesName());
         tvColor.setText(dataBean.getColor());
@@ -166,6 +175,19 @@ public class CarInfoFragment extends BaseFragment {
                 detailFragment.saveCarInfo();
             }
         });
+
+        //初始化
+        ArrayList<CarInfo.DataBean.ModelListBean> modelList =
+                (ArrayList<CarInfo.DataBean.ModelListBean>) (dataBean.getModelList());
+        ArrayAdapter<CarInfo.DataBean.ModelListBean> carModelAdapter = new ArrayAdapter<>(getActivity(),
+                R.layout.simple_spinner_item, modelList);
+        carModelAdapter.setDropDownViewResource(R.layout.my_drop_down_item);
+        spCarModelName.setAdapter(carModelAdapter);
+        for (CarInfo.DataBean.ModelListBean bean : modelList) {
+            if (bean.getId().equals(dataBean.getCarModelID())) {
+                spCarModelName.setSelection(modelList.indexOf(bean));
+            }
+        }
     }
 
     public void showError() {

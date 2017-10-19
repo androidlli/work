@@ -32,7 +32,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * A simple {@link Fragment} subclass.
  */
 public class LoginFragment extends BaseFragment implements LoginContract.View, EasyPermissions.PermissionCallbacks {
-    private static final int REQUEST_READ_PHONE_STATE = 100;
+    private static final int REQUEST_READ_PHONE_STATE_CAMERA_STORAGE = 100;
 
     public static LoginFragment getInstance() {
         LoginFragment loginFragment = new LoginFragment();
@@ -151,16 +151,17 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    @AfterPermissionGranted(REQUEST_READ_PHONE_STATE)
+    @AfterPermissionGranted(REQUEST_READ_PHONE_STATE_CAMERA_STORAGE)
     private void openPermissions() {
-        String[] perms = {Manifest.permission.READ_PHONE_STATE};
+        String[] perms = {Manifest.permission.READ_PHONE_STATE,Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
         if (EasyPermissions.hasPermissions(getContext(), perms)) {
             if (isDoLogin) {
                 isDoLogin = false;
                 login();
             }
         } else {
-            EasyPermissions.requestPermissions(this, getString(R.string.read_phone_state), REQUEST_READ_PHONE_STATE, perms);
+            EasyPermissions.requestPermissions(this, getString(R.string.read_phone_state), REQUEST_READ_PHONE_STATE_CAMERA_STORAGE, perms);
         }
     }
 
@@ -176,9 +177,9 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Logger.d("onPermissionsDenied");
 //        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-        if (requestCode == REQUEST_READ_PHONE_STATE) {
+        if (requestCode == REQUEST_READ_PHONE_STATE_CAMERA_STORAGE) {
             new AppSettingsDialog.Builder(this)
-                    .setRequestCode(REQUEST_READ_PHONE_STATE)
+                    .setRequestCode(REQUEST_READ_PHONE_STATE_CAMERA_STORAGE)
                     .setTitle("权限获取失败")
                     .setRationale(R.string.setting_read_phone_state)
                     .build().show();
@@ -190,7 +191,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.d("onActivityResult");
-        if (requestCode == REQUEST_READ_PHONE_STATE) {
+        if (requestCode == REQUEST_READ_PHONE_STATE_CAMERA_STORAGE) {
             // Do something after user returned from app settings screen, like showing a Toast.
             openPermissions();
         }

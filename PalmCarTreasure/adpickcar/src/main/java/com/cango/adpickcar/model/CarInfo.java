@@ -2,6 +2,8 @@ package com.cango.adpickcar.model;
 
 import com.cango.adpickcar.util.CommUtil;
 
+import java.util.List;
+
 /**
  * Created by cango on 2017/10/13.
  */
@@ -92,6 +94,8 @@ public class CarInfo {
         private String CarBrandName;
         private String CarSeriesName;
         private String CarModelName;
+        private List<ModelListBean> modelList;
+
 
         public int getDisCarID() {
             return DisCarID;
@@ -319,6 +323,40 @@ public class CarInfo {
             if (CommUtil.checkIsNull(CarModelName))
                 CarModelName = "";
             this.CarModelName = CarModelName;
+        }
+
+        public List<ModelListBean> getModelList() {
+            return modelList;
+        }
+
+        public void setModelList(List<ModelListBean> modelList) {
+            this.modelList = modelList;
+        }
+
+        public static class ModelListBean {
+            private String Id;
+            private String Value;
+
+            @Override
+            public String toString() {
+                return Value;
+            }
+
+            public String getId() {
+                return Id;
+            }
+
+            public void setId(String Id) {
+                this.Id = Id;
+            }
+
+            public String getValue() {
+                return Value;
+            }
+
+            public void setValue(String Value) {
+                this.Value = Value;
+            }
         }
     }
 }

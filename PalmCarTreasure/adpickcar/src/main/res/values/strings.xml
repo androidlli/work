@@ -5,8 +5,8 @@
     <string name="load_end_tip">已经全部加载完毕</string>
     <string name="load_loading_tip">努力加载中</string>
     <string name="load_failed_tip">点我再试试？</string>
-    <string name="read_phone_state">登录前必须获得读取手机状态</string>
-    <string name="setting_read_phone_state">请到设置中授权读取手机状态</string>
+    <string name="read_phone_state">必须授权读取手机状态和存储权限及照相机权限</string>
+    <string name="setting_read_phone_state">请到设置中授权读取手机状态和存储权限及照相机权限</string>
     <string name="request_storage_group">必须授权存储空间的权限</string>
     <string name="setting_request_storage_group">请到设置中授权存储空间的权限</string>
     <string name="camera_permission_confirmation">需要打开使用摄像头权限</string>
