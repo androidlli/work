@@ -130,6 +130,8 @@ public class ParticularFragment extends BaseFragment {
             mDatas.addAll(carFilesInfo.getData().getDetailList());
             mAdapter.notifyDataSetChanged();
         }
+        llSorry.setVisibility(View.GONE);
+        llNoData.setVisibility(View.GONE);
     }
 
     public void showError() {
@@ -242,6 +244,7 @@ public class ParticularFragment extends BaseFragment {
                         return;
                     currentPostion = holder.getAdapterPosition();
                     Intent cameraIntent = new Intent(mActivity, CameraActivity.class);
+                    cameraIntent.putExtra("SurfaceFileListBean",mDatas.get(currentPostion));
                     startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE_PARTICULAR);
                 }
             });

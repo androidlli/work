@@ -121,7 +121,8 @@ public class ResetFragment extends BaseFragment implements ResetPSContract.View 
         if (!TextUtils.isEmpty(message))
             ToastUtils.showShort(message);
         if (isSuccess) {
-            mActivity.finish();
+            startActivity(new Intent(mActivity, LoginActivity.class));
+//            mActivity.finish();
         }
     }
 

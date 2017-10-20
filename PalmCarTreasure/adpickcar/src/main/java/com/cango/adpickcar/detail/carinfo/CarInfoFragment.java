@@ -168,13 +168,15 @@ public class CarInfoFragment extends BaseFragment {
         tvEngineno.setText(dataBean.getEngineNO());
         tvCarRegno.setText(dataBean.getCarRegNO());
         tvCarModelText.setText(dataBean.getCarModelText());
-
         switchIsERPMapping.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 detailFragment.saveCarInfo();
             }
         });
+        llSorry.setVisibility(View.GONE);
+        llNoData.setVisibility(View.GONE);
+        nsvCar.setVisibility(View.VISIBLE);
 
         //初始化
         ArrayList<CarInfo.DataBean.ModelListBean> modelList =

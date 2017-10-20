@@ -1,5 +1,8 @@
 package com.cango.adpickcar.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.cango.adpickcar.util.CommUtil;
 
 import java.util.List;
@@ -73,7 +76,7 @@ public class CarFilesInfo {
             this.SupplementList = SupplementList;
         }
 
-        public static class SurfaceFileListBean {
+        public static class SurfaceFileListBean implements Parcelable {
             /**
              * PicFileID : 0
              * DisCarPicID : 0
@@ -97,6 +100,9 @@ public class CarFilesInfo {
             private String SubID;
             private String SubName;
             private boolean IsRequire;
+            private String MongoliaPath;
+            private String MongoliaIconPath;
+            private String MongoliaDesc;
 
             public int getPicFileID() {
                 return PicFileID;
@@ -189,6 +195,85 @@ public class CarFilesInfo {
             public void setIsRequire(boolean IsRequire) {
                 this.IsRequire = IsRequire;
             }
+
+            public String getMongoliaPath() {
+                return MongoliaPath;
+            }
+
+            public void setMongoliaPath(String mongoliaPath) {
+                MongoliaPath = mongoliaPath;
+            }
+
+            public String getMongoliaIconPath() {
+                return MongoliaIconPath;
+            }
+
+            public void setMongoliaIconPath(String mongoliaIconPath) {
+                MongoliaIconPath = mongoliaIconPath;
+            }
+
+            public String getMongoliaDesc() {
+                return MongoliaDesc;
+            }
+
+            public void setMongoliaDesc(String mongoliaDesc) {
+                if (!CommUtil.checkIsNull(mongoliaDesc))
+                    mongoliaDesc = "";
+                MongoliaDesc = mongoliaDesc;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(this.PicFileID);
+                dest.writeInt(this.DisCarPicID);
+                dest.writeString(this.PicPath);
+                dest.writeString(this.ThumbPath);
+                dest.writeString(this.PicInst);
+                dest.writeString(this.PicDtlDesc);
+                dest.writeString(this.SubCategory);
+                dest.writeString(this.SubID);
+                dest.writeString(this.SubName);
+                dest.writeByte(this.IsRequire ? (byte) 1 : (byte) 0);
+                dest.writeString(this.MongoliaPath);
+                dest.writeString(this.MongoliaIconPath);
+                dest.writeString(this.MongoliaDesc);
+            }
+
+            public SurfaceFileListBean() {
+            }
+
+            protected SurfaceFileListBean(Parcel in) {
+                this.PicFileID = in.readInt();
+                this.DisCarPicID = in.readInt();
+                this.PicPath = in.readString();
+                this.ThumbPath = in.readString();
+                this.PicInst = in.readString();
+                this.PicDtlDesc = in.readString();
+                this.SubCategory = in.readString();
+                this.SubID = in.readString();
+                this.SubName = in.readString();
+                this.IsRequire = in.readByte() != 0;
+                this.MongoliaPath = in.readString();
+                this.MongoliaIconPath = in.readString();
+                this.MongoliaDesc = in.readString();
+            }
+
+            public static final Parcelable.Creator<SurfaceFileListBean> CREATOR = new Parcelable.Creator<SurfaceFileListBean>() {
+                @Override
+                public SurfaceFileListBean createFromParcel(Parcel source) {
+                    return new SurfaceFileListBean(source);
+                }
+
+                @Override
+                public SurfaceFileListBean[] newArray(int size) {
+                    return new SurfaceFileListBean[size];
+                }
+            };
         }
     }
 }

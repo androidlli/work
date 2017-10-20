@@ -354,6 +354,7 @@
                 android:id="@+id/ll_modify_ps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
                 android:layout_marginStart="24dp"
                 android:gravity="center_vertical">
 
@@ -400,6 +401,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="46dp"
             android:layout_marginStart="21dp"
+            android:padding="5dp"
             android:gravity="center_vertical">
 
             <ImageView

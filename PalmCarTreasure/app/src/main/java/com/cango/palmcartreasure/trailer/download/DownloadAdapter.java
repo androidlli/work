@@ -34,8 +34,19 @@ public class DownloadAdapter extends BaseAdapter<File> {
         TextView tvName = holder.getView(R.id.tv_download_first_a);
         TextView tvSize = holder.getView(R.id.tv_download_file_size_a);
         TextView tvLook = holder.getView(R.id.tv_look);
+        TextView tvDelete = holder.getView(R.id.tv_delete);
         tvName.setText(data.getName());
         tvSize.setText(FileUtils.GetFileSize(data));
+        tvDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (data!=null){
+                    mDatas.remove(data);
+                    data.delete();
+                    notifyDataSetChanged();
+                }
+            }
+        });
         tvLook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

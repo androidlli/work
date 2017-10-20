@@ -82,7 +82,8 @@ public class ResetPSPresenter implements ResetPSContract.Presenter {
                                 return;
                             }
                             if (isSuccess) {
-                                ADApplication.mSPUtils.put(Api.PASSWORD, newPassword);
+//                                ADApplication.mSPUtils.put(Api.PASSWORD, newPassword);
+                                ADApplication.mSPUtils.clear();
                             }
                             mView.showResetSuccess(isSuccess, o.getMsg());
                         }

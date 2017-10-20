@@ -69,6 +69,10 @@ public class ImageInfoFragment extends BaseFragment {
     public void updateUI(CarFilesInfo carFilesInfo) {
         mCarFilesInfo = carFilesInfo;
         initTabLayout();
+        mTabLayout.setVisibility(View.VISIBLE);
+        mViewPager.setVisibility(View.VISIBLE);
+        llSorry.setVisibility(View.GONE);
+        llNoData.setVisibility(View.GONE);
     }
 
     public void showError() {

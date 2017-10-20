@@ -27,11 +27,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.detail.DetailActivity;
+import com.cango.adpickcar.model.CarFilesInfo;
 import com.cango.adpickcar.util.ToastUtils;
 import com.google.android.cameraview.CameraView;
 import com.orhanobut.logger.Logger;
@@ -76,10 +78,11 @@ public class CameraActivity extends AppCompatActivity implements
             R.string.flash_on,
     };
 
+    private CarFilesInfo.DataBean.SurfaceFileListBean surfaceFileListBean;
     private int mCurrentFlash;
-
     private CameraView mCameraView;
-    private ImageView ivCancal, ivFlash, ivNo, ivOk, ivResult, ivShadow;
+    private ImageView ivCancal, ivFlash, ivNo, ivOk, ivResult, ivShadow, ivPromptLeft;
+    private TextView tvPromptBottom;
     private ImageView fab;
     private RelativeLayout rlLeft, rlCenter, rlRight, rlPrompt;
     private ImageView ivPrompt;
@@ -137,8 +140,11 @@ public class CameraActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_camera);
         if (getIntent() != null) {
             currentType = getIntent().getIntExtra(TYPE, -1);
+            surfaceFileListBean = getIntent().getParcelableExtra("SurfaceFileListBean");
         }
         ivShadow = (ImageView) findViewById(R.id.iv_shadow);
+        ivPromptLeft = (ImageView) findViewById(R.id.iv_camera_prompt_left);
+        tvPromptBottom = (TextView) findViewById(R.id.tv_camera_prompt_bottom);
         ivCancal = (ImageView) findViewById(R.id.iv_camera_cancal);
         ivFlash = (ImageView) findViewById(R.id.iv_camera_flash);
         ivResult = (ImageView) findViewById(R.id.iv_result);
@@ -179,6 +185,16 @@ public class CameraActivity extends AppCompatActivity implements
                 }
             }
         });
+
+        if (surfaceFileListBean != null) {
+            Glide.with(this)
+                    .load(surfaceFileListBean.getMongoliaPath())
+                    .into(ivShadow);
+            Glide.with(this)
+                    .load(surfaceFileListBean.getMongoliaIconPath())
+                    .into(ivPromptLeft);
+            tvPromptBottom.setText(surfaceFileListBean.getMongoliaDesc());
+        }
     }
 
     private void stopPrompt() {

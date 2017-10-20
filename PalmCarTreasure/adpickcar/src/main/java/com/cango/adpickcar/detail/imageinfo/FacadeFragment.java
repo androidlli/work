@@ -148,6 +148,8 @@ public class FacadeFragment extends BaseFragment {
                 mAdapter.notifyDataSetChanged();
             }
         }
+        llSorry.setVisibility(View.GONE);
+        llNoData.setVisibility(View.GONE);
     }
 
     public void showError() {
@@ -307,6 +309,7 @@ public class FacadeFragment extends BaseFragment {
                     fromType = 0;
                     currentPostion = holder.getAdapterPosition();
                     Intent cameraIntent = new Intent(mActivity, CameraActivity.class);
+                    cameraIntent.putExtra("SurfaceFileListBean",mDatas.get(currentPostion));
                     startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE_FACADE);
                 }
             });
