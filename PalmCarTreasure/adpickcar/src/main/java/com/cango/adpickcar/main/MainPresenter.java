@@ -91,7 +91,7 @@ public class MainPresenter implements MainContract.Presenter {
                                         mView.openOtherUi();
                                         return;
                                     }
-//                                    o.setCode("211");
+                                    o.setCode("211");
                                     if ("211".equals(o.getCode())) {
                                         mView.updateApk();
                                         return;

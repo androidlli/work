@@ -1,14 +1,18 @@
 package com.cango.adpickcar.main;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,6 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,12 +43,13 @@ import com.cango.adpickcar.base.BaseFragment;
 import com.cango.adpickcar.baseAdapter.BaseHolder;
 import com.cango.adpickcar.baseAdapter.OnBaseItemClickListener;
 import com.cango.adpickcar.baseAdapter.OnLoadMoreListener;
-import com.cango.adpickcar.customview.UpdateFragment;
 import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.login.LoginActivity;
 import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.model.EventModel.RefreshMainEvent;
 import com.cango.adpickcar.resetps.ResetPSActivity;
+import com.cango.adpickcar.update.ProgressListener;
+import com.cango.adpickcar.update.UpdatePresenter;
 import com.cango.adpickcar.util.BarUtil;
 import com.cango.adpickcar.util.CommUtil;
 import com.cango.adpickcar.util.ToastUtils;
@@ -54,6 +60,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +72,11 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, MainContract.View, EasyPermissions.PermissionCallbacks {
     /**
@@ -654,8 +667,10 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
      * 显示更新dialog
      */
     private void showUpdateDialog() {
-        UpdateFragment updateFragment = new UpdateFragment();
-        updateFragment.show(getChildFragmentManager(), updateFragment.getClass().getSimpleName());
+//        UpdateFragment updateFragment = new UpdateFragment();
+//        updateFragment.show(getChildFragmentManager(), updateFragment.getClass().getSimpleName());
+
+        updateAPK();
     }
 
     @Override
@@ -668,6 +683,9 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        if (subscription != null)
+            subscription.unsubscribe();
+
     }
 
     //接受详情提交后返回成功，然后首页刷新
@@ -717,5 +735,110 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         if (requestCode == REQUEST_STORAGE_GROUP) {
             openPermissions();
         }
+    }
+
+    private NumberFormat nt;
+    private Subscription subscription;
+
+    //跟新apk
+    private void updateAPK() {
+        nt = NumberFormat.getPercentInstance();
+        String parentDir = ADApplication.getmContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+        final String apkPath = parentDir + File.separator + "kingkong_ad.apk";
+        final UpdatePresenter presenter = new UpdatePresenter();
+        presenter.start();
+        final ProgressDialog progressDialog = new ProgressDialog(mActivity);
+        ///dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置进度条的形式为圆形转动的进度条
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//        dialog.setProgress(R.mipmap.ic_launcher);
+//        dialog.setSecondaryProgress(R.mipmap.image002);//设置二级进度条的背景
+        progressDialog.setCancelable(false);// 设置是否可以通过点击Back键取消
+        progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+        progressDialog.setIcon(R.mipmap.ic_launcher);//
+        // 设置提示的title的图标，默认是没有的，需注意的是如果没有设置title的话只设置Icon是不会显示图标的
+        progressDialog.setTitle("更新");
+        progressDialog.setMax(100);
+        // dismiss监听
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+            }
+        });
+        // 监听Key事件被传递给dialog
+        progressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                return false;
+            }
+        });
+        // 监听cancel事件
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+            @Override
+            public void onCancel(DialogInterface dialog) {
+            }
+        });
+//        设置可点击的按钮，最多有三个(默认情况下)
+        progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if ("点击安装".equals(progressDialog.getButton(DialogInterface.BUTTON_POSITIVE).getText())) {
+                            installApk(apkPath);
+                        }
+                    }
+                });
+        progressDialog.setMessage("正在下载......");
+        progressDialog.show();
+//        progressDialog.incrementProgressBy(1);
+//        progressDialog.incrementSecondaryProgressBy(15);//二级进度条更新方式
+        
+        presenter.downLoadAPK(apkPath, new ProgressListener() {
+            @Override
+            public void update(final long bytesRead, final long contentLength, boolean done) {
+                if (done) {
+//                    installApk(apkPath);
+                    progressDialog.getButton(DialogInterface.BUTTON_POSITIVE).setText("点击安装");
+                } else {
+                    Observable<Long> updateObservable = Observable.create(new Observable.OnSubscribe<Long>() {
+                        @Override
+                        public void call(Subscriber<? super Long> subscriber) {
+                            subscriber.onNext(Long.valueOf(bytesRead));
+                            subscriber.onCompleted();
+                        }
+                    });
+                    subscription = updateObservable
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Action1<Long>() {
+                                @Override
+                                public void call(Long aLong) {
+                                    //设置百分数精确度2即保留两位小数
+                                    nt.setMinimumFractionDigits(2);
+                                    float baifen = (float) aLong / (float) contentLength * 100;
+//                                    tvProgress.setText((int) baifen + " %");
+//                                    progressBar.setProgress((int) baifen);
+                                    progressDialog.setProgress((int) baifen);
+                                }
+                            });
+                }
+            }
+        });
+    }
+
+    public void installApk(String apkPath) {
+        File file = new File(apkPath);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri fileUri;
+        if (Build.VERSION.SDK_INT >= 24) {
+            fileUri = FileProvider.getUriForFile(getActivity(), "com.cango.adpickcar.fileprovider", file);
+        } else {
+            fileUri = Uri.fromFile(file);
+        }
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
+        startActivity(intent);
     }
 }
