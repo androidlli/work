@@ -1,2 +1,2 @@
-include ':app', ':PushSDK', ':CarLocation', ':library', ':adpickcar', ':nice-spinner-master'
+include ':app', ':PushSDK', ':CarLocation', ':library', ':adpickcar'
 include ':zxing'

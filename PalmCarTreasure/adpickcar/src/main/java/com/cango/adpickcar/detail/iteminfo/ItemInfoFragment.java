@@ -114,7 +114,9 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
     }
 
     public void getData() {
-        presenter.GetCarTakeStoreBaseInfo(true, mCarTakeTaskListBean.getCTSID() + "", mCarTakeTaskListBean.getDisCarID() + "");
+        if (mCarTakeTaskListBean!=null){
+            presenter.GetCarTakeStoreBaseInfo(true, mCarTakeTaskListBean.getCTSID() + "", mCarTakeTaskListBean.getDisCarID() + "");
+        }
     }
 
     private void initRecyclerView() {

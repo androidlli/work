@@ -125,7 +125,9 @@ public class CarInfoFragment extends BaseFragment {
     }
 
     public void getData() {
-        presenter.GetCarTakeStoreCarInfo(true, mCarTakeTaskListBean.getDisCarID() + "");
+        if (mCarInfo!=null){
+            presenter.GetCarTakeStoreCarInfo(true, mCarTakeTaskListBean.getDisCarID() + "");
+        }
     }
 
     @Override
