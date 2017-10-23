@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.cango.adpickcar">
 
     <!-- Normal Permissions 不需要运行时注册 -->
@@ -55,6 +56,10 @@
         <activity
             android:name=".TestActivity"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="portrait"
+            tools:replace="screenOrientation" />
     </application>
 
 </manifest>

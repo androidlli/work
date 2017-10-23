@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -53,6 +54,12 @@ import com.cango.adpickcar.update.UpdatePresenter;
 import com.cango.adpickcar.util.BarUtil;
 import com.cango.adpickcar.util.CommUtil;
 import com.cango.adpickcar.util.ToastUtils;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.android.Intents;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -107,6 +114,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     RelativeLayout rlHead;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.ll_main_scan)
+    LinearLayout llMainScan;
     @BindView(R.id.ll_main_search)
     LinearLayout llMainSearch;
     @BindView(R.id.iv_main_popup_parent)
@@ -154,17 +163,28 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @BindView(R.id.avl_login_indicator)
     AVLoadingIndicatorView mLoadView;
 
-    @OnClick({R.id.ll_modify_ps, R.id.ll_main_search, R.id.rl_main_first, R.id.rl_main_second, R.id.rl_main_third,
+    @OnClick({R.id.ll_modify_ps, R.id.ll_main_scan, R.id.ll_main_search, R.id.rl_main_first, R.id.rl_main_second, R.id.rl_main_third,
             R.id.rl_main_fourth, R.id.rl_main_fifth, R.id.ll_sign_off, R.id.rl_drawer})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_modify_ps:
                 startActivity(new Intent(mActivity, ResetPSActivity.class));
                 break;
+            case R.id.ll_main_scan:
+//                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+//                try {
+//                    Bitmap qrCode = barcodeEncoder.encodeBitmap("十九大举行集体采访，聚焦中国特色强军之路",BarcodeFormat.QR_CODE,500,500);
+//
+//                } catch (WriterException e) {
+//                    e.printStackTrace();
+//                }
+//                IntentIntegrator.forSupportFragment(this).initiateScan();
+                break;
             case R.id.ll_main_search:
                 showPopSearch();
                 break;
             case R.id.rl_main_first:
+                llMainScan.setVisibility(View.VISIBLE);
                 llMainSearch.setVisibility(View.VISIBLE);
                 selectTitleStatus(0);
                 if (CURRENT_TYPE != WEIJIECHE) {
@@ -180,6 +200,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 }
                 break;
             case R.id.rl_main_second:
+                llMainScan.setVisibility(View.INVISIBLE);
                 llMainSearch.setVisibility(View.INVISIBLE);
                 selectTitleStatus(1);
                 if (CURRENT_TYPE != WEITIJIAO) {
@@ -188,6 +209,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 }
                 break;
             case R.id.rl_main_third:
+                llMainScan.setVisibility(View.INVISIBLE);
                 llMainSearch.setVisibility(View.INVISIBLE);
                 selectTitleStatus(2);
                 if (CURRENT_TYPE != SHENHEZHON) {
@@ -196,6 +218,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 }
                 break;
             case R.id.rl_main_fourth:
+                llMainScan.setVisibility(View.INVISIBLE);
                 llMainSearch.setVisibility(View.INVISIBLE);
                 selectTitleStatus(3);
                 if (CURRENT_TYPE != SHENHETUIHUI) {
@@ -204,6 +227,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 }
                 break;
             case R.id.rl_main_fifth:
+                llMainScan.setVisibility(View.INVISIBLE);
                 llMainSearch.setVisibility(View.INVISIBLE);
                 selectTitleStatus(4);
                 if (CURRENT_TYPE != SHENHETONGUO) {
@@ -286,6 +310,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
         initNum(0, 0, 0, 0, 0);
         selectTitleStatus(0);
+        llMainScan.setVisibility(View.VISIBLE);
         CURRENT_TYPE = WEIJIECHE;
         tvUserMobile.setText(ADApplication.mSPUtils.getString(Api.MOBILE));
         initRecyclerView();
@@ -734,6 +759,17 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_STORAGE_GROUP) {
             openPermissions();
+        } else {
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (result != null) {
+                if (result.getContents() == null) {
+                } else {
+                    ToastUtils.showShort(result.getContents());
+                    Logger.d(result.toString());
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 
@@ -795,7 +831,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         progressDialog.show();
 //        progressDialog.incrementProgressBy(1);
 //        progressDialog.incrementSecondaryProgressBy(15);//二级进度条更新方式
-        
+
         presenter.downLoadAPK(apkPath, new ProgressListener() {
             @Override
             public void update(final long bytesRead, final long contentLength, boolean done) {
