@@ -18,15 +18,17 @@ import com.cango.adpickcar.detail.DetailFragment;
 import com.cango.adpickcar.detail.DetailPresenter;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 
 public class BasicInfoFragment extends BaseFragment {
-    public static BasicInfoFragment getInstance() {
+    public static BasicInfoFragment getInstance(CarTakeTaskList.DataBean.CarTakeTaskListBean bean) {
         BasicInfoFragment basicInfoFragment = new BasicInfoFragment();
         Bundle bundle = new Bundle();
+        bundle.putParcelable("bean",bean);
         basicInfoFragment.setArguments(bundle);
         return basicInfoFragment;
     }
@@ -89,7 +91,7 @@ public class BasicInfoFragment extends BaseFragment {
     @Override
     protected void initData() {
         presenter = (DetailPresenter) ((DetailFragment) getParentFragment()).mPresenter;
-        mCarTakeTaskListBean = ((DetailFragment) getParentFragment()).mCarTakeTaskListBean;
+        mCarTakeTaskListBean = getArguments().getParcelable("bean");
         isEdit = ((DetailFragment) getParentFragment()).isEdit;
     }
 

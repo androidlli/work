@@ -24,6 +24,7 @@ import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.util.ToastUtils;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
@@ -31,9 +32,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class CarInfoFragment extends BaseFragment {
-    public static CarInfoFragment getInstance() {
+    public static CarInfoFragment getInstance(CarTakeTaskList.DataBean.CarTakeTaskListBean bean) {
         CarInfoFragment carInfoFragment = new CarInfoFragment();
         Bundle bundle = new Bundle();
+        bundle.putParcelable("bean",bean);
         carInfoFragment.setArguments(bundle);
         return carInfoFragment;
     }
@@ -125,7 +127,7 @@ public class CarInfoFragment extends BaseFragment {
     }
 
     public void getData() {
-        if (mCarInfo!=null){
+        if (mCarTakeTaskListBean!=null){
             presenter.GetCarTakeStoreCarInfo(true, mCarTakeTaskListBean.getDisCarID() + "");
         }
     }
@@ -135,7 +137,7 @@ public class CarInfoFragment extends BaseFragment {
         mActivity = (DetailActivity) getActivity();
         detailFragment = (DetailFragment) getParentFragment();
         presenter = (DetailPresenter) ((DetailFragment) getParentFragment()).mPresenter;
-        mCarTakeTaskListBean = ((DetailFragment) getParentFragment()).mCarTakeTaskListBean;
+        mCarTakeTaskListBean = getArguments().getParcelable("bean");
         isEdit = ((DetailFragment) getParentFragment()).isEdit;
     }
 

@@ -33,6 +33,7 @@ import com.cango.adpickcar.detail.DetailPresenter;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.model.PhotoResult;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,9 +45,10 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
     private static final int REQUEST_IMAGE_CAPTURE_INFO = 1;
     private String photoPath;
 
-    public static ItemInfoFragment getInstance() {
+    public static ItemInfoFragment getInstance(CarTakeTaskList.DataBean.CarTakeTaskListBean bean) {
         ItemInfoFragment itemInfoFragment = new ItemInfoFragment();
         Bundle bundle = new Bundle();
+        bundle.putParcelable("bean",bean);
         itemInfoFragment.setArguments(bundle);
         return itemInfoFragment;
     }
@@ -154,7 +156,7 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         mActivity = (DetailActivity) getActivity();
         detailFragment = (DetailFragment) getParentFragment();
         presenter = (DetailPresenter) ((DetailFragment) getParentFragment()).mPresenter;
-        mCarTakeTaskListBean = ((DetailFragment) getParentFragment()).mCarTakeTaskListBean;
+        mCarTakeTaskListBean = getArguments().getParcelable("bean");
         isEdit = ((DetailFragment) getParentFragment()).isEdit;
         spaceText = getResources().getString(R.string.space_text);
     }

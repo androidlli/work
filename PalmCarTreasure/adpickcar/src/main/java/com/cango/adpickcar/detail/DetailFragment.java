@@ -32,6 +32,7 @@ import com.cango.adpickcar.model.EventModel.RefreshMainEvent;
 import com.cango.adpickcar.model.PhotoResult;
 import com.cango.adpickcar.util.BarUtil;
 import com.cango.adpickcar.util.ToastUtils;
+import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -240,10 +241,10 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
     }
 
     private void addChildFragment() {
-        basicInfoFragment = BasicInfoFragment.getInstance();
-        itemInfoFragment = ItemInfoFragment.getInstance();
-        carInfoFragment = CarInfoFragment.getInstance();
-        imageInfoFragment = ImageInfoFragment.getInstance();
+        basicInfoFragment = BasicInfoFragment.getInstance(mCarTakeTaskListBean);
+        itemInfoFragment = ItemInfoFragment.getInstance(mCarTakeTaskListBean);
+        carInfoFragment = CarInfoFragment.getInstance(mCarTakeTaskListBean);
+        imageInfoFragment = ImageInfoFragment.getInstance(mCarTakeTaskListBean);
         mFragments.add(basicInfoFragment);
         mFragments.add(itemInfoFragment);
         mFragments.add(carInfoFragment);

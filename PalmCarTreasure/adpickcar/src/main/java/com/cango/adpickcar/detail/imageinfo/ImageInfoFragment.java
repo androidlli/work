@@ -18,15 +18,17 @@ import com.cango.adpickcar.detail.DetailPresenter;
 import com.cango.adpickcar.model.CarFilesInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.model.PhotoResult;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 
 public class ImageInfoFragment extends BaseFragment {
-    public static ImageInfoFragment getInstance() {
+    public static ImageInfoFragment getInstance(CarTakeTaskList.DataBean.CarTakeTaskListBean bean) {
         ImageInfoFragment imageInfoFragment = new ImageInfoFragment();
         Bundle bundle = new Bundle();
+        bundle.putParcelable("bean",bean);
         imageInfoFragment.setArguments(bundle);
         return imageInfoFragment;
     }
@@ -147,7 +149,7 @@ public class ImageInfoFragment extends BaseFragment {
     protected void initData() {
         mActivity = (DetailActivity) getActivity();
         presenter = (DetailPresenter) ((DetailFragment) getParentFragment()).mPresenter;
-        mCarTakeTaskListBean = ((DetailFragment) getParentFragment()).mCarTakeTaskListBean;
+        mCarTakeTaskListBean = getArguments().getParcelable("bean");
         isEdit = ((DetailFragment) getParentFragment()).isEdit;
     }
 

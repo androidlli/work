@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -48,18 +47,16 @@ import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.login.LoginActivity;
 import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.model.EventModel.RefreshMainEvent;
+import com.cango.adpickcar.model.QRCodeBean;
 import com.cango.adpickcar.resetps.ResetPSActivity;
 import com.cango.adpickcar.update.ProgressListener;
 import com.cango.adpickcar.update.UpdatePresenter;
 import com.cango.adpickcar.util.BarUtil;
 import com.cango.adpickcar.util.CommUtil;
 import com.cango.adpickcar.util.ToastUtils;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.android.Intents;
+import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -171,14 +168,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 startActivity(new Intent(mActivity, ResetPSActivity.class));
                 break;
             case R.id.ll_main_scan:
-//                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-//                try {
-//                    Bitmap qrCode = barcodeEncoder.encodeBitmap("十九大举行集体采访，聚焦中国特色强军之路",BarcodeFormat.QR_CODE,500,500);
-//
-//                } catch (WriterException e) {
-//                    e.printStackTrace();
-//                }
-//                IntentIntegrator.forSupportFragment(this).initiateScan();
+                IntentIntegrator.forSupportFragment(this).initiateScan();
                 break;
             case R.id.ll_main_search:
                 showPopSearch();
@@ -764,8 +754,11 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             if (result != null) {
                 if (result.getContents() == null) {
                 } else {
-                    ToastUtils.showShort(result.getContents());
+//                    ToastUtils.showShort(result.getContents());
                     Logger.d(result.toString());
+                    Gson gson = new Gson();
+                    QRCodeBean qrCodeBean = gson.fromJson(result.getContents(), QRCodeBean.class);
+                    qrCodeBean.setUserID(ADApplication.mSPUtils.getString(Api.USERID));
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
