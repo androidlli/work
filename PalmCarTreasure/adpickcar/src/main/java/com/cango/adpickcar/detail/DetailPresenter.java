@@ -97,8 +97,13 @@ public class DetailPresenter implements DetailContract.Presenter {
                                 return;
                             }
                             if (isSuccess) {
-                                mView.showCarTakeStoreBaseInfo(o);
-                                mView.showItemInfo(o);
+                                if (o.getData()!=null){
+                                    mView.showCarTakeStoreBaseInfo(o);
+                                    mView.showItemInfo(o);
+                                }else {
+                                    mView.showBaseInfoNoData();
+                                    mView.showItemInfoNoData();
+                                }
                             } else {
                                 mView.showBaseInfoNoData();
                                 mView.showItemInfoNoData();
@@ -147,7 +152,11 @@ public class DetailPresenter implements DetailContract.Presenter {
                                 return;
                             }
                             if (isSuccess) {
-                                mView.showCarInfo(o);
+                                if (o.getData()!=null){
+                                    mView.showCarInfo(o);
+                                }else {
+                                    mView.showCarInfoNoData();
+                                }
                             } else {
                                 mView.showCarInfoNoData();
                             }
@@ -213,7 +222,7 @@ public class DetailPresenter implements DetailContract.Presenter {
 
     @Override
     public void saveCarInfo(boolean showRefreshLoadingUI, final String UserID,
-                            final String LicensePlateNo, final String IsErpMapping, final String DisCarID) {
+                            final String LicensePlateNo, final String IsErpMapping, final String DisCarID, final String CarModelID) {
         if (mView.isActive()) {
             mView.showIndicator(showRefreshLoadingUI);
         }
@@ -230,6 +239,7 @@ public class DetailPresenter implements DetailContract.Presenter {
                         paramsMap.put("LicensePlateNo", LicensePlateNo);
                         paramsMap.put("IsErpMapping", IsErpMapping);
                         paramsMap.put("DisCarID", DisCarID);
+                        paramsMap.put("CarModelID",CarModelID);
                         String encrypt = CommUtil.getParmasMapToJsonByEncrypt(paramsMap);
                         paramsMap = new HashMap<>();
                         paramsMap.put("RequestContent", encrypt);

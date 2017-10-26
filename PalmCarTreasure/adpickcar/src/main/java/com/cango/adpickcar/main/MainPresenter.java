@@ -5,6 +5,7 @@ import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.api.MainService;
 import com.cango.adpickcar.model.BaseData;
 import com.cango.adpickcar.model.CarTakeTaskList;
+import com.cango.adpickcar.model.GetQRCodeData;
 import com.cango.adpickcar.model.ServerTime;
 import com.cango.adpickcar.net.NetManager;
 import com.cango.adpickcar.net.RxSubscriber;
@@ -28,7 +29,7 @@ public class MainPresenter implements MainContract.Presenter {
     private MainContract.View mView;
     private MainService mService;
     private Subscription subscription1, subscription2, subscription3, subscription4, subscription5,
-            subscription6, subscription7;
+            subscription6, subscription7,subscription8;
 
     public MainPresenter(MainContract.View view) {
         mView = view;
@@ -57,6 +58,8 @@ public class MainPresenter implements MainContract.Presenter {
             subscription6.unsubscribe();
         if (!CommUtil.checkIsNull(subscription7))
             subscription7.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription8))
+            subscription8.unsubscribe();
     }
 
     @Override
@@ -452,6 +455,59 @@ public class MainPresenter implements MainContract.Presenter {
                         if (mView.isActive()) {
                             mView.showLoadView(false);
                             mView.showGetCarTake(false, null);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void carTakeStoreConfirmByQRCode(boolean showRefreshLoadingUI, final String UserID, final String TCUserID,
+                                            final String AgencyID, final String ApplyCD, final String Lat, final String Lon, final String WHNO) {
+        if (mView.isActive())
+            mView.showLoadView(showRefreshLoadingUI);
+        subscription8 = mService.getServerTime()
+                .flatMap(new Func1<ServerTime, Observable<GetQRCodeData>>() {
+                    @Override
+                    public Observable<GetQRCodeData> call(ServerTime serverTime) {
+                        boolean isSuccess = serverTime.getCode().equals("200");
+                        if (isSuccess) {
+                            ADApplication.mSPUtils.put(Api.SERVERTIME, serverTime.getData().getServerTime());
+                        }
+                        Map<String, Object> paramsMap = new HashMap<>();
+                        paramsMap.put("UserID", UserID);
+                        paramsMap.put("TCUserID", TCUserID);
+                        paramsMap.put("AgencyID", AgencyID);
+                        paramsMap.put("ApplyCD", ApplyCD);
+                        paramsMap.put("Lat", Lat);
+                        paramsMap.put("Lon", Lon);
+                        paramsMap.put("WHNO", WHNO);
+                        String encrypt = CommUtil.getParmasMapToJsonByEncrypt(paramsMap);
+                        paramsMap = new HashMap<>();
+                        paramsMap.put("RequestContent", encrypt);
+                        return mService.cartakestoreconfirmbyqrcode(paramsMap);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new RxSubscriber<GetQRCodeData>() {
+                    @Override
+                    protected void _onNext(GetQRCodeData o) {
+                        if (mView.isActive()) {
+                            mView.showLoadView(false);
+                            boolean isSuccess = o.getCode().equals("200");
+                            if (CommUtil.handingCodeLogin(o.getCode())) {
+                                mView.openOtherUi();
+                                return;
+                            }
+                            mView.showQRCodeStatus(isSuccess, o);
+                        }
+                    }
+
+                    @Override
+                    protected void _onError() {
+                        if (mView.isActive()) {
+                            mView.showLoadView(false);
+                            mView.showQRCodeStatus(false, null);
                         }
                     }
                 });

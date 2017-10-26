@@ -159,6 +159,28 @@ public class CarTakeTaskList {
             private String CarBrandPicURL;
             private String ReturnReason;
             private String TowingcoShortName;
+            private String OperTime;
+            private String CarModelName;
+
+            public String getCarModelName() {
+                return CarModelName;
+            }
+
+            public void setCarModelName(String carModelName) {
+                if (CommUtil.checkIsNull(carModelName))
+                    carModelName = "";
+                CarModelName = carModelName;
+            }
+
+            public String getOperTime() {
+                return OperTime;
+            }
+
+            public void setOperTime(String operTime) {
+                if (CommUtil.checkIsNull(operTime))
+                    operTime = "";
+                OperTime = operTime;
+            }
 
             public String getTowingcoShortName() {
                 return TowingcoShortName;
@@ -347,6 +369,8 @@ public class CarTakeTaskList {
                 dest.writeString(this.CarBrandPicURL);
                 dest.writeString(this.ReturnReason);
                 dest.writeString(this.TowingcoShortName);
+                dest.writeString(this.OperTime);
+                dest.writeString(this.CarModelName);
             }
 
             public CarTakeTaskListBean() {
@@ -370,6 +394,8 @@ public class CarTakeTaskList {
                 this.CarBrandPicURL = in.readString();
                 this.ReturnReason = in.readString();
                 this.TowingcoShortName = in.readString();
+                this.OperTime = in.readString();
+                this.CarModelName = in.readString();
             }
 
             public static final Parcelable.Creator<CarTakeTaskListBean> CREATOR = new Parcelable.Creator<CarTakeTaskListBean>() {

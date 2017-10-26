@@ -1,12 +1,14 @@
 package com.cango.adpickcar.detail.basicinfo;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Html;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -214,9 +216,21 @@ public class BasicInfoFragment extends BaseFragment {
         //有无车辆行驶证
         if (dataBean.getHasDrvLic().equals("0")) {
             switchCard.setChecked(false);
+            switchCard.setSwitchTextAppearance(getActivity(),R.style.off);
         } else {
             switchCard.setChecked(true);
+            switchCard.setSwitchTextAppearance(getActivity(),R.style.on);
         }
+        switchCard.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    switchCard.setSwitchTextAppearance(getActivity(),R.style.on);
+                }else {
+                    switchCard.setSwitchTextAppearance(getActivity(),R.style.off);
+                }
+            }
+        });
         //客户GPS排查
         ArrayList<BaseInfo.DataBean.BaseSpinnerListBean> hasDriverCardListBeanArrayList =
                 (ArrayList<BaseInfo.DataBean.BaseSpinnerListBean>) dataBean.getHasDriverCardList();

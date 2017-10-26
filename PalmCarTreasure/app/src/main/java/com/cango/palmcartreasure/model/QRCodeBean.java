@@ -19,8 +19,8 @@ public class QRCodeBean implements Parcelable {
     private String TCUserID;
     private String AgencyID;
     private String ApplyCD;
-    private String LAT;
-    private String LON;
+    private String Lat;
+    private String Lon;
 
     public String getTCUserID() {
         return TCUserID;
@@ -47,19 +47,19 @@ public class QRCodeBean implements Parcelable {
     }
 
     public String getLAT() {
-        return LAT;
+        return Lat;
     }
 
     public void setLAT(String LAT) {
-        this.LAT = LAT;
+        this.Lat = LAT;
     }
 
     public String getLON() {
-        return LON;
+        return Lon;
     }
 
     public void setLON(String LON) {
-        this.LON = LON;
+        this.Lon = LON;
     }
 
     @Override
@@ -72,8 +72,8 @@ public class QRCodeBean implements Parcelable {
         dest.writeString(this.TCUserID);
         dest.writeString(this.AgencyID);
         dest.writeString(this.ApplyCD);
-        dest.writeString(this.LAT);
-        dest.writeString(this.LON);
+        dest.writeString(this.Lat);
+        dest.writeString(this.Lon);
     }
 
     public QRCodeBean() {
@@ -83,8 +83,8 @@ public class QRCodeBean implements Parcelable {
         this.TCUserID = in.readString();
         this.AgencyID = in.readString();
         this.ApplyCD = in.readString();
-        this.LAT = in.readString();
-        this.LON = in.readString();
+        this.Lat = in.readString();
+        this.Lon = in.readString();
     }
 
     public static final Parcelable.Creator<QRCodeBean> CREATOR = new Parcelable.Creator<QRCodeBean>() {

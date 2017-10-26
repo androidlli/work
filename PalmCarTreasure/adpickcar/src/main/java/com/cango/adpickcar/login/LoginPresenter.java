@@ -55,7 +55,6 @@ public class LoginPresenter implements LoginContract.Presenter {
         paramsMap.put("DeviceToken", deviceToken);
         paramsMap.put("DeviceType", deviceType);
         String encrypt = CommUtil.getParmasMapToJsonByEncrypt(paramsMap);
-        Logger.d(encrypt);
         paramsMap = new HashMap<>();
         paramsMap.put("RequestContent", encrypt);
         subscription = mService.login(paramsMap)

@@ -2,6 +2,7 @@ package com.cango.adpickcar.api;
 
 import com.cango.adpickcar.model.BaseData;
 import com.cango.adpickcar.model.CarTakeTaskList;
+import com.cango.adpickcar.model.GetQRCodeData;
 import com.cango.adpickcar.model.ServerTime;
 
 import java.util.Map;
@@ -46,4 +47,8 @@ public interface MainService {
     //确认接车
     @POST("api/cartake/cartakestoreconfirm")
     Observable<BaseData> carTakeStoreConfirm(@Body Map<String,Object> requestContent);
+
+    //确认接车（二维码）
+    @POST("api/cartake/cartakestoreconfirmbyqrcode")
+    Observable<GetQRCodeData> cartakestoreconfirmbyqrcode(@Body Map<String,Object> requestContent);
 }

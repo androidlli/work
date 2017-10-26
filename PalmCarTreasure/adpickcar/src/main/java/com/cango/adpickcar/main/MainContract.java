@@ -2,7 +2,9 @@ package com.cango.adpickcar.main;
 
 import com.cango.adpickcar.base.BasePresenter;
 import com.cango.adpickcar.base.BaseView;
+import com.cango.adpickcar.model.BaseData;
 import com.cango.adpickcar.model.CarTakeTaskList;
+import com.cango.adpickcar.model.GetQRCodeData;
 
 import java.util.ArrayList;
 
@@ -29,6 +31,8 @@ public interface MainContract {
         void showLogout(boolean isSuccess, String message);
 
         void showGetCarTake(boolean isSuccess, String message);
+
+        void showQRCodeStatus(boolean isSuccess, GetQRCodeData baseData);
 
         void openOtherUi();
 
@@ -60,5 +64,17 @@ public interface MainContract {
          * CarID											车辆ID									string
          */
         void GetCarTakeTaskList(boolean showRefreshLoadingUI, String UserID, String CTTaskID, String CTWhno, String Vin, String CarID);
+
+        /**
+         * UserID											用户ID									string
+         * TCUserID											接车任务ID									string
+         * AgencyID											拖车任务ID									string
+         * ApplyCD											申请编号ID									string
+         * Lat											维度									string
+         * Lon											精度									string
+         * WHNO											库点编号									string
+         */
+        void carTakeStoreConfirmByQRCode(boolean showRefreshLoadingUI, String UserID, String TCUserID,
+                                         String AgencyID, String ApplyCD, String Lat,String Lon,String WHNO);
     }
 }

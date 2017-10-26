@@ -76,7 +76,7 @@ public interface DetailContract {
          * IsErpMapping											与ERP车型是否相符（0-不相符/1-相符）									string
          * DisCarID											处置车辆ID									string
          */
-        void saveCarInfo(boolean showRefreshLoadingUI, String UserID, String LicensePlateNo, String IsErpMapping, String DisCarID);
+        void saveCarInfo(boolean showRefreshLoadingUI, String UserID, String LicensePlateNo, String IsErpMapping, String DisCarID,String CarModelID);
 
         void getCarFilesInfo(boolean showRefreshLoadingUI, String DisCarID);
 

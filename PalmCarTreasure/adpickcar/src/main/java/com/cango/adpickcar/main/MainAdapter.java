@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -20,8 +21,11 @@ import java.util.List;
  */
 
 public class MainAdapter extends BaseAdapter<CarTakeTaskList.DataBean.CarTakeTaskListBean> {
-    public MainAdapter(Context context, List<CarTakeTaskList.DataBean.CarTakeTaskListBean> datas, boolean isOpenLoadMore) {
+    private MainFragment mainFragment;
+
+    public MainAdapter(Context context, List<CarTakeTaskList.DataBean.CarTakeTaskListBean> datas, boolean isOpenLoadMore, MainFragment mainFragment) {
         super(context, datas, isOpenLoadMore);
+        this.mainFragment = mainFragment;
     }
 
     @Override
@@ -31,7 +35,9 @@ public class MainAdapter extends BaseAdapter<CarTakeTaskList.DataBean.CarTakeTas
 
     @Override
     protected void convert(BaseHolder holder, final CarTakeTaskList.DataBean.CarTakeTaskListBean data) {
+        TextView tvTime = holder.getView(R.id.tv_time);
         TextView tvApplyCD = holder.getView(R.id.tv_ApplyCD);
+        LinearLayout llCenter = holder.getView(R.id.ll_main_item_center);
         ImageView ivCarBrandPicURL = holder.getView(R.id.iv_CarBrandPicURL);
         TextView tvCarBrandName = holder.getView(R.id.tv_CarBrandName);
         TextView tvTowingcoShortName = holder.getView(R.id.tv_TowingcoShortName);
@@ -39,7 +45,9 @@ public class MainAdapter extends BaseAdapter<CarTakeTaskList.DataBean.CarTakeTas
         TextView tvCustName = holder.getView(R.id.tv_CustName);
         TextView tvLicensePlateNo = holder.getView(R.id.tv_LicensePlateNo);
         TextView tvColor = holder.getView(R.id.tv_Color);
+        TextView tvCarModelName = holder.getView(R.id.tv_CarModelName);
         ImageView ivPhone = holder.getView(R.id.iv_main_item_phone);
+        tvTime.setText(data.getOperTime());
         tvApplyCD.setText(data.getApplyCD());
         Glide.with(mContext)
                 .load(data.getCarBrandPicURL())
@@ -50,7 +58,21 @@ public class MainAdapter extends BaseAdapter<CarTakeTaskList.DataBean.CarTakeTas
         tvCustName.setText(data.getCustName());
         tvLicensePlateNo.setText(data.getLicenseplateNO());
         tvColor.setText(data.getColor());
+        tvCarModelName.setText(data.getCarModelName());
 
+        switch (mainFragment.CURRENT_TYPE) {
+            case MainFragment.WEIJIECHE:
+                ivPhone.setVisibility(View.VISIBLE);
+                llCenter.setVisibility(View.VISIBLE);
+                break;
+            case MainFragment.WEITIJIAO:
+            case MainFragment.SHENHEZHON:
+            case MainFragment.SHENHETUIHUI:
+            case MainFragment.SHENHETONGUO:
+                ivPhone.setVisibility(View.GONE);
+                llCenter.setVisibility(View.GONE);
+                break;
+        }
         ivPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

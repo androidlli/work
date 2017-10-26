@@ -55,8 +55,8 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
 
     @BindView(R.id.nsv_item)
     NestedScrollView nsvItem;
-    @BindView(R.id.et_InCarDlvNO)
-    EditText etInCarDlvNO;
+//    @BindView(R.id.et_InCarDlvNO)
+//    EditText etInCarDlvNO;
     @BindView(R.id.cb1)
     CheckBox cb1;
     @BindView(R.id.cb2)
@@ -77,8 +77,8 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
     EditText etInCarList;
     @BindView(R.id.et_InCarNmb)
     EditText etInCarNmb;
-    @BindView(R.id.et_InCarDlvComp)
-    EditText etInCarDlvComp;
+//    @BindView(R.id.et_InCarDlvComp)
+//    EditText etInCarDlvComp;
     @BindView(R.id.rv_item_info)
     RecyclerView mRecyclerView;
     @BindView(R.id.ll_sorry)
@@ -204,23 +204,23 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
     public void updateUI(BaseInfo baseInfo) {
         mBaseInfo = baseInfo;
         if (isEdit) {
-            etInCarDlvNO.setFocusable(true);
-            etInCarDlvNO.setFocusableInTouchMode(true);
+//            etInCarDlvNO.setFocusable(true);
+//            etInCarDlvNO.setFocusableInTouchMode(true);
             etInCarList.setFocusable(true);
             etInCarList.setFocusableInTouchMode(true);
             etInCarNmb.setFocusable(true);
             etInCarNmb.setFocusableInTouchMode(true);
-            etInCarDlvComp.setFocusable(true);
-            etInCarDlvComp.setFocusableInTouchMode(true);
+//            etInCarDlvComp.setFocusable(true);
+//            etInCarDlvComp.setFocusableInTouchMode(true);
         } else {
-            etInCarDlvNO.setFocusable(false);
-            etInCarDlvNO.setFocusableInTouchMode(false);
+//            etInCarDlvNO.setFocusable(false);
+//            etInCarDlvNO.setFocusableInTouchMode(false);
             etInCarList.setFocusable(false);
             etInCarList.setFocusableInTouchMode(false);
             etInCarNmb.setFocusable(false);
             etInCarNmb.setFocusableInTouchMode(false);
-            etInCarDlvComp.setFocusable(false);
-            etInCarDlvComp.setFocusableInTouchMode(false);
+//            etInCarDlvComp.setFocusable(false);
+//            etInCarDlvComp.setFocusableInTouchMode(false);
             cb1.setEnabled(false);
             cb2.setEnabled(false);
             cb3.setEnabled(false);
@@ -235,7 +235,7 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         llNoData.setVisibility(View.GONE);
 
         BaseInfo.DataBean dataBean = baseInfo.getData();
-        etInCarDlvNO.setText(dataBean.getInCarDlvNO());
+//        etInCarDlvNO.setText(dataBean.getInCarDlvNO());
         //车内物品清单
         ArrayList<BaseInfo.DataBean.CarUsualListBean> carUsualListBeanArrayList =
                 (ArrayList<BaseInfo.DataBean.CarUsualListBean>) dataBean.getInCarUsualList();
@@ -269,7 +269,7 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         }
         etInCarList.setText(dataBean.getInCarList());
         etInCarNmb.setText(dataBean.getInCarNmb() + "");
-        etInCarDlvComp.setText(dataBean.getInCarDlvComp());
+//        etInCarDlvComp.setText(dataBean.getInCarDlvComp());
 
         datas.clear();
         if (isEdit) {
@@ -299,11 +299,11 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         llNoData.setVisibility(View.VISIBLE);
     }
 
-    public String getCarDlvNO() {
-        String carDlvNO = etInCarDlvNO.getText().toString().trim();
-        mBaseInfo.getData().setInCarDlvNO(carDlvNO);
-        return carDlvNO;
-    }
+//    public String getCarDlvNO() {
+//        String carDlvNO = etInCarDlvNO.getText().toString().trim();
+//        mBaseInfo.getData().setInCarDlvNO(carDlvNO);
+//        return carDlvNO;
+//    }
 
     public String getInCarList() {
         String inCarList = etInCarList.getText().toString().trim();
@@ -317,11 +317,11 @@ public class ItemInfoFragment extends BaseFragment implements CompoundButton.OnC
         return inCarNmb;
     }
 
-    public String getInCarDlvComp() {
-        String inCarDlvComp = etInCarDlvComp.getText().toString().trim();
-        mBaseInfo.getData().setInCarDlvComp(inCarDlvComp);
-        return inCarDlvComp;
-    }
+//    public String getInCarDlvComp() {
+//        String inCarDlvComp = etInCarDlvComp.getText().toString().trim();
+//        mBaseInfo.getData().setInCarDlvComp(inCarDlvComp);
+//        return inCarDlvComp;
+//    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

@@ -61,7 +61,7 @@ public class ImageInfoFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-//        initTabLayout();
+        initTabLayout();
     }
 
     public void getData() {
@@ -70,7 +70,11 @@ public class ImageInfoFragment extends BaseFragment {
 
     public void updateUI(CarFilesInfo carFilesInfo) {
         mCarFilesInfo = carFilesInfo;
-        initTabLayout();
+//        initTabLayout();
+        mFacadeFragment.updateUI(mCarFilesInfo);
+        mParticularFragment.updateUI(mCarFilesInfo);
+        mSupplementFragment.updateUI(mCarFilesInfo);
+
         mTabLayout.setVisibility(View.VISIBLE);
         mViewPager.setVisibility(View.VISIBLE);
         llSorry.setVisibility(View.GONE);

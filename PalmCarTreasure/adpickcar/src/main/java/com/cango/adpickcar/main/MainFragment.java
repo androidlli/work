@@ -37,6 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cango.adpickcar.ADApplication;
+import com.cango.adpickcar.CustomQRCodeActivity;
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.base.BaseFragment;
@@ -47,6 +48,7 @@ import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.login.LoginActivity;
 import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.model.EventModel.RefreshMainEvent;
+import com.cango.adpickcar.model.GetQRCodeData;
 import com.cango.adpickcar.model.QRCodeBean;
 import com.cango.adpickcar.resetps.ResetPSActivity;
 import com.cango.adpickcar.update.ProgressListener;
@@ -92,6 +94,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     public static final int SHENHETUIHUI = 4;
     public static final int SHENHETONGUO = 5;
     public int CURRENT_TYPE = -1;
+    private QRCodeBean currentQRCodeBean;
 
 
     public static MainFragment getInstance() {
@@ -153,6 +156,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.ll_sorry)
     LinearLayout llSorry;
+    @BindView(R.id.ll_no_data)
+    LinearLayout llNoData;
     @BindView(R.id.recyclerview_main)
     RecyclerView mRecyclerView;
     @BindView(R.id.fl_shadow)
@@ -168,7 +173,11 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 startActivity(new Intent(mActivity, ResetPSActivity.class));
                 break;
             case R.id.ll_main_scan:
-                IntentIntegrator.forSupportFragment(this).initiateScan();
+                //使用第三方sdk的activity
+//                IntentIntegrator.forSupportFragment(this).initiateScan();
+                //使用自己定义的界面
+                IntentIntegrator.forSupportFragment(this).setCaptureActivity(CustomQRCodeActivity.class).initiateScan();
+//                new IntentIntegrator.forSupportFragment(this).setCaptureActivity(ToolbarCaptureActivity.class).initiateScan();
                 break;
             case R.id.ll_main_search:
                 showPopSearch();
@@ -408,7 +417,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         mSwipeRefreshLayout.setColorSchemeResources(R.color.red, R.color.green, R.color.blue);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         datas = new ArrayList<>();
-        mAdapter = new MainAdapter(mActivity, datas, true);
+        mAdapter = new MainAdapter(mActivity, datas, true, this);
         mAdapter.setLoadingView(R.layout.load_loading_layout);
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
@@ -588,6 +597,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             mAdapter.setLoadFailedView(R.layout.load_failed_layout);
         } else {
             llSorry.setVisibility(View.VISIBLE);
+            llNoData.setVisibility(View.GONE);
         }
     }
 
@@ -596,7 +606,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         if (isLoadMore) {
             mAdapter.setLoadEndView(R.layout.load_end_layout);
         } else {
-            llSorry.setVisibility(View.VISIBLE);
+            llNoData.setVisibility(View.VISIBLE);
+            llSorry.setVisibility(View.GONE);
         }
     }
 
@@ -621,6 +632,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     public void showMainSuccess(boolean isSuccess, ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> carTakeTaskListBeanList) {
         llSorry.setVisibility(View.GONE);
+        llNoData.setVisibility(View.GONE);
         if (isLoadMore) {
             mTempPageCount++;
             mAdapter.setLoadMoreData(carTakeTaskListBeanList);
@@ -648,16 +660,79 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         isDoCarTakeStoreConfirm = true;
         if (isSuccess) {
             //只有未接车才能确认接车
-            if (itemOnClickPosition < datas.size()) {
-                Intent intent = new Intent(mActivity, DetailActivity.class);
-                intent.putExtra("CarTakeTaskListBean", datas.get(itemOnClickPosition));
-                intent.putExtra("Type", CURRENT_TYPE);
-                startActivity(intent);
-            }
+//            if (itemOnClickPosition < datas.size()) {
+//                Intent intent = new Intent(mActivity, DetailActivity.class);
+//                intent.putExtra("CarTakeTaskListBean", datas.get(itemOnClickPosition));
+//                intent.putExtra("Type", CURRENT_TYPE);
+//                startActivity(intent);
+//            }
             onRefresh();
         }
         if (!TextUtils.isEmpty(message))
             ToastUtils.showShort(message);
+    }
+
+    @Override
+    public void showQRCodeStatus(boolean isSuccess, GetQRCodeData baseData) {
+        if (baseData != null) {
+            if (isSuccess) {
+                if (baseData.getData() != null) {
+                    final GetQRCodeData.DataBean dataBean = baseData.getData();
+                    if (dataBean.getSateCode() == 1) {
+                        ToastUtils.showShort("接车成功");
+                        onRefresh();
+                    } else if (dataBean.getSateCode() == 2) {
+                        if (dataBean.getWareHourseNOList() != null && dataBean.getWareHourseNOList().size() > 0) {
+                            if (dataBean.getWareHourseNOList().size() == 1) {
+                                new AlertDialog.Builder(mActivity)
+                                        .setTitle("接车")
+                                        .setMessage("是否强制接车")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                mPresenter.carTakeStoreConfirmByQRCode(true, ADApplication.mSPUtils.getString(Api.USERID),
+                                                        currentQRCodeBean.getTCUserID(), currentQRCodeBean.getAgencyID(),
+                                                        currentQRCodeBean.getApplyCD(), currentQRCodeBean.getLAT(),
+                                                        currentQRCodeBean.getLON(), dataBean.getWareHourseNOList().get(0));
+                                            }
+                                        })
+                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .create().show();
+                            } else {
+                                new AlertDialog.Builder(mActivity)
+                                        .setTitle("接车")
+                                        .setMessage("是否强制接车")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                showSingleChoiceDialog(dataBean.getWareHourseNOList());
+                                            }
+                                        })
+                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .create().show();
+
+                            }
+                        } else {
+                            ToastUtils.showShort("数据有误");
+                        }
+                    }
+                }
+            } else {
+                if (!TextUtils.isEmpty(baseData.getMsg())) {
+                    ToastUtils.showShort(baseData.getMsg());
+                }
+            }
+        }
     }
 
     @Override
@@ -753,12 +828,12 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result != null) {
                 if (result.getContents() == null) {
+//                    ToastUtils.showShort("二维码异常");
                 } else {
-//                    ToastUtils.showShort(result.getContents());
-                    Logger.d(result.toString());
                     Gson gson = new Gson();
-                    QRCodeBean qrCodeBean = gson.fromJson(result.getContents(), QRCodeBean.class);
-                    qrCodeBean.setUserID(ADApplication.mSPUtils.getString(Api.USERID));
+                    currentQRCodeBean = gson.fromJson(result.getContents(), QRCodeBean.class);
+                    mPresenter.carTakeStoreConfirmByQRCode(true, ADApplication.mSPUtils.getString(Api.USERID), currentQRCodeBean.getTCUserID(),
+                            currentQRCodeBean.getAgencyID(), currentQRCodeBean.getApplyCD(), currentQRCodeBean.getLAT(), currentQRCodeBean.getLON(), null);
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
@@ -869,5 +944,29 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
         startActivity(intent);
+    }
+
+    private String currentWHNO;
+
+    private void showSingleChoiceDialog(List<String> arrayList) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setTitle("选择库点");
+        int size = arrayList.size();
+        final String[] items = arrayList.toArray(new String[size]);
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                currentWHNO = items[i];
+            }
+        }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mPresenter.carTakeStoreConfirmByQRCode(true, ADApplication.mSPUtils.getString(Api.USERID),
+                        currentQRCodeBean.getTCUserID(), currentQRCodeBean.getAgencyID(),
+                        currentQRCodeBean.getApplyCD(), currentQRCodeBean.getLAT(),
+                        currentQRCodeBean.getLON(), currentWHNO);
+            }
+        }).setCancelable(false).create().show();
     }
 }

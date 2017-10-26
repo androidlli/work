@@ -92,8 +92,12 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 hideFragments();
                 showFragment(currentPosition);
                 basicInfoFragment.getData();
-                tvSave.setVisibility(View.VISIBLE);
-                tvSave.setText("保存");
+                if (isEdit) {
+                    tvSave.setVisibility(View.VISIBLE);
+                    tvSave.setText("保存");
+                } else {
+                    tvSave.setVisibility(View.INVISIBLE);
+                }
                 break;
             case R.id.ll_detail_item_info:
                 if (currentPosition == 1) {
@@ -104,8 +108,12 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 hideFragments();
                 showFragment(currentPosition);
                 itemInfoFragment.getData();
-                tvSave.setVisibility(View.VISIBLE);
-                tvSave.setText("保存");
+                if (isEdit) {
+                    tvSave.setVisibility(View.VISIBLE);
+                    tvSave.setText("保存");
+                } else {
+                    tvSave.setVisibility(View.INVISIBLE);
+                }
                 break;
             case R.id.ll_detail_car_info:
                 if (currentPosition == 2) {
@@ -129,8 +137,12 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                 hideFragments();
                 showFragment(currentPosition);
                 imageInfoFragment.getData();
-                tvSave.setVisibility(View.VISIBLE);
-                tvSave.setText("提交");
+                if (isEdit) {
+                    tvSave.setVisibility(View.VISIBLE);
+                    tvSave.setText("提交");
+                } else {
+                    tvSave.setVisibility(View.INVISIBLE);
+                }
                 break;
             case R.id.tv_save:
                 switch (currentPosition) {
@@ -147,7 +159,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                         break;
                     //保存车辆信息
                     case 2:
-                        saveCarInfo();
+//                        saveCarInfo();
                         break;
                     //提交
                     case 3:
@@ -164,14 +176,15 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
         }
     }
 
-    public void saveCarInfo() {
+    public void saveCarInfo(String CarModelID) {
         if (isDoSaveCarInfo) {
             isDoSaveCarInfo = false;
             mPresenter.saveCarInfo(true, ADApplication.mSPUtils.getString(Api.USERID),
                     carInfoFragment.getLicenseplateNO(), carInfoFragment.getIsErpMapping(),
-                    mCarTakeTaskListBean.getDisCarID() + "");
+                    mCarTakeTaskListBean.getDisCarID() + "",CarModelID);
         }
     }
+
 
     /**
      * 当前类型，为接车等,有些可以编辑有些不可以编辑
@@ -574,10 +587,10 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
         basicInfoFragment.getStatus();
         basicInfoFragment.getApproveStatus();
 
-        itemInfoFragment.getCarDlvNO();
+//        itemInfoFragment.getCarDlvNO();
         itemInfoFragment.getInCarList();
         itemInfoFragment.getInCarNmb();
-        itemInfoFragment.getInCarDlvComp();
+//        itemInfoFragment.getInCarDlvComp();
         return check;
     }
 

@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -40,6 +41,7 @@ import com.cango.adpickcar.model.CarTakeTaskList;
 import com.cango.adpickcar.model.PhotoResult;
 import com.cango.adpickcar.util.CommUtil;
 import com.cango.adpickcar.util.SizeUtil;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -113,17 +115,38 @@ public class ParticularFragment extends BaseFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        Logger.d("onCreate");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        Logger.d("onDestroy");
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        if (!isOver) {
-            isOver = true;
-            updateUI(((ImageInfoFragment) getParentFragment()).mCarFilesInfo);
-        }
+//        if (!isOver) {
+//            isOver = true;
+//            updateUI(((ImageInfoFragment) getParentFragment()).mCarFilesInfo);
+//        }
+//        Logger.d("onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+//        Logger.d("onPause");
     }
 
 
     public void updateUI(CarFilesInfo carFilesInfo) {
         mCarFilesInfo = carFilesInfo;
+        mDatas.clear();
+        mAdapter.notifyDataSetChanged();
         if (CommUtil.checkIsNull(mCarFilesInfo.getData().getDetailList())) {
             showNoData();
         } else {
@@ -264,6 +287,8 @@ public class ParticularFragment extends BaseFragment {
 //                        mDatas.get(changePosition).setPicPath("");
 //                        mAdapter.notifyItemChanged(changePosition);
 //                    }
+                    if (!isEdit)
+                        return;
                     currentPostion = holder.getAdapterPosition();
                     detailFragment.DeletePhoto(1, 1, true, ADApplication.mSPUtils.getString(Api.USERID), data.getPicFileID() + "");
                 }

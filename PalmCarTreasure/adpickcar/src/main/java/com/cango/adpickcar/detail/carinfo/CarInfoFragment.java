@@ -7,6 +7,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -98,7 +99,7 @@ public class CarInfoFragment extends BaseFragment {
                                         ToastUtils.showShort("请输入内容");
                                     } else {
                                         tvPhotoNumber.setText(input);
-                                        detailFragment.saveCarInfo();
+                                        detailFragment.saveCarInfo(null);
                                     }
                                 }
                             })
@@ -145,7 +146,7 @@ public class CarInfoFragment extends BaseFragment {
         mCarInfo = carInfo;
         if (isEdit) {
         } else {
-            switchIsERPMapping.setEnabled(false);
+            switchIsERPMapping.setClickable(false);
             switchIsERPMapping.setFocusable(false);
             switchIsERPMapping.setFocusableInTouchMode(false);
             spCarModelName.setClickable(false);
@@ -157,6 +158,22 @@ public class CarInfoFragment extends BaseFragment {
         tvCarBrandName.setText(dataBean.getCarBrandName());
 //        tvCarModelName.setText(dataBean.getCarModelName());
         switchIsERPMapping.setChecked(dataBean.getIsErpMapping().equals("1"));
+        if (switchIsERPMapping.isChecked()){
+            switchIsERPMapping.setSwitchTextAppearance(getActivity(),R.style.on);
+            if (isEdit) {
+                spCarModelName.setClickable(false);
+                spCarModelName.setFocusable(false);
+                spCarModelName.setFocusableInTouchMode(false);
+                spCarModelName.setEnabled(false);
+            } else {
+            }
+        }else {
+            switchIsERPMapping.setSwitchTextAppearance(getActivity(),R.style.off);
+            if (isEdit) {
+                spCarModelName.setEnabled(true);
+            } else {
+            }
+        }
         tvCarSeriesName.setText(dataBean.getCarSeriesName());
         tvColor.setText(dataBean.getColor());
         tvDiscarno.setText(dataBean.getDisCarNo());
@@ -175,7 +192,23 @@ public class CarInfoFragment extends BaseFragment {
         switchIsERPMapping.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                detailFragment.saveCarInfo();
+                if (isChecked){
+                    switchIsERPMapping.setSwitchTextAppearance(getActivity(),R.style.on);
+                    if (isEdit) {
+                        spCarModelName.setClickable(false);
+                        spCarModelName.setFocusable(false);
+                        spCarModelName.setFocusableInTouchMode(false);
+                        spCarModelName.setEnabled(false);
+                    } else {
+                    }
+                    detailFragment.saveCarInfo(null);
+                }else {
+                    if (isEdit) {
+                        spCarModelName.setEnabled(true);
+                    } else {
+                    }
+                    switchIsERPMapping.setSwitchTextAppearance(getActivity(),R.style.off);
+                }
             }
         });
         llSorry.setVisibility(View.GONE);
@@ -183,7 +216,7 @@ public class CarInfoFragment extends BaseFragment {
         nsvCar.setVisibility(View.VISIBLE);
 
         //初始化
-        ArrayList<CarInfo.DataBean.ModelListBean> modelList =
+        final ArrayList<CarInfo.DataBean.ModelListBean> modelList =
                 (ArrayList<CarInfo.DataBean.ModelListBean>) (dataBean.getModelList());
         ArrayAdapter<CarInfo.DataBean.ModelListBean> carModelAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.simple_spinner_item, modelList);
@@ -191,11 +224,27 @@ public class CarInfoFragment extends BaseFragment {
         spCarModelName.setAdapter(carModelAdapter);
         for (CarInfo.DataBean.ModelListBean bean : modelList) {
             if (bean.getId().equals(dataBean.getCarModelID())) {
+                isFirstSP = true;
                 spCarModelName.setSelection(modelList.indexOf(bean));
             }
         }
-    }
+        spCarModelName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isFirstSP){
+                    isFirstSP = false;
+                    return;
+                }
+                detailFragment.saveCarInfo(modelList.get(position).getId());
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+    private boolean isFirstSP = false;
     public void showError() {
         nsvCar.setVisibility(View.GONE);
         llSorry.setVisibility(View.VISIBLE);
