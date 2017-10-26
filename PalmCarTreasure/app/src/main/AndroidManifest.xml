@@ -199,9 +199,13 @@
             android:name=".trailer.checkorder.CheckOrderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Transparent" />
-        <!--<activity android:name=".document.ContactActivity"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@style/AppTheme.Transparent"/>-->
+        <!-- <activity android:name=".document.ContactActivity" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:theme="@style/AppTheme.Transparent"/> -->
+        <activity
+            android:name=".ShowQRActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent" />
     </application>
 
 </manifest>

@@ -76,6 +76,23 @@
                 android:textSize="13sp"
                 android:text="@string/track_query"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_get_qrcode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="26px"
+            android:orientation="vertical"
+            android:layout_gravity="right|center_vertical"
+            android:gravity="center"
+            android:layout_alignParentTop="true">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="30px"
+                android:paddingEnd="30px"
+                android:src="@drawable/qrcode"/>
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
 

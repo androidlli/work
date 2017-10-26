@@ -46,12 +46,14 @@ import com.amap.api.maps.utils.SpatialRelationUtil;
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
 import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
+import com.cango.palmcartreasure.ShowQRActivity;
 import com.cango.palmcartreasure.api.Api;
 import com.cango.palmcartreasure.api.TrailerTaskService;
 import com.cango.palmcartreasure.base.BaseFragment;
 import com.cango.palmcartreasure.customview.TrackDialogFragment;
 import com.cango.palmcartreasure.customview.UploadDialogFragment;
 import com.cango.palmcartreasure.model.NavigationCar;
+import com.cango.palmcartreasure.model.QRCodeBean;
 import com.cango.palmcartreasure.model.SelectPhoto;
 import com.cango.palmcartreasure.model.TaskAbandon;
 import com.cango.palmcartreasure.model.TypeTaskData;
@@ -59,7 +61,6 @@ import com.cango.palmcartreasure.model.WareHouse;
 import com.cango.palmcartreasure.net.NetManager;
 import com.cango.palmcartreasure.net.RxSubscriber;
 import com.cango.palmcartreasure.trailer.main.TrailerActivity;
-import com.cango.palmcartreasure.trailer.taskdetail.TaskDetailPresenter;
 import com.cango.palmcartreasure.trailer.track.TrackActivity;
 import com.cango.palmcartreasure.trailer.track.TrackFragment;
 import com.cango.palmcartreasure.util.AppUtils;
@@ -69,7 +70,6 @@ import com.cango.palmcartreasure.util.FileUtils;
 import com.cango.palmcartreasure.util.ScreenUtil;
 import com.cango.palmcartreasure.util.SizeUtil;
 import com.cango.palmcartreasure.util.ToastUtils;
-import com.google.gson.JsonArray;
 import com.orhanobut.logger.Logger;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -113,6 +113,8 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
 
     @BindView(R.id.toolbar_trailer_map)
     Toolbar mToolbar;
+    @BindView(R.id.ll_get_qrcode)
+    LinearLayout llQrCode;
     @BindView(R.id.ll_toolbar_right)
     LinearLayout llRight;
     @BindView(R.id.ll_select)
@@ -168,7 +170,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
     private double mLat, mLon;
 
     @OnClick({R.id.ll_select, R.id.iv_map_nav, R.id.iv_map_location, R.id.tv_one_speed, R.id.tv_one_point_five_speed, R.id.tv_two_speed,
-            R.id.btn_map_send,R.id.ll_toolbar_right})
+            R.id.btn_map_send,R.id.ll_toolbar_right,R.id.ll_get_qrcode})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_select:
@@ -217,6 +219,20 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             //轨迹查询（老板和员工都可以看到轨迹查询）
             case R.id.ll_toolbar_right:
                 showTrackDialog();
+                break;
+            //开启一个页面展示二维码
+            case R.id.ll_get_qrcode:
+                if (CommUtil.checkIsNull(mTaskListBean))
+                    return;
+                Intent intent = new Intent(mActivity, ShowQRActivity.class);
+                QRCodeBean qrCodeBean = new QRCodeBean();
+                qrCodeBean.setTCUserID(MtApplication.mSPUtils.getInt(Api.USERID)+"");
+                qrCodeBean.setAgencyID(mTaskListBean.getAgencyID()+"");
+                qrCodeBean.setApplyCD(mTaskListBean.getApplyCD());
+                qrCodeBean.setLAT(mPhoneLat+"");
+                qrCodeBean.setLON(mPhoneLon+"");
+                intent.putExtra("QRCodeBean",qrCodeBean);
+                mActivity.mSwipeBackHelper.forward(intent);
                 break;
             default:
                 break;
@@ -369,6 +385,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         if (TRAILER_NAV.equals(mType)) {
             mTitle.setText(R.string.traialer_navigation);
             llRight.setVisibility(View.GONE);
+            llQrCode.setVisibility(View.GONE);
             rlMapTop.setVisibility(View.GONE);
             llDate.setVisibility(View.GONE);
             rlMapBottom.setVisibility(View.GONE);
@@ -378,6 +395,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         } else if (SEND_CAR_LIBRARY.equals(mType)) {
             mTitle.setText(R.string.send_car_library);
             llRight.setVisibility(View.GONE);
+            llQrCode.setVisibility(View.GONE);
             rlMapTop.setVisibility(View.GONE);
             rlMapBottom.setVisibility(View.GONE);
             ivLocation.setVisibility(View.GONE);
@@ -385,6 +403,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
 //            ivDown.setVisibility(View.GONE);
         } else {
             mTitle.setText(R.string.vehicle_localization);
+            llRight.setVisibility(View.GONE);
             rlMapTop.setVisibility(View.GONE);
             rlMapBottom.setVisibility(View.GONE);
             ivLocation.setVisibility(View.GONE);
@@ -487,6 +506,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                                             if (o.getData().size()==0){
                                                 llNoData.setVisibility(View.VISIBLE);
                                             }else {
+                                                llQrCode.setVisibility(View.VISIBLE);
                                                 mWareHouse = o;
                                                 currentLibrary = mWareHouse.getData().get(0);
                                                 mSelectPW = getPopupWindow(mActivity, R.layout.libary_point);
