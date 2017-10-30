@@ -78,8 +78,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
     @Override
     protected void initView() {
         showLoginIndicator(false);
-        etUserName.setText("13601952324");
-        etPassword.setText("Cango123456");
+//        etUserName.setText("13601952324");
+//        etPassword.setText("Cango123456");
         openPermissions();
     }
 

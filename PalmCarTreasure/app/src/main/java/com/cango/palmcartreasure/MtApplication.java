@@ -1,6 +1,5 @@
 package com.cango.palmcartreasure;
 
-import android.app.Activity;
 import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
@@ -83,47 +82,27 @@ public class MtApplication extends Application {
                 Logger.d(uMessage.text);
                 AppCompatActivity lastActvity = getLastActvity();
                 if (lastActvity != null) {
-                    if (lastActvity instanceof MessageActivity) {
+                    if (lastActvity instanceof TrailerActivity) {
+                        EventBus.getDefault().post(new TrailerEvent("ok"));
+                    } else if (lastActvity instanceof MessageActivity) {
                         MessageFragment fragment = (MessageFragment) lastActvity.getSupportFragmentManager().findFragmentById(R.id.fl_message_contains);
                         if (!CommUtil.checkIsNull(fragment))
                             fragment.onRefresh();
-                    }
-                }
-
-                if (lastActvity != null) {
-                    if (uMessage.extra != null) {
-                        String key1 = uMessage.extra.get("key1");
-                        if ("app_sendinstoreqrcode".equals(key1)) {
-                            if (lastActvity instanceof ShowQRActivity) {
+                    } else if (lastActvity instanceof ShowQRActivity) {
+                        if (uMessage.extra != null) {
+                            String key1 = uMessage.extra.get("key1");
+                            if ("app_sendinstoreqrcode".equals(key1)) {
                                 clearExceptFirstActivitys();
                             }
                         }
                     }
                 }
-
-                //推送消息关联主页
-                boolean hasTrailerActivity = isHasTrailerActivity();
-                if (hasTrailerActivity) {
-                    EventBus.getDefault().post(new TrailerEvent("ok"));
-                }
-
                 return super.getNotification(context, uMessage);
             }
 
             @Override
             public void dealWithCustomMessage(Context context, UMessage uMessage) {
                 Logger.d(uMessage.custom);
-//                AppCompatActivity lastActvity = getLastActvity();
-//                if (lastActvity != null) {
-//                    if (lastActvity instanceof ShowQRActivity) {
-//                        //推送消息关联主页
-//                        boolean hasTrailerActivity = isHasTrailerActivity();
-//                        if (hasTrailerActivity) {
-//                            EventBus.getDefault().post(new TrailerEvent("ok"));
-//                        }
-//                        clearExceptFirstActivitys();
-//                    }
-//                }
                 super.dealWithCustomMessage(context, uMessage);
             }
         };
@@ -205,16 +184,16 @@ public class MtApplication extends Application {
 ////                        baseActivity.mSwipeBackHelper.swipeBackward();
 //                    }
 //                }
-                for (int i = activityList.size()-1; i >0; i--) {
+                for (int i = activityList.size() - 1; i > 0; i--) {
                     if (activityList.get(i) != null) {
 //                        activityList.get(i).finish();
                         BaseActivity baseActivity = (BaseActivity) activityList.get(i);
                         baseActivity.mSwipeBackHelper.swipeBackward();
                     }
                 }
-                AppCompatActivity activity = activityList.get(activityList.size() - 1);
-                activityList.clear();
-                activityList.add(activity);
+//                AppCompatActivity activity = activityList.get(activityList.size() - 1);
+//                activityList.clear();
+//                activityList.add(activity);
             }
         }
     }
