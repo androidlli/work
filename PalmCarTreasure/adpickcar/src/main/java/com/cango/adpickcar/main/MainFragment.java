@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import com.cango.adpickcar.ADApplication;
 import com.cango.adpickcar.CustomQRCodeActivity;
+import com.cango.adpickcar.DocActivity;
 import com.cango.adpickcar.R;
 import com.cango.adpickcar.api.Api;
 import com.cango.adpickcar.base.BaseFragment;
@@ -166,7 +167,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     AVLoadingIndicatorView mLoadView;
 
     @OnClick({R.id.ll_modify_ps, R.id.ll_main_scan, R.id.ll_main_search, R.id.rl_main_first, R.id.rl_main_second, R.id.rl_main_third,
-            R.id.rl_main_fourth, R.id.rl_main_fifth, R.id.ll_sign_off, R.id.rl_drawer})
+            R.id.rl_main_fourth, R.id.rl_main_fifth, R.id.ll_sign_off, R.id.rl_drawer,R.id.ll_about_us})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_modify_ps:
@@ -241,6 +242,9 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 }
                 break;
             case R.id.rl_drawer:
+                break;
+            case R.id.ll_about_us:
+                startActivity(new Intent(mActivity, DocActivity.class));
                 break;
         }
     }
@@ -436,29 +440,29 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             public void onItemClick(BaseHolder viewHolder, final CarTakeTaskList.DataBean.CarTakeTaskListBean data, final int position) {
                 switch (CURRENT_TYPE) {
                     case WEIJIECHE:
-                        new AlertDialog.Builder(mActivity)
-                                .setTitle("确认接车")
-                                .setMessage("申请编号：" + data.getApplyCD() + "\r\n" + "客户姓名：" + data.getCustName() + "\r\n" +
-                                        "车牌号码：" + data.getLicenseplateNO() + "\r\n" + "颜色：" + data.getColor())
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        itemOnClickPosition = position;
-                                        if (isDoCarTakeStoreConfirm) {
-                                            isDoCarTakeStoreConfirm = false;
-                                            mPresenter.GetCarTakeTaskList(true, ADApplication.mSPUtils.getString(Api.USERID),
-                                                    data.getCTTaskID() + "", data.getPlanctWhno(), data.getVin(), data.getCarID() + "");
-
-                                        }
-                                    }
-                                })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                    }
-                                })
-                                .create().show();
+//                        new AlertDialog.Builder(mActivity)
+//                                .setTitle("确认接车")
+//                                .setMessage("申请编号：" + data.getApplyCD() + "\r\n" + "客户姓名：" + data.getCustName() + "\r\n" +
+//                                        "车牌号码：" + data.getLicenseplateNO() + "\r\n" + "颜色：" + data.getColor())
+//                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        itemOnClickPosition = position;
+//                                        if (isDoCarTakeStoreConfirm) {
+//                                            isDoCarTakeStoreConfirm = false;
+//                                            mPresenter.GetCarTakeTaskList(true, ADApplication.mSPUtils.getString(Api.USERID),
+//                                                    data.getCTTaskID() + "", data.getPlanctWhno(), data.getVin(), data.getCarID() + "");
+//
+//                                        }
+//                                    }
+//                                })
+//                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//
+//                                    }
+//                                })
+//                                .create().show();
                         break;
                     case WEITIJIAO:
                     case SHENHEZHON:
@@ -967,6 +971,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                         currentQRCodeBean.getApplyCD(), currentQRCodeBean.getLAT(),
                         currentQRCodeBean.getLON(), currentWHNO);
             }
-        }).setCancelable(false).create().show();
+        })
+                .setCancelable(false)
+                .create().show();
     }
 }

@@ -1,11 +1,13 @@
 package com.cango.palmcartreasure;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
+import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.model.TrailerEvent;
 import com.cango.palmcartreasure.trailer.main.TrailerActivity;
 import com.cango.palmcartreasure.trailer.message.MessageActivity;
@@ -51,6 +53,7 @@ public class MtApplication extends Application {
         UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
             @Override
             public void dealWithCustomAction(Context context, UMessage msg) {
+                //用于处理api推送的自定义行为的通知
                 Logger.d(msg.custom);
                 //推送消息关联消息列表
                 AppCompatActivity lastActvity = getLastActvity();
@@ -76,6 +79,7 @@ public class MtApplication extends Application {
         UmengMessageHandler messageHandler = new UmengMessageHandler() {
             @Override
             public Notification getNotification(Context context, UMessage uMessage) {
+                //只要接收到通知都走这里统一处理
                 Logger.d(uMessage.text);
                 AppCompatActivity lastActvity = getLastActvity();
                 if (lastActvity != null) {
@@ -86,6 +90,17 @@ public class MtApplication extends Application {
                     }
                 }
 
+                if (lastActvity != null) {
+                    if (uMessage.extra != null) {
+                        String key1 = uMessage.extra.get("key1");
+                        if ("app_sendinstoreqrcode".equals(key1)) {
+                            if (lastActvity instanceof ShowQRActivity) {
+                                clearExceptFirstActivitys();
+                            }
+                        }
+                    }
+                }
+
                 //推送消息关联主页
                 boolean hasTrailerActivity = isHasTrailerActivity();
                 if (hasTrailerActivity) {
@@ -93,6 +108,23 @@ public class MtApplication extends Application {
                 }
 
                 return super.getNotification(context, uMessage);
+            }
+
+            @Override
+            public void dealWithCustomMessage(Context context, UMessage uMessage) {
+                Logger.d(uMessage.custom);
+//                AppCompatActivity lastActvity = getLastActvity();
+//                if (lastActvity != null) {
+//                    if (lastActvity instanceof ShowQRActivity) {
+//                        //推送消息关联主页
+//                        boolean hasTrailerActivity = isHasTrailerActivity();
+//                        if (hasTrailerActivity) {
+//                            EventBus.getDefault().post(new TrailerEvent("ok"));
+//                        }
+//                        clearExceptFirstActivitys();
+//                    }
+//                }
+                super.dealWithCustomMessage(context, uMessage);
             }
         };
         mPushAgent.setMessageHandler(messageHandler);
@@ -161,6 +193,32 @@ public class MtApplication extends Application {
         }
     }
 
+    public static void clearExceptFirstActivitys() {
+        if (activityList == null || activityList.size() == 0) {
+
+        } else {
+            if (activityList.size() > 1) {
+//                for (int i = 1; i < activityList.size(); i++) {
+//                    if (activityList.get(i) != null) {
+//                        activityList.get(i).finish();
+////                        BaseActivity baseActivity = (BaseActivity) activityList.get(i);
+////                        baseActivity.mSwipeBackHelper.swipeBackward();
+//                    }
+//                }
+                for (int i = activityList.size()-1; i >0; i--) {
+                    if (activityList.get(i) != null) {
+//                        activityList.get(i).finish();
+                        BaseActivity baseActivity = (BaseActivity) activityList.get(i);
+                        baseActivity.mSwipeBackHelper.swipeBackward();
+                    }
+                }
+                AppCompatActivity activity = activityList.get(activityList.size() - 1);
+                activityList.clear();
+                activityList.add(activity);
+            }
+        }
+    }
+
     private static AppCompatActivity getLastActvity() {
         if (activityList == null || activityList.size() == 0) {
             return null;
@@ -169,11 +227,11 @@ public class MtApplication extends Application {
         }
     }
 
-    public static void clearSecondLastActivity(){
-        if (activityList == null || activityList.size() == 0||activityList.size()<2) {
+    public static void clearSecondLastActivity() {
+        if (activityList == null || activityList.size() == 0 || activityList.size() < 2) {
 
         } else {
-            if (activityList.size()>=2){
+            if (activityList.size() >= 2) {
                 AppCompatActivity activity = activityList.get(activityList.size() - 2);
                 activityList.remove(activity);
                 activity.finish();

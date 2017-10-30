@@ -5,8 +5,9 @@ package com.cango.adpickcar.api;
  */
 
 public class Api {
-        public static final String BASE_URL = "http://192.168.121.112:90";
-//    public static final String BASE_URL = "http://testgps.cangoonline.com:82";
+//        public static final String BASE_URL = "http://192.168.121.112:90";
+    public static final String BASE_URL = "http://testgps.cangoonline.com:82";
+    public static final String ABOUT_CONTENT = "/signup/index.html";
     public static final String TOKEN = "token";
     public static final String SERVERTIME = "server_time";
     public static final String DEVICE_TYPE = "2";
