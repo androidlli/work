@@ -210,11 +210,11 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                 break;
             //送车入库
             case R.id.btn_map_send:
-                if (isSendCarOk) {
-//                    ToastUtils.showLong("已经送车入库了！");
-                } else {
-                    showUpLoadDialog();
-                }
+//                if (isSendCarOk) {
+////                    ToastUtils.showLong("已经送车入库了！");
+//                } else {
+//                    showUpLoadDialog();
+//                }
                 break;
             //轨迹查询（老板和员工都可以看到轨迹查询）
             case R.id.ll_toolbar_right:
