@@ -58,6 +58,7 @@ import com.cango.adpickcar.util.BarUtil;
 import com.cango.adpickcar.util.CommUtil;
 import com.cango.adpickcar.util.ToastUtils;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.orhanobut.logger.Logger;
@@ -824,6 +825,11 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 //    }
     }
 
+    /**
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_STORAGE_GROUP) {
@@ -835,9 +841,14 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 //                    ToastUtils.showShort("二维码异常");
                 } else {
                     Gson gson = new Gson();
-                    currentQRCodeBean = gson.fromJson(result.getContents(), QRCodeBean.class);
-                    mPresenter.carTakeStoreConfirmByQRCode(true, ADApplication.mSPUtils.getString(Api.USERID), currentQRCodeBean.getTCUserID(),
-                            currentQRCodeBean.getAgencyID(), currentQRCodeBean.getApplyCD(), currentQRCodeBean.getLAT(), currentQRCodeBean.getLON(), null);
+                    try {
+                        currentQRCodeBean = gson.fromJson(result.getContents(), QRCodeBean.class);
+                        mPresenter.carTakeStoreConfirmByQRCode(true, ADApplication.mSPUtils.getString(Api.USERID), currentQRCodeBean.getTCUserID(),
+                                currentQRCodeBean.getAgencyID(), currentQRCodeBean.getApplyCD(), currentQRCodeBean.getLAT(), currentQRCodeBean.getLON(), null);
+                    } catch (JsonSyntaxException e) {
+                        ToastUtils.showShort("请正确扫描拖车二维码");
+                        e.printStackTrace();
+                    }
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
