@@ -57,9 +57,9 @@
 
         <LinearLayout
             android:id="@+id/ll_main_item_center"
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical">
 
             <ImageView
@@ -93,62 +93,61 @@
         </LinearLayout>
 
         <LinearLayout
-        android:id="@+id/ll_main_item_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical">
+            android:id="@+id/ll_main_item_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
 
-        <ImageView
-        android:layout_width="8dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="6dp"
-        android:src="@drawable/name" />
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="6dp"
+                android:src="@drawable/name" />
 
-        <TextView
-        android:id="@+id/tv_CustName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:text="王勇华"
-        android:textColor="@color/colorPrimary"
-        android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tv_CustName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:ellipsize="end"
+                android:maxEms="5"
+                android:maxLines="1"
+                android:text="王勇华"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
 
-        <ImageView
-        android:layout_width="7dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="11dp"
-        android:src="@drawable/car_id" />
+            <ImageView
+                android:layout_width="7dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="11dp"
+                android:src="@drawable/car_id" />
 
-        <!--android:background="@drawable/main_item_tv_stroke_bg"-->
-        <TextView
-        android:id="@+id/tv_LicensePlateNo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="吉BKN3399"
-        android:textColor="@color/colorPrimary"
-        android:textSize="14sp" />
+            <!--android:background="@drawable/main_item_tv_stroke_bg"-->
+            <TextView
+                android:id="@+id/tv_LicensePlateNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="吉BKN3399"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
 
-        <!--android:background="@drawable/main_item_tv_full_bg"-->
-        <ImageView
-        android:layout_width="10dp"
-        android:layout_height="9dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/color" />
+            <!--android:background="@drawable/main_item_tv_full_bg"-->
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="9dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/color" />
 
-        <TextView
-        android:id="@+id/tv_Color"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="摩卡棕"
-        android:textColor="@color/colorPrimary"
-        android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tv_Color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:text="摩卡棕"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -157,6 +156,7 @@
             android:layout_marginBottom="15dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical">
+
             <TextView
                 android:id="@+id/tv_CarModelName"
                 android:layout_width="wrap_content"
