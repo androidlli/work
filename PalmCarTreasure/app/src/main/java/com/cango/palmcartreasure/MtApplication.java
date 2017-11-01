@@ -191,9 +191,9 @@ public class MtApplication extends Application {
                         baseActivity.mSwipeBackHelper.swipeBackward();
                     }
                 }
-//                AppCompatActivity activity = activityList.get(activityList.size() - 1);
-//                activityList.clear();
-//                activityList.add(activity);
+                AppCompatActivity activity = activityList.get(activityList.size() - 1);
+                activityList.clear();
+                activityList.add(activity);
             }
         }
     }
