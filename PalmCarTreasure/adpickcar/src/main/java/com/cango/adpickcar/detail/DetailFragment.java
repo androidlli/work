@@ -604,9 +604,9 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
         isDoSaveDisCarFile = false;
         mFromType = fromType;
         mSubType = subType;
-        File file = new File(mImgPath);
+        final File tempFile = new File(mImgPath);
         Luban.get(mActivity)
-                .load(file)                     //传人要压缩的图片
+                .load(tempFile)                     //传人要压缩的图片
                 .putGear(Luban.THIRD_GEAR)      //设定压缩档次，默认三挡
                 .setCompressListener(new OnCompressListener() { //设置回调
 
@@ -622,6 +622,9 @@ public class DetailFragment extends BaseFragment implements DetailContract.View 
                     public void onSuccess(File file) {
                         // TODO 压缩成功后调用，返回压缩后的图片文件
                         mPresenter.saveDisCarInfo(true, UserID, DisCarID, PicGroup, SubCategory, SubID, PicFileID, file);
+                        if (tempFile.exists()){
+                            tempFile.delete();
+                        }
                     }
 
                     @Override

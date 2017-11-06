@@ -511,6 +511,9 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                                         }
                                     }
                                 } else {
+                                    if (code == Api.APP_UPDATE){
+                                        updateAPK();
+                                    }
                                     mLoadView.smoothToHide();
                                     llCenter.setVisibility(View.INVISIBLE);
                                     ivVp.setVisibility(View.VISIBLE);

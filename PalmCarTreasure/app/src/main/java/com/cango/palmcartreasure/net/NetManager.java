@@ -4,6 +4,7 @@ import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.api.Api;
 import com.cango.palmcartreasure.update.ProgressListener;
 import com.cango.palmcartreasure.update.ProgressResponseBody;
+import com.cango.palmcartreasure.util.AppUtils;
 import com.cango.palmcartreasure.util.CommUtil;
 import com.umeng.message.PushAgent;
 
@@ -72,7 +73,7 @@ public class NetManager {
         //配置log打印拦截器
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        builder.addInterceptor(loggingInterceptor);
+        builder.addInterceptor(loggingInterceptor);
         //配置request header 添加的token拦截器
         builder.addInterceptor(new Interceptor() {
             @Override
@@ -85,9 +86,11 @@ public class NetManager {
                     deviceToken = pushAgent.getRegistrationId();
                 if (CommUtil.checkIsNull(token))
                     return chain.proceed(originalRequest);
+                String appVersion = AppUtils.getVersionName(MtApplication.getmContext());
                 Request request = chain.request().newBuilder()
                         .addHeader("Authorization", token)
                         .addHeader("DEVICETOKEN",deviceToken)
+                        .addHeader("APPVERSION",appVersion+"@" + Api.DEVICE_TYPE)
                         .build();
                 return chain.proceed(request);
             }

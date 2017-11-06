@@ -25,6 +25,8 @@ public class Api {
     public static final String USERROLEID = "USERROLEID";
     public static final String LOGIN_LAST_LON = "LOGIN_LAST_LON";
     public static final String LOGIN_LAST_LAT = "LOGIN_LAST_LAT";
+    public static final String APPVERSION = "app_version";
 
     public static final int ADMIN_CODE = 1031;
+    public static final int APP_UPDATE = -905;
 }
