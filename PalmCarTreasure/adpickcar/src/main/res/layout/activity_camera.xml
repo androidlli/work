@@ -1,49 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@android:color/black">
 
-    <com.google.android.cameraview.CameraView
-        android:id="@+id/camera"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:adjustViewBounds="true"
-        android:background="@android:color/black" />
+        android:background="#50000000">
+        <com.google.android.cameraview.CameraView
+            android:id="@+id/camera"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            app:aspectRatio="16:9"
+            android:background="@android:color/black">
+            <ImageView
+                android:id="@+id/iv_shadow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/camera_bg" />
+        </com.google.android.cameraview.CameraView>
+    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/iv_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/camera_bg" />
-
-    <RelativeLayout
-        android:id="@+id/rl_camera_left"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="#e0000000">
-
-        <ImageView
-            android:id="@+id/iv_camera_cancal"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:onClick="cancal"
-            android:padding="10dp"
-            android:src="@drawable/camera_return" />
-
-        <ImageView
-            android:id="@+id/iv_camera_flash"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:onClick="flash"
-            android:padding="10dp"
-            android:src="@drawable/flashoff" />
-    </RelativeLayout>
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/rl_camera_right"/>
 
     <RelativeLayout
         android:id="@+id/rl_camera_center"
@@ -106,12 +93,37 @@
             android:src="@drawable/explain" />
     </RelativeLayout>
 
+
+    <RelativeLayout
+        android:id="@+id/rl_camera_left"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#50000000">
+
+        <ImageView
+            android:id="@+id/iv_camera_cancal"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:onClick="cancal"
+            android:padding="10dp"
+            android:src="@drawable/camera_return" />
+
+        <ImageView
+            android:id="@+id/iv_camera_flash"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:onClick="flash"
+            android:padding="10dp"
+            android:src="@drawable/flashoff" />
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rl_camera_right"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        android:background="#e0000000">
+        android:background="#50000000">
 
         <ImageView
             android:id="@+id/take_picture"

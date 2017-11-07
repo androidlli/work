@@ -318,8 +318,8 @@ public class AdminFragment extends BaseFragment implements EasyPermissions.Permi
             @Override
             public void update(final long bytesRead, final long contentLength, boolean done) {
                 if (done) {
-//                    installApk(apkPath);
-                    progressDialog.getButton(DialogInterface.BUTTON_POSITIVE).setText("点击安装");
+                    installApk(apkPath);
+//                    progressDialog.getButton(DialogInterface.BUTTON_POSITIVE).setText("点击安装");
                 } else {
                     Observable<Long> updateObservable = Observable.create(new Observable.OnSubscribe<Long>() {
                         @Override

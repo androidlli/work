@@ -18,10 +18,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -35,6 +40,7 @@ import com.cango.adpickcar.R;
 import com.cango.adpickcar.detail.DetailActivity;
 import com.cango.adpickcar.model.CarFilesInfo;
 import com.cango.adpickcar.util.ToastUtils;
+import com.google.android.cameraview.AspectRatio;
 import com.google.android.cameraview.CameraView;
 import com.orhanobut.logger.Logger;
 
@@ -44,10 +50,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 // AspectRatioFragment.Listener
 public class CameraActivity extends AppCompatActivity implements
-        ActivityCompat.OnRequestPermissionsResultCallback {
+        ActivityCompat.OnRequestPermissionsResultCallback ,AspectRatioFragment.Listener{
 
     private static final String TYPE = "type";
     /**
@@ -135,9 +142,17 @@ public class CameraActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
+
         if (getIntent() != null) {
             currentType = getIntent().getIntExtra(TYPE, -1);
             surfaceFileListBean = getIntent().getParcelableExtra("SurfaceFileListBean");
@@ -162,6 +177,8 @@ public class CameraActivity extends AppCompatActivity implements
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
         }
+        mCameraView.setAspectRatio(AspectRatio.of(16,9));
+
         fab = (ImageView) findViewById(R.id.take_picture);
         if (fab != null) {
             fab.setOnClickListener(mOnClickListener);
@@ -499,6 +516,36 @@ public class CameraActivity extends AppCompatActivity implements
                 return emptyFile.delete();
         }
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.aspect_ratio:
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                if (mCameraView != null
+                        && fragmentManager.findFragmentByTag(FRAGMENT_DIALOG) == null) {
+                    final Set<AspectRatio> ratios = mCameraView.getSupportedAspectRatios();
+                    final AspectRatio currentRatio = mCameraView.getAspectRatio();
+                    AspectRatioFragment.newInstance(ratios, currentRatio)
+                            .show(fragmentManager, FRAGMENT_DIALOG);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onAspectRatioSelected(@NonNull AspectRatio ratio) {
+        if (mCameraView != null) {
+            mCameraView.setAspectRatio(ratio);
+        }
     }
 
     public static class ConfirmationDialogFragment extends DialogFragment {

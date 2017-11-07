@@ -98,7 +98,7 @@ public class BasicInfoFragment extends BaseFragment {
     }
 
     public void getData() {
-        if (mCarTakeTaskListBean!=null){
+        if (mCarTakeTaskListBean!=null&&presenter!=null){
             presenter.GetCarTakeStoreBaseInfo(true, mCarTakeTaskListBean.getCTSID() + "", mCarTakeTaskListBean.getDisCarID() + "");
         }
     }
