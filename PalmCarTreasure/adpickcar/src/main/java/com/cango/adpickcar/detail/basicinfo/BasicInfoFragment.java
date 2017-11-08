@@ -1,7 +1,6 @@
 package com.cango.adpickcar.detail.basicinfo;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.SwitchCompat;
@@ -20,7 +19,6 @@ import com.cango.adpickcar.detail.DetailFragment;
 import com.cango.adpickcar.detail.DetailPresenter;
 import com.cango.adpickcar.model.BaseInfo;
 import com.cango.adpickcar.model.CarTakeTaskList;
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
@@ -30,7 +28,7 @@ public class BasicInfoFragment extends BaseFragment {
     public static BasicInfoFragment getInstance(CarTakeTaskList.DataBean.CarTakeTaskListBean bean) {
         BasicInfoFragment basicInfoFragment = new BasicInfoFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("bean",bean);
+        bundle.putParcelable("bean", bean);
         basicInfoFragment.setArguments(bundle);
         return basicInfoFragment;
     }
@@ -98,7 +96,7 @@ public class BasicInfoFragment extends BaseFragment {
     }
 
     public void getData() {
-        if (mCarTakeTaskListBean!=null&&presenter!=null){
+        if (mCarTakeTaskListBean != null && presenter != null) {
             presenter.GetCarTakeStoreBaseInfo(true, mCarTakeTaskListBean.getCTSID() + "", mCarTakeTaskListBean.getDisCarID() + "");
         }
     }
@@ -216,18 +214,18 @@ public class BasicInfoFragment extends BaseFragment {
         //有无车辆行驶证
         if (dataBean.getHasDrvLic().equals("0")) {
             switchCard.setChecked(false);
-            switchCard.setSwitchTextAppearance(getActivity(),R.style.off);
+            switchCard.setSwitchTextAppearance(getActivity(), R.style.off);
         } else {
             switchCard.setChecked(true);
-            switchCard.setSwitchTextAppearance(getActivity(),R.style.on);
+            switchCard.setSwitchTextAppearance(getActivity(), R.style.on);
         }
         switchCard.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    switchCard.setSwitchTextAppearance(getActivity(),R.style.on);
-                }else {
-                    switchCard.setSwitchTextAppearance(getActivity(),R.style.off);
+                if (isChecked) {
+                    switchCard.setSwitchTextAppearance(getActivity(), R.style.on);
+                } else {
+                    switchCard.setSwitchTextAppearance(getActivity(), R.style.off);
                 }
             }
         });
