@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseFragment;
 import com.cango.palmcartreasure.baseAdapter.BaseHolder;
@@ -257,6 +258,7 @@ public class StaiffFragment extends BaseFragment implements StaiffContract.View 
         if (isSuccess) {
             mActivity.setResult(Activity.RESULT_OK);
             mActivity.mSwipeBackHelper.swipeBackward();
+            MtApplication.clearLastActivity();
         }
     }
 

@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.util.CommUtil;
@@ -36,6 +37,7 @@ public class AdminActivity extends BaseActivity {
     }
     @Override
     public void onBackPressed() {
+        MtApplication.clearLastActivity();
         finish();
     }
 

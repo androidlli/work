@@ -138,6 +138,7 @@ public class EditFragment extends BaseFragment {
                                         //填写标注成功，返回，如果前一页面处于拖车信息的话，刷新内容
                                         EventBus.getDefault().post(new EditEvent(""));
                                         mActivity.mSwipeBackHelper.swipeBackward();
+                                        MtApplication.clearLastActivity();
                                     } else {
                                         if (!CommUtil.checkIsNull(o.getMsg())) {
                                             ToastUtils.showShort(o.getMsg());

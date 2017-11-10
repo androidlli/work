@@ -235,8 +235,10 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
         showLoginIndicator(false);
         if (MtApplication.mSPUtils.getInt(Api.USERROLEID) == Api.ADMIN_CODE) {
             mActivity.mSwipeBackHelper.forwardAndFinish(AdminActivity.class);
+            MtApplication.clearLastActivity();
         } else {
             mActivity.mSwipeBackHelper.forwardAndFinish(TrailerActivity.class);
+            MtApplication.clearLastActivity();
         }
     }
 

@@ -17,6 +17,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseFragment;
 import com.cango.palmcartreasure.document.DocActivity;
@@ -97,6 +98,7 @@ public class MineFragment extends BaseFragment implements MineContract.View, Eas
                 break;
             case R.id.ll_tasks:
                 mActivity.mSwipeBackHelper.swipeBackward();
+                MtApplication.clearLastActivity();
                 break;
             case R.id.rl_about_cango:
                 mActivity.mSwipeBackHelper.forward(DocActivity.class);

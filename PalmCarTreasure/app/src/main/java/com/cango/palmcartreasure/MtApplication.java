@@ -136,6 +136,7 @@ public class MtApplication extends Application {
             activityList = new ArrayList<>();
         }
         activityList.add(activity);
+        Logger.d(activityList.size());
     }
 
     public static void clearActivitys() {
@@ -154,6 +155,7 @@ public class MtApplication extends Application {
 
         } else {
             activityList.remove(activityList.size() - 1);
+            Logger.d(activityList.size());
         }
     }
 
@@ -169,6 +171,7 @@ public class MtApplication extends Application {
             AppCompatActivity activity = activityList.get(activityList.size() - 1);
             activityList.clear();
             activityList.add(activity);
+            Logger.d(activityList.size());
         }
     }
 
@@ -195,6 +198,7 @@ public class MtApplication extends Application {
                 activityList.clear();
                 activityList.add(activity);
             }
+            Logger.d(activityList.size());
         }
     }
 
@@ -215,6 +219,7 @@ public class MtApplication extends Application {
                 activityList.remove(activity);
                 activity.finish();
             }
+            Logger.d(activityList.size());
         }
     }
 

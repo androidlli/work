@@ -52,6 +52,7 @@ public class MessageActivity extends BaseActivity {
             super.onBackPressed();
         }else {
             mSwipeBackHelper.forwardAndFinish(TrailerActivity.class);
+            MtApplication.clearLastActivity();
         }
     }
 }

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseFragment;
 import com.cango.palmcartreasure.baseAdapter.BaseHolder;
@@ -421,6 +422,7 @@ public class GroupFragment extends BaseFragment implements GroupContract.View, G
         if (isSuccess) {
             mActivity.setResult(Activity.RESULT_OK);
             mActivity.mSwipeBackHelper.swipeBackward();
+            MtApplication.clearLastActivity();
         }
     }
 

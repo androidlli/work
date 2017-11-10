@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.base.BaseActivity;
 import com.cango.palmcartreasure.login.LoginActivity;
@@ -104,6 +105,7 @@ public class LaunchActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 mSwipeBackHelper.forwardAndFinish(LoginActivity.class);
+                MtApplication.clearLastActivity();
             }
         });
         pageList.add(view_one);
