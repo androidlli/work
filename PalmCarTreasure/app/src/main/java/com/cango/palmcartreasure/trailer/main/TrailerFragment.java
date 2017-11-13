@@ -463,6 +463,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                         protected void _onNext(TypeTaskData o) {
                             if (isAdded()) {
                                 int code = o.getCode();
+                                code = Api.APP_UPDATE;
                                 if (code == 0) {
                                     if (CommUtil.checkIsNull(o.getData())) {
 //                                        doNewTask();
@@ -1120,16 +1121,16 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
             }
         });
 //        设置可点击的按钮，最多有三个(默认情况下)
-        progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if ("点击安装".equals(progressDialog.getButton(DialogInterface.BUTTON_POSITIVE).getText())) {
-                            installApk(apkPath);
-                        }
-                    }
-                });
+//        progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定",
+//                new DialogInterface.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        if ("点击安装".equals(progressDialog.getButton(DialogInterface.BUTTON_POSITIVE).getText())) {
+//                            installApk(apkPath);
+//                        }
+//                    }
+//                });
         progressDialog.setMessage("正在下载......");
         progressDialog.show();
 //        progressDialog.incrementProgressBy(1);
