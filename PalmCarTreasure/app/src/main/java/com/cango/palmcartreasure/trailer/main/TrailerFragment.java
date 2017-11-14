@@ -463,7 +463,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                         protected void _onNext(TypeTaskData o) {
                             if (isAdded()) {
                                 int code = o.getCode();
-                                code = Api.APP_UPDATE;
+//                                code = Api.APP_UPDATE;
                                 if (code == 0) {
                                     if (CommUtil.checkIsNull(o.getData())) {
 //                                        doNewTask();
