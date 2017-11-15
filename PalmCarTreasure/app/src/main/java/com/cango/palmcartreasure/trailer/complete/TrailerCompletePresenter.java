@@ -50,12 +50,12 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
     }
 
     @Override
-    public void wareHouse(boolean showIndicatorUI, int agencyID, int caseID, double lat, double lon, String province) {
+    public void wareHouse(boolean showIndicatorUI, int agencyID, int caseID, double lat, double lon, String province,int datasource) {
         if (mView.isActive()) {
             mView.showIndicator(showIndicatorUI);
         }
         if (lat > 0 && lon > 0 && province != null) {
-            subscription1 = mService.wareHouse(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID, lat, lon, province)
+            subscription1 = mService.wareHouse(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID, lat, lon, province,datasource)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<WareHouse>() {
@@ -96,7 +96,7 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
 
     @Override
     public void comfirmTrailerComplete(int userId, double LAT, double LON, int agencyID, int caseID,
-                                       String isNotifyCustImm, List<String> answerList, int realSPID, String tmpReason, final File file) {
+                                       String isNotifyCustImm, List<String> answerList, int realSPID, String tmpReason, final File file,int datasource) {
         if (LAT > 0 && LON > 0) {
             RequestBody mUserId = RequestBody.create(null, userId + "");
             RequestBody mLat = RequestBody.create(null, LAT + "");
@@ -118,8 +118,10 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
             RequestBody photoBody = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), photoBody);
 
+            RequestBody datasourceBody = RequestBody.create(null,datasource+"");
+
             subscription2 = mService.checkPiontSubmit(mUserId, mLat, mLon, mAgencyID, mCaseID, notifyCustImm, mAnswerList,
-                    mRealSPID, mTmpReason, part).subscribeOn(Schedulers.io())
+                    mRealSPID, mTmpReason, part,datasourceBody).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<TaskAbandon>() {
                         @Override
@@ -151,7 +153,8 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
     }
 
     @Override
-    public void comfirmTrailerCompleteNoFile(int userId, double LAT, double LON, int agencyID, int caseID, String isNotifyCustImm, List<String> answerList, int realSPID, String tmpReason) {
+    public void comfirmTrailerCompleteNoFile(int userId, double LAT, double LON, int agencyID, int caseID,
+                                             String isNotifyCustImm, List<String> answerList, int realSPID, String tmpReason,int datasource) {
         if (LAT > 0 && LON > 0) {
             RequestBody mUserId = RequestBody.create(null, userId + "");
             RequestBody mLat = RequestBody.create(null, LAT + "");
@@ -171,8 +174,10 @@ public class TrailerCompletePresenter implements TrailerCompleteContract.Present
             }
             RequestBody mTmpReason = RequestBody.create(null, tmpReason);
 
+            RequestBody datasourceBody = RequestBody.create(null,datasource+"");
+
             subscription2 = mService.checkPiontSubmitNoFile(mUserId, mLat, mLon, mAgencyID, mCaseID, notifyCustImm, mAnswerList,
-                    mRealSPID, mTmpReason).subscribeOn(Schedulers.io())
+                    mRealSPID, mTmpReason,datasourceBody).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<TaskAbandon>() {
                         @Override

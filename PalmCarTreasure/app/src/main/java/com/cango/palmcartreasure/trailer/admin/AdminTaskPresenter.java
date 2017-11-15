@@ -332,13 +332,14 @@ public class AdminTaskPresenter implements AdminTasksContract.Presenter {
     }
 
     @Override
-    public void taskManagerRead(final int position, int agencyID, int caseID, int applyID, String applyCD) {
+    public void taskManagerRead(final int position, int agencyID, int caseID, int applyID, String applyCD,int datasource) {
         Map<String, Object> objectMap = new HashMap<>();
         objectMap.put("userid", MtApplication.mSPUtils.getInt(Api.USERID));
         objectMap.put("agencyID",agencyID);
         objectMap.put("caseID",caseID);
         objectMap.put("applyID",applyID);
         objectMap.put("applyCD",applyCD);
+        objectMap.put("datasource",datasource);
         subscription6 = mService.taskManagerRead(objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -210,11 +210,11 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                 break;
             //送车入库
             case R.id.btn_map_send:
-//                if (isSendCarOk) {
-////                    ToastUtils.showLong("已经送车入库了！");
-//                } else {
-//                    showUpLoadDialog();
-//                }
+                if (isSendCarOk) {
+//                    ToastUtils.showLong("已经送车入库了！");
+                } else {
+                    showUpLoadDialog();
+                }
                 break;
             //轨迹查询（老板和员工都可以看到轨迹查询）
             case R.id.ll_toolbar_right:
@@ -231,6 +231,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                 qrCodeBean.setApplyCD(mTaskListBean.getApplyCD());
                 qrCodeBean.setLAT(mPhoneLat+"");
                 qrCodeBean.setLON(mPhoneLon+"");
+                qrCodeBean.setDatasource(mTaskListBean.getDatasource()+"");
                 intent.putExtra("QRCodeBean",qrCodeBean);
                 mActivity.mSwipeBackHelper.forward(intent);
                 break;
@@ -423,7 +424,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             if (isAdded()) {
                 mLoadView.smoothToShow();
             }
-            subscription1 = mService.navigationCar(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),null)
+            subscription1 = mService.navigationCar(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),null,mTaskListBean.getDatasource())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<NavigationCar>() {
@@ -489,7 +490,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
             }
             if (mPhoneLat > 0 && mPhoneLon > 0) {
                 subscription2 = mService.wareHouse(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),
-                        mPhoneLat, mPhoneLon,mProvince)
+                        mPhoneLat, mPhoneLon,mProvince,mTaskListBean.getDatasource())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new RxSubscriber<WareHouse>() {
@@ -548,7 +549,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         subscribeInterval = interval.subscribe(new Action1<Long>() {
             @Override
             public void call(Long aLong) {
-                    mService.navigationCar(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),firstServerTime)
+                    mService.navigationCar(MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),firstServerTime,mTaskListBean.getDatasource())
                             .subscribeOn(Schedulers.io())
                             .doOnSubscribe(new Action0() {
                                 @Override
@@ -788,7 +789,10 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                     photos.put("file" + i + "\"; filename=\"" + file.getName(), photoBody);
                 }
             }
-            subscription3 = mService.godownSubmit(userId, LAT, LON, agencyID, caseID, photos)
+
+            RequestBody datasource = RequestBody.create(null, mTaskListBean.getDatasource() + "");
+
+            subscription3 = mService.godownSubmit(userId, LAT, LON, agencyID, caseID, photos,datasource)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RxSubscriber<TaskAbandon>() {

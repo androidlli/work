@@ -99,6 +99,15 @@ public class GroupTaskQuery {
             private String redueAmount;
             private String address;
             private String isRead;
+            private int datasource;
+
+            public int getDatasource() {
+                return datasource;
+            }
+
+            public void setDatasource(int datasource) {
+                this.datasource = datasource;
+            }
 
             public String getAddress() {
                 return address;

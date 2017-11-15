@@ -27,12 +27,12 @@ public interface TaskDetailContract {
 
     interface Presenter extends BasePresenter {
         //type  0:电催信息 1:家访信息 2：案件信息 3：客户信息
-        void loadTaskDetail(int type, boolean showLoadingUI, int agencyID, int caseID);
+        void loadTaskDetail(int type, boolean showLoadingUI, int agencyID, int caseID,int datasource);
 
-        void loadTrailerInfo(boolean showLoadingUI,int applyID,String applyCD,int caseID);
+        void loadTrailerInfo(boolean showLoadingUI,int applyID,String applyCD,int caseID,int datasource);
 
         //downLoad  docType 1:委托函 2：拖车任务书
         void downLoadFile(int type, boolean showLoadingUI, int userId, int agencyID, int caseID, String docType, String parentDir,
-                          TaskDetailFragment.OnDownloadListener listener);
+                          TaskDetailFragment.OnDownloadListener listener,int datasource);
     }
 }

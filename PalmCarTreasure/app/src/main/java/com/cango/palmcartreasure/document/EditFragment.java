@@ -124,6 +124,7 @@ public class EditFragment extends BaseFragment {
                 objectMap.put("applyID", mTaskListBean.getApplyID());
                 objectMap.put("applyCD", mTaskListBean.getApplyCD());
                 objectMap.put("caseID", mTaskListBean.getCaseID());
+                objectMap.put("datasource",mTaskListBean.getDatasource());
                 objectMap.put("comment", comment);
                 subscription = mService.agencySave(objectMap)
                         .subscribeOn(Schedulers.io())

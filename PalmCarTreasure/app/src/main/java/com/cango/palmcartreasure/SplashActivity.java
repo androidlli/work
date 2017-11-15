@@ -118,57 +118,57 @@ public class SplashActivity extends BaseActivity {
         }, 2000);
     }
 
-    private void downLoadFile(final OnDownloadListener listener) {
-        NetManager.getInstance().create(TrailerTaskService.class)
-                .docDownLoad(1, 1, 1, "1")
-                .enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        InputStream is = null;
-                        byte[] buf = new byte[2048];
-                        int len = 0;
-                        FileOutputStream fos = null;
-//                        // 储存下载文件的目录
-//                        String savePath = isExistDir(saveDir);
-                        try {
-                            is = response.body().byteStream();
-                            long total = response.body().contentLength();
-                            File file = createDownFile();
-                            fos = new FileOutputStream(file);
-                            long sum = 0;
-                            while ((len = is.read(buf)) != -1) {
-                                fos.write(buf, 0, len);
-                                sum += len;
-                                int progress = (int) (sum * 1.0f / total * 100);
-                                // 下载中
-                                listener.onDownloading(progress);
-                            }
-                            fos.flush();
-                            // 下载完成
-                            listener.onDownloadSuccess(file);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            listener.onDownloadFailed(e.getMessage());
-                        } finally {
-                            try {
-                                if (is != null)
-                                    is.close();
-                            } catch (IOException e) {
-                            }
-                            try {
-                                if (fos != null)
-                                    fos.close();
-                            } catch (IOException e) {
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Logger.d(t.getMessage());
-                    }
-                });
-    }
+//    private void downLoadFile(final OnDownloadListener listener) {
+//        NetManager.getInstance().create(TrailerTaskService.class)
+//                .docDownLoad(1, 1, 1, "1")
+//                .enqueue(new Callback<ResponseBody>() {
+//                    @Override
+//                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                        InputStream is = null;
+//                        byte[] buf = new byte[2048];
+//                        int len = 0;
+//                        FileOutputStream fos = null;
+////                        // 储存下载文件的目录
+////                        String savePath = isExistDir(saveDir);
+//                        try {
+//                            is = response.body().byteStream();
+//                            long total = response.body().contentLength();
+//                            File file = createDownFile();
+//                            fos = new FileOutputStream(file);
+//                            long sum = 0;
+//                            while ((len = is.read(buf)) != -1) {
+//                                fos.write(buf, 0, len);
+//                                sum += len;
+//                                int progress = (int) (sum * 1.0f / total * 100);
+//                                // 下载中
+//                                listener.onDownloading(progress);
+//                            }
+//                            fos.flush();
+//                            // 下载完成
+//                            listener.onDownloadSuccess(file);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            listener.onDownloadFailed(e.getMessage());
+//                        } finally {
+//                            try {
+//                                if (is != null)
+//                                    is.close();
+//                            } catch (IOException e) {
+//                            }
+//                            try {
+//                                if (fos != null)
+//                                    fos.close();
+//                            } catch (IOException e) {
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                        Logger.d(t.getMessage());
+//                    }
+//                });
+//    }
 
     private File createDownFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

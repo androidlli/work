@@ -225,7 +225,6 @@
         </LinearLayout>
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/btn_map_send"
             android:layout_width="254px"
             android:layout_height="114px"

@@ -372,9 +372,10 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     taskListBean.setIsStart("F");
                     taskListBean.setIsCheckPoint("F");
                     taskListBean.setIsDone("F");
+                    taskListBean.setDatasource(data.getDatasource());
                     ToType = 1;
                     if ("F".equals(data.getIsRead())) {
-                        mPresenter.taskManagerRead(position, data.getAgencyID(), data.getCaseID(), data.getApplyID(), data.getApplyCD());
+                        mPresenter.taskManagerRead(position, data.getAgencyID(), data.getCaseID(), data.getApplyID(), data.getApplyCD(),data.getDatasource());
                     } else {
                     }
                     mPresenter.openDetailTask(taskListBean);
@@ -433,6 +434,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     taskListBean.setIsStart("F");
                     taskListBean.setIsCheckPoint("F");
                     taskListBean.setIsDone("F");
+                    taskListBean.setDatasource(data.getDatasource());
                     ToType = 2;
                     mPresenter.openDetailTask(taskListBean);
                 }
@@ -1008,6 +1010,7 @@ public class AdminTasksFragment extends BaseFragment implements AdminTasksContra
                     request.setApplyCD(bean.getApplyCD());
                     request.setApplyID(bean.getApplyID());
                     request.setCaseID(bean.getCaseID());
+                    request.setDatasource(bean.getDatasource());
                     lists.add(request);
                 }
             }

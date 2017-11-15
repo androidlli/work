@@ -34,11 +34,11 @@ public interface TrailerCompleteContract {
         /**
          * 送车入库导航，得到库点和原因
          */
-        void wareHouse(boolean showIndicatorUI, int agencyID, int caseID, double lat, double lon, String province);
+        void wareHouse(boolean showIndicatorUI, int agencyID, int caseID, double lat, double lon, String province,int datasource);
 
         void comfirmTrailerComplete(int userId, double LAT, double LON,int agencyID, int caseID, String isNotifyCustImm,
-                                    List<String> answerList, int realSPID, String tmpReason, File file);
+                                    List<String> answerList, int realSPID, String tmpReason, File file,int datasource);
         void comfirmTrailerCompleteNoFile(int userId, double LAT, double LON,int agencyID, int caseID, String isNotifyCustImm,
-                                          List<String> answerList, int realSPID, String tmpReason);
+                                          List<String> answerList, int realSPID, String tmpReason,int datasource);
     }
 }

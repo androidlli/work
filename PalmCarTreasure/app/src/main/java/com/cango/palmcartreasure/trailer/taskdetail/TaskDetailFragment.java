@@ -174,7 +174,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                 iv4.setImageResource(R.drawable.customer_information_off);
                 iv5.setImageResource(R.drawable.trailer_information);
                 isTrailerInfomation = true;
-                mPresenter.loadTrailerInfo(true, mTaskListBean.getApplyID(), mTaskListBean.getApplyCD(), mTaskListBean.getCaseID());
+                mPresenter.loadTrailerInfo(true, mTaskListBean.getApplyID(), mTaskListBean.getApplyCD(), mTaskListBean.getCaseID(),mTaskListBean.getDatasource());
                 break;
             case R.id.ll_case_info:
                 iv1.setImageResource(R.drawable.telephone_collection_off);
@@ -297,7 +297,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEditEvent(EditEvent editEvent) {
         if (isTrailerInfomation) {
-            mPresenter.loadTrailerInfo(true, mTaskListBean.getApplyID(), mTaskListBean.getApplyCD(), mTaskListBean.getCaseID());
+            mPresenter.loadTrailerInfo(true, mTaskListBean.getApplyID(), mTaskListBean.getApplyCD(), mTaskListBean.getCaseID(),mTaskListBean.getDatasource());
         }
     }
 
@@ -477,6 +477,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                         bean.setRedueAmount("");
                         bean.setAddress(mTaskListBean.getAddress());
                         bean.setIsRead("T");
+                        bean.setDatasource(mTaskListBean.getDatasource());
                         taskListBeanList.add(bean);
                         if (!CommUtil.checkIsNull(taskListBeanList) && taskListBeanList.size() > 0) {
                             Intent intent = new Intent(mActivity, StaiffActivity.class);
@@ -739,7 +740,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
         downloadPW = getPopupWindow(getActivity(), R.layout.task_download);
 
         mPresenter.start();
-        mPresenter.loadTaskDetail(mType, true, mTaskListBean.getAgencyID(), mTaskListBean.getCaseID());
+        mPresenter.loadTaskDetail(mType, true, mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),mTaskListBean.getDatasource());
         openPermissions();
     }
 
@@ -820,7 +821,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
 
     public void onRefresh(int type) {
         mType = type;
-        mPresenter.loadTaskDetail(mType, true, mTaskListBean.getAgencyID(), mTaskListBean.getCaseID());
+        mPresenter.loadTaskDetail(mType, true, mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(),mTaskListBean.getDatasource());
     }
 
     @Override
@@ -933,7 +934,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                                                 showDownLoadResult(false, null, "下载失败！");
                                             }
                                         }
-                                    });
+                                    },mTaskListBean.getDatasource());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -979,7 +980,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                                                 showDownLoadResult(false, null, "下载失败！");
                                             }
                                         }
-                                    });
+                                    },mTaskListBean.getDatasource());
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -1045,6 +1046,7 @@ public class TaskDetailFragment extends BaseFragment implements TaskDetailContra
                         objectMap.put("planDonetime", dateString);
                         objectMap.put("LAT", mLat);
                         objectMap.put("LON", mLon);
+                        objectMap.put("datasource",mTaskListBean.getDatasource());
                         mService.startTaskSubmit(objectMap)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())

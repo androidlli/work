@@ -69,13 +69,13 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
     }
 
     @Override
-    public void loadTaskDetail(int type, boolean showLoadingUI, int agencyID, int caseID) {
+    public void loadTaskDetail(int type, boolean showLoadingUI, int agencyID, int caseID,int datasource) {
         if (mView.isActive()) {
             mView.showTaskDetailIndicator(showLoadingUI);
         }
         switch (type) {
             case 0:
-                subscription1 = mService.callRecord(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
+                subscription1 = mService.callRecord(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID,datasource)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new RxSubscriber<CallRecord>() {
@@ -111,7 +111,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                         });
                 break;
             case 1:
-                subscription2 = mService.homeVisitRecord(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
+                subscription2 = mService.homeVisitRecord(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID,datasource)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new RxSubscriber<HomeVisitRecord>() {
@@ -147,7 +147,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                         });
                 break;
             case 2:
-                subscription3 = mService.caseInfo(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
+                subscription3 = mService.caseInfo(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID,datasource)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new RxSubscriber<CaseInfo>() {
@@ -179,7 +179,7 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                         });
                 break;
             case 3:
-                subscription4 = mService.customerinfo(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID)
+                subscription4 = mService.customerinfo(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, caseID,datasource)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new RxSubscriber<CustomerInfo>() {
@@ -219,8 +219,8 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
     }
 
     @Override
-    public void loadTrailerInfo(boolean showLoadingUI, int applyID, String applyCD, int caseID) {
-        subscription5 = mService.trailerInfo(MtApplication.mSPUtils.getInt(Api.USERID), applyID, applyCD, caseID)
+    public void loadTrailerInfo(boolean showLoadingUI, int applyID, String applyCD, int caseID,int datasource) {
+        subscription5 = mService.trailerInfo(MtApplication.mSPUtils.getInt(Api.USERID), applyID, applyCD, caseID,datasource)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<TrailerInfo>() {
@@ -868,11 +868,11 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
 
     @Override
     public void downLoadFile(int type, boolean showLoadingUI, int userId, int agencyID, int caseID,
-                             String docType, final String parentDir, final TaskDetailFragment.OnDownloadListener listener) {
+                             String docType, final String parentDir, final TaskDetailFragment.OnDownloadListener listener,int datasource) {
         if (mView.isActive()) {
             mView.showTaskDetailIndicator(showLoadingUI);
         }
-        mService.docDownLoad(userId, agencyID, caseID, docType)
+        mService.docDownLoad(userId, agencyID, caseID, docType,datasource)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

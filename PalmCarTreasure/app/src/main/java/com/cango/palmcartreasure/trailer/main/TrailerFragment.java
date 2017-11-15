@@ -926,6 +926,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                         objectMap.put("planDonetime", dateString);
                         objectMap.put("LAT", mLat);
                         objectMap.put("LON", mLon);
+                        objectMap.put("datasource",currentBean.getDatasource());
                         subscription2 = mService.startTaskSubmit(objectMap)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())

@@ -173,7 +173,7 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
         showIndicator(false);
         tvConfirm.setVisibility(View.GONE);
         llSixth.setVisibility(View.GONE);
-        mPresenter.wareHouse(true, mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(), mLat, mLon, mProvince);
+        mPresenter.wareHouse(true, mTaskListBean.getAgencyID(), mTaskListBean.getCaseID(), mLat, mLon, mProvince,mTaskListBean.getDatasource());
 
         //动态的生成radiobutton
         final List<RadioButton> radioButtons = new ArrayList<>();
@@ -525,10 +525,10 @@ public class TrailerCompleteFragment extends BaseFragment implements TrailerComp
 
     private void upLoadImage(File file) {
         mPresenter.comfirmTrailerComplete(MtApplication.mSPUtils.getInt(Api.USERID), mLat, mLon, mTaskListBean.getAgencyID(),
-                mTaskListBean.getCaseID(), isNotifyCustImm, mAnswerList, mRealSPID, mTmpReason, file);
+                mTaskListBean.getCaseID(), isNotifyCustImm, mAnswerList, mRealSPID, mTmpReason, file,mTaskListBean.getDatasource());
     }
     private void upLoadImageNoFile(){
         mPresenter.comfirmTrailerCompleteNoFile(MtApplication.mSPUtils.getInt(Api.USERID), mLat, mLon, mTaskListBean.getAgencyID(),
-                mTaskListBean.getCaseID(), isNotifyCustImm, mAnswerList, mRealSPID, mTmpReason);
+                mTaskListBean.getCaseID(), isNotifyCustImm, mAnswerList, mRealSPID, mTmpReason,mTaskListBean.getDatasource());
     }
 }

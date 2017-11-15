@@ -178,6 +178,7 @@ public class AdminFragment extends BaseFragment implements EasyPermissions.Permi
             public void onClick(View v) {
                 MtApplication.mSPUtils.clear();
                 MtApplication.mSPUtils.put(Api.ISSHOWSTARTOVER,true);
+                popupWindow.dismiss();
                 Intent loginIntent = new Intent(mActivity, LoginActivity.class);
                 loginIntent.putExtra("isFromLogout", true);
                 mActivity.mSwipeBackHelper.forward(loginIntent);

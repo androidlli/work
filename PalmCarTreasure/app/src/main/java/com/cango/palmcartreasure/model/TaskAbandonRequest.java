@@ -18,6 +18,16 @@ public class TaskAbandonRequest {
     private int applyID;
     private String applyCD;
 
+    public int getDatasource() {
+        return datasource;
+    }
+
+    public void setDatasource(int datasource) {
+        this.datasource = datasource;
+    }
+
+    private int datasource;
+
     public int getAgencyID() {
         return agencyID;
     }

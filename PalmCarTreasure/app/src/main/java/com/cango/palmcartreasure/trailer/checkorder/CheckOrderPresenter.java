@@ -40,11 +40,11 @@ public class CheckOrderPresenter implements CheckOrderContract.Presenter {
     }
 
     @Override
-    public void getCheckOrderData(boolean showIndicatorUI, int userId, int agencyID, String applyCD, int caseID) {
+    public void getCheckOrderData(boolean showIndicatorUI, int userId, int agencyID, String applyCD, int caseID,int datasource) {
         if (mView.isActive()) {
             mView.showIndicator(showIndicatorUI);
         }
-        mSubscription = mService.getCheckOrderData(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, applyCD, caseID)
+        mSubscription = mService.getCheckOrderData(MtApplication.mSPUtils.getInt(Api.USERID), agencyID, applyCD, caseID,datasource)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxSubscriber<CheckOrderData>() {

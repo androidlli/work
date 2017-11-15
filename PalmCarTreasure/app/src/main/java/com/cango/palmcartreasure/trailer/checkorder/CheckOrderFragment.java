@@ -196,7 +196,7 @@ public class CheckOrderFragment extends BaseFragment implements CheckOrderContra
             }
         });
         mPresenter.getCheckOrderData(true, MtApplication.mSPUtils.getInt(Api.USERID), mTaskListBean.getAgencyID(),
-                mTaskListBean.getApplyCD(), mTaskListBean.getCaseID());
+                mTaskListBean.getApplyCD(), mTaskListBean.getCaseID(),mTaskListBean.getDatasource());
     }
 
     @Override

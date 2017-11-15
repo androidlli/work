@@ -132,6 +132,15 @@ public class TypeTaskData {
             private String isStart;
             private String isCheckPoint;
             private String isDone;
+            private int datasource;
+
+            public int getDatasource() {
+                return datasource;
+            }
+
+            public void setDatasource(int datasource) {
+                this.datasource = datasource;
+            }
 
             public String getAddress() {
                 return address;
@@ -308,6 +317,7 @@ public class TypeTaskData {
                 dest.writeString(this.isStart);
                 dest.writeString(this.isCheckPoint);
                 dest.writeString(this.isDone);
+                dest.writeInt(this.datasource);
             }
 
             public TaskListBean() {
@@ -327,6 +337,7 @@ public class TypeTaskData {
                 this.isStart = in.readString();
                 this.isCheckPoint = in.readString();
                 this.isDone = in.readString();
+                this.datasource = in.readInt();
             }
 
             public static final Parcelable.Creator<TaskListBean> CREATOR = new Parcelable.Creator<TaskListBean>() {

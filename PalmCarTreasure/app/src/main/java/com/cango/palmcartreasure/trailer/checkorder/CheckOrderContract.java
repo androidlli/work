@@ -26,6 +26,6 @@ public interface CheckOrderContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getCheckOrderData(boolean showIndicatorUI, int userId, int agencyID, String applyCD, int caseID);
+        void getCheckOrderData(boolean showIndicatorUI, int userId, int agencyID, String applyCD, int caseID,int datasource);
     }
 }

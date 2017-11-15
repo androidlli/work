@@ -98,6 +98,15 @@ public class TaskManageList {
             private String redueAmount;
             private String address;
             private String isRead;
+            private int datasource;
+
+            public int getDatasource() {
+                return datasource;
+            }
+
+            public void setDatasource(int datasource) {
+                this.datasource = datasource;
+            }
 
             public String getAddress() {
                 return address;
@@ -275,6 +284,7 @@ public class TaskManageList {
                 dest.writeString(this.feerate);
                 dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
                 dest.writeDouble(this.agencyAmount);
+                dest.writeInt(this.datasource);
             }
 
             public TaskListBean() {
@@ -294,6 +304,7 @@ public class TaskManageList {
                 this.feerate = in.readString();
                 this.isChecked = in.readByte() != 0;
                 this.agencyAmount = in.readDouble();
+                this.datasource = in.readInt();
             }
 
             public static final Parcelable.Creator<TaskListBean> CREATOR = new Parcelable.Creator<TaskListBean>() {
