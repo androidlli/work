@@ -11,7 +11,7 @@ import retrofit2.http.GET;
 public interface DownLoadService {
     //http://gps.cangoonline.com:83/content/kingkong.apk
     String BASE_URL = Api.ABOUT_URL;
-
+//    String BASE_URL = "http://gps.cangoonline.com:83/";
     @GET("content/kingkong.apk")
     Call<ResponseBody> downLoadAPK();
 

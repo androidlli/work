@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.cango.palmcartreasure.MtApplication;
 import com.cango.palmcartreasure.R;
 import com.cango.palmcartreasure.api.Api;
+import com.cango.palmcartreasure.api.LoginService;
 import com.cango.palmcartreasure.api.TrailerTaskService;
 import com.cango.palmcartreasure.base.BaseFragment;
 import com.cango.palmcartreasure.camera.CameraActivity;
@@ -45,6 +46,7 @@ import com.cango.palmcartreasure.customview.MessageItemDialogFragment;
 import com.cango.palmcartreasure.customview.UpdateFragment;
 import com.cango.palmcartreasure.model.CheckPointOkToHomeEvent;
 import com.cango.palmcartreasure.model.MessageList;
+import com.cango.palmcartreasure.model.PersonalInfo;
 import com.cango.palmcartreasure.model.TaskAbandon;
 import com.cango.palmcartreasure.model.TrailerEvent;
 import com.cango.palmcartreasure.model.TypeTaskData;
@@ -248,6 +250,7 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
     //定位相关
     private AMapLocationClient mLocationClient;
     private boolean isShouldFirstAddData = true;
+    private boolean isShouldSizeUpdate = true;
     private double mLat, mLon;
     private String mProvince;
     private double pointLat, pointLon;
@@ -277,6 +280,29 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                         if (isShouldFirstAddData) {
                             isShouldFirstAddData = false;
                             addData();
+                            if (isShouldSizeUpdate){
+                                isShouldSizeUpdate = false;
+                                //获取是否更新apk仅仅是第一次开启页面才显示
+                                NetManager.getInstance().create(LoginService.class).getPersonalInfo(MtApplication.mSPUtils.getInt(Api.USERID))
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new RxSubscriber<PersonalInfo>() {
+                                            @Override
+                                            protected void _onNext(PersonalInfo o) {
+                                                if (o!=null){
+                                                    int code = o.getCode();
+                                                    if (code == Api.APP_UPDATE){
+                                                        updateAPK();
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            protected void _onError() {
+
+                                            }
+                                        });
+                            }
                         }
                     }
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -463,7 +489,6 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                         protected void _onNext(TypeTaskData o) {
                             if (isAdded()) {
                                 int code = o.getCode();
-//                                code = Api.APP_UPDATE;
                                 if (code == 0) {
                                     if (CommUtil.checkIsNull(o.getData())) {
 //                                        doNewTask();
@@ -512,9 +537,9 @@ public class TrailerFragment extends BaseFragment implements EasyPermissions.Per
                                         }
                                     }
                                 } else {
-                                    if (code == Api.APP_UPDATE){
-                                        updateAPK();
-                                    }
+//                                    if (code == Api.APP_UPDATE){
+//                                        updateAPK();
+//                                    }
                                     mLoadView.smoothToHide();
                                     llCenter.setVisibility(View.INVISIBLE);
                                     ivVp.setVisibility(View.VISIBLE);

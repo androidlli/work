@@ -255,7 +255,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, E
 
     @AfterPermissionGranted(REQUEST_READ_PHONE_STATE_AND_LOCATION)
     private void openPermissions() {
-        String[] perms = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,};
+        String[] perms = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(getContext(), perms)) {
             mLocationClient.startLocation();
             if (isDoLogin) {
