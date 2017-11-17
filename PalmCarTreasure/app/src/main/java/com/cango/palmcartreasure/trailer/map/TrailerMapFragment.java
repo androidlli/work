@@ -113,8 +113,8 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
 
     @BindView(R.id.toolbar_trailer_map)
     Toolbar mToolbar;
-    @BindView(R.id.ll_get_qrcode)
-    LinearLayout llQrCode;
+//    @BindView(R.id.ll_get_qrcode)
+//    LinearLayout llQrCode;
     @BindView(R.id.ll_toolbar_right)
     LinearLayout llRight;
     @BindView(R.id.ll_select)
@@ -386,7 +386,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         if (TRAILER_NAV.equals(mType)) {
             mTitle.setText(R.string.traialer_navigation);
             llRight.setVisibility(View.GONE);
-            llQrCode.setVisibility(View.GONE);
+//            llQrCode.setVisibility(View.GONE);
             rlMapTop.setVisibility(View.GONE);
             llDate.setVisibility(View.GONE);
             rlMapBottom.setVisibility(View.GONE);
@@ -396,7 +396,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
         } else if (SEND_CAR_LIBRARY.equals(mType)) {
             mTitle.setText(R.string.send_car_library);
             llRight.setVisibility(View.GONE);
-            llQrCode.setVisibility(View.GONE);
+//            llQrCode.setVisibility(View.GONE);
             rlMapTop.setVisibility(View.GONE);
             rlMapBottom.setVisibility(View.GONE);
             ivLocation.setVisibility(View.GONE);
@@ -507,7 +507,7 @@ public class TrailerMapFragment extends BaseFragment implements EasyPermissions.
                                             if (o.getData().size()==0){
                                                 llNoData.setVisibility(View.VISIBLE);
                                             }else {
-                                                llQrCode.setVisibility(View.VISIBLE);
+//                                                llQrCode.setVisibility(View.VISIBLE);
                                                 mWareHouse = o;
                                                 currentLibrary = mWareHouse.getData().get(0);
                                                 mSelectPW = getPopupWindow(mActivity, R.layout.libary_point);
