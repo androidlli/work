@@ -13,6 +13,7 @@ import com.cango.palmcartreasure.trailer.message.MessageActivity;
 import com.cango.palmcartreasure.trailer.message.MessageFragment;
 import com.cango.palmcartreasure.util.CommUtil;
 import com.cango.palmcartreasure.util.SPUtils;
+import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengRegisterCallback;
@@ -40,6 +41,7 @@ public class MtApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Logger.init().logLevel(LogLevel.NONE);
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setMuteDurationSeconds(0);
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
