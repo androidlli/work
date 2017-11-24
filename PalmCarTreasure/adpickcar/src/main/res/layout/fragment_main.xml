@@ -263,6 +263,192 @@
                     </RelativeLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:visibility="gone"
+                android:id="@+id/cv_jiaoche_main"
+                android:layout_width="match_parent"
+                android:layout_height="87dp"
+                android:layout_marginBottom="7dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
+                android:layout_marginTop="102dp"
+                app:cardCornerRadius="7dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="30dp"
+                    android:paddingRight="30dp">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_jiaoche_main_first"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/iv_jiaoche_main_first"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="13dp"
+                            android:src="@drawable/weijieche_off" />
+
+                        <TextView
+                            android:id="@+id/tv_jiaoche_main_first"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/iv_jiaoche_main_first"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="5dp"
+                            android:text="待交车"
+                            android:textColor="@color/ad888888"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_jiaoche_main_first_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:padding="20dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:visibility="invisible"
+                        android:id="@+id/rl_jiaoche_main_second"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/iv_jiaoche_main_second"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="13dp"
+                            android:src="@drawable/weitijiao_off" />
+
+                        <TextView
+                            android:id="@+id/tv_jiaoche_main_second"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/iv_jiaoche_main_second"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="5dp"
+                            android:text="未提交"
+                            android:textColor="@color/ad888888"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_jiaoche_main_second_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:padding="20dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_jiaoche_main_third"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/iv_jiaoche_main_third"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="13dp"
+                            android:src="@drawable/shenhezhong_off" />
+
+                        <TextView
+                            android:id="@+id/tv_jiaoche_main_third"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/iv_jiaoche_main_third"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="5dp"
+                            android:text="已交车"
+                            android:textColor="@color/ad888888"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_jiaoche_main_third_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:padding="20dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:visibility="invisible"
+                        android:id="@+id/rl_jiaoche_main_fourth"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/iv_jiaoche_main_fourth"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="13dp"
+                            android:src="@drawable/shenhetuihui_off" />
+
+                        <TextView
+                            android:id="@+id/tv_jiaoche_main_fourth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/iv_jiaoche_main_fourth"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="5dp"
+                            android:text="审核退回"
+                            android:textColor="@color/ad888888"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_main_fourth_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:padding="20dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_jiaoche_main_fifth"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/iv_jiaoche_main_fifth"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="13dp"
+                            android:src="@drawable/shenhetongguo_off" />
+
+                        <TextView
+                            android:id="@+id/tv_jiaoche_main_fifth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/iv_jiaoche_main_fifth"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="5dp"
+                            android:text="交车失败"
+                            android:textColor="@color/ad888888"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_jiaoche_main_fifth_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:padding="20dp" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
         </RelativeLayout>
 
         <RelativeLayout
@@ -277,6 +463,19 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerview_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:visibility="gone"
+                android:id="@+id/srl_jiaoche_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="50dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview_jiaoche_main"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </android.support.v4.widget.SwipeRefreshLayout>
@@ -296,21 +495,85 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/ad888888" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:id="@+id/ll_jieche_bottom"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/jieche_icon" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:src="@drawable/jieche_icon" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginTop="4dp"
+                            android:text="接车"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@color/ad888888" />
+                    <LinearLayout
+                        android:id="@+id/ll_jiaoche_bottom"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/jieche_icon" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginTop="4dp"
-                    android:text="接车"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="10sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginTop="4dp"
+                            android:text="交车"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@color/ad888888" />
+                    <LinearLayout
+                        android:id="@+id/ll_xunjian_bottom"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/jieche_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginTop="4dp"
+                            android:text="日常巡检"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
 
             <FrameLayout

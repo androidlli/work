@@ -29,7 +29,7 @@ public class MainPresenter implements MainContract.Presenter {
     private MainContract.View mView;
     private MainService mService;
     private Subscription subscription1, subscription2, subscription3, subscription4, subscription5,
-            subscription6, subscription7,subscription8;
+            subscription6, subscription7,subscription8,subscription9,subscription10,subscription11;
 
     public MainPresenter(MainContract.View view) {
         mView = view;
@@ -60,6 +60,12 @@ public class MainPresenter implements MainContract.Presenter {
             subscription7.unsubscribe();
         if (!CommUtil.checkIsNull(subscription8))
             subscription8.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription9))
+            subscription9.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription10))
+            subscription10.unsubscribe();
+        if (!CommUtil.checkIsNull(subscription11))
+            subscription11.unsubscribe();
     }
 
     @Override
@@ -355,6 +361,191 @@ public class MainPresenter implements MainContract.Presenter {
                                     mView.showMainIndicator(false);
                                     mView.showMainTitleError();
                                     mView.showMainError();
+                                }
+                            }
+                        });
+                break;
+        }
+    }
+
+    @Override
+    public void loadJListByStatus(boolean showRefreshLoadingUI, final String UserID, final String CustName, final String LicensePlateNO, final String CarBrandName, final String QueryType, final String PageIndex, final String PageSize) {
+        if (mView.isActive()) {
+            mView.showJMainIndicator(showRefreshLoadingUI);
+        }
+        switch (Integer.parseInt(QueryType)) {
+            case MainFragment.DAIJIAOCHE:
+                subscription9 = mService.getServerTime()
+                        .flatMap(new Func1<ServerTime, Observable<CarTakeTaskList>>() {
+                            @Override
+                            public Observable<CarTakeTaskList> call(ServerTime serverTime) {
+                                boolean isSuccess = serverTime.getCode().equals("200");
+                                if (isSuccess) {
+                                    ADApplication.mSPUtils.put(Api.SERVERTIME, serverTime.getData().getServerTime());
+                                }
+                                return mService.getDatasByStatus(UserID, CustName, LicensePlateNO, CarBrandName, MainFragment.WEIJIECHE+"",
+                                        PageIndex, PageSize);
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new RxSubscriber<CarTakeTaskList>() {
+                            @Override
+                            protected void _onNext(CarTakeTaskList o) {
+                                if (mView.isActive()) {
+                                    mView.showJMainIndicator(false);
+                                    boolean isSuccess = o.getCode().equals("200");
+                                    if (CommUtil.handingCodeLogin(o.getCode())) {
+                                        mView.openOtherUi();
+                                        return;
+                                    }
+//                                    o.setCode("211");
+                                    if ("211".equals(o.getCode())) {
+                                        mView.updateApk();
+                                        return;
+                                    }
+                                    if (isSuccess) {
+                                        CarTakeTaskList.DataBean dataBean = o.getData();
+                                        if (!CommUtil.checkIsNull(dataBean)) {
+                                            mView.showJMainTitle(dataBean);
+                                            ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> list =
+                                                    (ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean>) dataBean.getCarTakeTaskList();
+                                            if (!CommUtil.checkIsNull(list) && list.size() > 0) {
+                                                mView.showJMainSuccess(isSuccess, list);
+                                            } else {
+                                                mView.showJNoData();
+                                            }
+                                        } else {
+                                            mView.showJMainTitleError();
+                                            mView.showJNoData();
+                                        }
+                                    } else {
+                                        mView.showJMainTitleError();
+                                        mView.showJMainError();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            protected void _onError() {
+                                if (mView.isActive()) {
+                                    mView.showJMainIndicator(false);
+                                    mView.showJMainTitleError();
+                                    mView.showJMainError();
+                                }
+                            }
+                        });
+                break;
+            case MainFragment.YIJIAOCHE:
+                subscription10 = mService.getServerTime()
+                        .flatMap(new Func1<ServerTime, Observable<CarTakeTaskList>>() {
+                            @Override
+                            public Observable<CarTakeTaskList> call(ServerTime serverTime) {
+                                boolean isSuccess = serverTime.getCode().equals("200");
+                                if (isSuccess) {
+                                    ADApplication.mSPUtils.put(Api.SERVERTIME, serverTime.getData().getServerTime());
+                                }
+                                return mService.getDatasByStatus(UserID, CustName, LicensePlateNO, CarBrandName,MainFragment.SHENHEZHON+"",
+                                        PageIndex, PageSize);
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new RxSubscriber<CarTakeTaskList>() {
+                            @Override
+                            protected void _onNext(CarTakeTaskList o) {
+                                if (mView.isActive()) {
+                                    mView.showJMainIndicator(false);
+                                    boolean isSuccess = o.getCode().equals("200");
+                                    if (CommUtil.handingCodeLogin(o.getCode())) {
+                                        mView.openOtherUi();
+                                        return;
+                                    }
+                                    if (isSuccess) {
+                                        CarTakeTaskList.DataBean dataBean = o.getData();
+                                        if (!CommUtil.checkIsNull(dataBean)) {
+                                            mView.showJMainTitle(dataBean);
+                                            ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> list =
+                                                    (ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean>) dataBean.getCarTakeTaskList();
+                                            if (!CommUtil.checkIsNull(list) && list.size() > 0) {
+                                                mView.showJMainSuccess(isSuccess, list);
+                                            } else {
+                                                mView.showJNoData();
+                                            }
+                                        } else {
+                                            mView.showJMainTitleError();
+                                            mView.showJNoData();
+                                        }
+                                    } else {
+                                        mView.showJMainTitleError();
+                                        mView.showJMainError();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            protected void _onError() {
+                                if (mView.isActive()) {
+                                    mView.showJMainIndicator(false);
+                                    mView.showJMainTitleError();
+                                    mView.showJMainError();
+                                }
+                            }
+                        });
+                break;
+            case MainFragment.JIAOCHESHIBAI:
+                subscription11 = mService.getServerTime()
+                        .flatMap(new Func1<ServerTime, Observable<CarTakeTaskList>>() {
+                            @Override
+                            public Observable<CarTakeTaskList> call(ServerTime serverTime) {
+                                boolean isSuccess = serverTime.getCode().equals("200");
+                                if (isSuccess) {
+                                    ADApplication.mSPUtils.put(Api.SERVERTIME, serverTime.getData().getServerTime());
+                                }
+                                return mService.getDatasByStatus(UserID, CustName, LicensePlateNO, CarBrandName, MainFragment.SHENHETONGUO+"",
+                                        PageIndex, PageSize);
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new RxSubscriber<CarTakeTaskList>() {
+                            @Override
+                            protected void _onNext(CarTakeTaskList o) {
+                                if (mView.isActive()) {
+                                    mView.showJMainIndicator(false);
+                                    boolean isSuccess = o.getCode().equals("200");
+                                    if (CommUtil.handingCodeLogin(o.getCode())) {
+                                        mView.openOtherUi();
+                                        return;
+                                    }
+                                    if (isSuccess) {
+                                        CarTakeTaskList.DataBean dataBean = o.getData();
+                                        if (!CommUtil.checkIsNull(dataBean)) {
+                                            mView.showJMainTitle(dataBean);
+                                            ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> list =
+                                                    (ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean>) dataBean.getCarTakeTaskList();
+                                            if (!CommUtil.checkIsNull(list) && list.size() > 0) {
+                                                mView.showJMainSuccess(isSuccess, list);
+                                            } else {
+                                                mView.showJNoData();
+                                            }
+                                        } else {
+                                            mView.showJMainTitleError();
+                                            mView.showJNoData();
+                                        }
+                                    } else {
+                                        mView.showJMainTitleError();
+                                        mView.showJMainError();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            protected void _onError() {
+                                if (mView.isActive()) {
+                                    mView.showJMainIndicator(false);
+                                    mView.showJMainTitleError();
+                                    mView.showJMainError();
                                 }
                             }
                         });

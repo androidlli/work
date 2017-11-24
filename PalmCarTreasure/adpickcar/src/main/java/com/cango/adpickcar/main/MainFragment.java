@@ -87,6 +87,14 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, MainContract.View, EasyPermissions.PermissionCallbacks {
+    public int BIGTYPE=-1;
+    public static final int JIECHE=10;
+    public static final int JIAOCHE=11;
+
+    public int JIAOCHETYPE = -1;
+    public static final int DAIJIAOCHE=12;
+    public static final int YIJIAOCHE=13;
+    public static final int JIAOCHESHIBAI=14;
     /**
      * 查询类型（1：未接车 2.未提交 3：审核中 4：审批退回 5.审批通过）
      */
@@ -124,6 +132,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     ImageView ivPopupParent;
     @BindView(R.id.cardview_main)
     CardView mCardView;
+    @BindView(R.id.cv_jiaoche_main)
+    CardView mJiaoCheCV;
     @BindView(R.id.tv_main_first_num)
     TextView tvFirstNum;
     @BindView(R.id.iv_main_first)
@@ -154,21 +164,45 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     ImageView ivFifth;
     @BindView(R.id.tv_main_fifth)
     TextView tvFifth;
+    @BindView(R.id.tv_jiaoche_main_first_num)
+    TextView tvJFirstNum;
+    @BindView(R.id.iv_jiaoche_main_first)
+    ImageView ivJFirst;
+    @BindView(R.id.tv_jiaoche_main_first)
+    TextView tvJFirst;
+    @BindView(R.id.tv_jiaoche_main_third_num)
+    TextView tvJThirdNum;
+    @BindView(R.id.iv_jiaoche_main_third)
+    ImageView ivJThird;
+    @BindView(R.id.tv_jiaoche_main_third)
+    TextView tvJThird;
+    @BindView(R.id.tv_jiaoche_main_fifth_num)
+    TextView tvJFifthNum;
+    @BindView(R.id.iv_jiaoche_main_fifth)
+    ImageView ivJFifth;
+    @BindView(R.id.tv_jiaoche_main_fifth)
+    TextView tvJFifth;
     @BindView(R.id.srl_main)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.srl_jiaoche_main)
+    SwipeRefreshLayout mJSwipeRefreshLayout;
     @BindView(R.id.ll_sorry)
     LinearLayout llSorry;
     @BindView(R.id.ll_no_data)
     LinearLayout llNoData;
     @BindView(R.id.recyclerview_main)
     RecyclerView mRecyclerView;
+    @BindView(R.id.recyclerview_jiaoche_main)
+    RecyclerView mJRecyclerView;
     @BindView(R.id.fl_shadow)
     FrameLayout flShadow;
     @BindView(R.id.avl_login_indicator)
     AVLoadingIndicatorView mLoadView;
 
     @OnClick({R.id.ll_modify_ps, R.id.ll_main_scan, R.id.ll_main_search, R.id.rl_main_first, R.id.rl_main_second, R.id.rl_main_third,
-            R.id.rl_main_fourth, R.id.rl_main_fifth, R.id.ll_sign_off, R.id.rl_drawer,R.id.ll_about_us})
+            R.id.rl_main_fourth, R.id.rl_main_fifth, R.id.ll_sign_off, R.id.rl_drawer,R.id.ll_about_us,
+            R.id.rl_jiaoche_main_first,R.id.rl_jiaoche_main_third,R.id.rl_jiaoche_main_fifth,
+            R.id.ll_jieche_bottom,R.id.ll_jiaoche_bottom,R.id.ll_xunjian_bottom})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_modify_ps:
@@ -236,6 +270,34 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                     onRefresh();
                 }
                 break;
+            case R.id.rl_jiaoche_main_first:
+                llMainSearch.setVisibility(View.VISIBLE);
+                selectJTitleStatus(0);
+                if (JIAOCHETYPE!=DAIJIAOCHE){
+                    JIAOCHETYPE = DAIJIAOCHE;
+                    onRefresh();
+                }
+                break;
+            case R.id.rl_jiaoche_main_third:
+                llMainSearch.setVisibility(View.INVISIBLE);
+                selectJTitleStatus(1);
+                if (JIAOCHETYPE!=YIJIAOCHE){
+                    JIAOCHETYPE = YIJIAOCHE;
+                    llNoData.setVisibility(View.GONE);
+                    llSorry.setVisibility(View.GONE);
+                    onRefresh();
+                }
+                break;
+            case R.id.rl_jiaoche_main_fifth:
+                llMainSearch.setVisibility(View.INVISIBLE);
+                selectJTitleStatus(2);
+                if (JIAOCHETYPE!=JIAOCHESHIBAI){
+                    JIAOCHETYPE = JIAOCHESHIBAI;
+                    llNoData.setVisibility(View.GONE);
+                    llSorry.setVisibility(View.GONE);
+                    onRefresh();
+                }
+                break;
             case R.id.ll_sign_off:
                 if (isDoLogout) {
                     isDoLogout = false;
@@ -247,15 +309,69 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             case R.id.ll_about_us:
                 startActivity(new Intent(mActivity, DocActivity.class));
                 break;
+            case R.id.ll_jieche_bottom:
+                BIGTYPE = JIECHE;
+                mCardView.setVisibility(View.VISIBLE);
+                mJiaoCheCV.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                mJSwipeRefreshLayout.setVisibility(View.GONE);
+                switch (CURRENT_TYPE){
+                    case WEIJIECHE:
+                        llMainScan.setVisibility(View.VISIBLE);
+                        llMainSearch.setVisibility(View.VISIBLE);
+                        break;
+                    case WEITIJIAO:
+                        llMainScan.setVisibility(View.INVISIBLE);
+                        llMainSearch.setVisibility(View.INVISIBLE);
+                        break;
+                    case SHENHEZHON:
+                        llMainScan.setVisibility(View.INVISIBLE);
+                        llMainSearch.setVisibility(View.INVISIBLE);
+                        break;
+                    case SHENHETUIHUI:
+                        llMainScan.setVisibility(View.INVISIBLE);
+                        llMainSearch.setVisibility(View.INVISIBLE);
+                        break;
+                    case SHENHETONGUO:
+                        llMainScan.setVisibility(View.INVISIBLE);
+                        llMainSearch.setVisibility(View.INVISIBLE);
+                        break;
+                }
+                onRefresh();
+                break;
+            case R.id.ll_jiaoche_bottom:
+                BIGTYPE = JIAOCHE;
+                mCardView.setVisibility(View.GONE);
+                mJiaoCheCV.setVisibility(View.VISIBLE);
+                llMainScan.setVisibility(View.INVISIBLE);
+                mSwipeRefreshLayout.setVisibility(View.GONE);
+                mJSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                switch (JIAOCHETYPE){
+                    case DAIJIAOCHE:
+                        llMainSearch.setVisibility(View.VISIBLE);
+                        break;
+                    case YIJIAOCHE:
+                        llMainSearch.setVisibility(View.INVISIBLE);
+                        break;
+                    case JIAOCHESHIBAI:
+                        llMainSearch.setVisibility(View.INVISIBLE);
+                        break;
+                }
+                onRefresh();
+                break;
+            case R.id.ll_xunjian_bottom:
+                break;
         }
     }
 
     private MainActivity mActivity;
     private MainContract.Presenter mPresenter;
     private MainAdapter mAdapter;
+    private JMainAdapter mJAdapter;
     private ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> datas;
+    private ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> JDatas;
     private int itemOnClickPosition;
-    private Badge firstQV, secondQV, thirdQV, fourthQV, fifthQV;
+    private Badge firstQV, secondQV, thirdQV, fourthQV, fifthQV,oneQV,twoQV,threeQV;
     private int selectColor, noSelectColor;
     private int mPageCount = 1, mTempPageCount = 2;
     static int PAGE_SIZE = 10;
@@ -312,10 +428,15 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
         mDrawerLayout.addDrawerListener(mToggle);
 
-        initNum(0, 0, 0, 0, 0);
-        selectTitleStatus(0);
-        llMainScan.setVisibility(View.VISIBLE);
+        BIGTYPE = JIECHE;
         CURRENT_TYPE = WEIJIECHE;
+        JIAOCHETYPE = DAIJIAOCHE;
+
+        initNum(0, 0, 0, 0, 0);
+        initJiaoChe(0,0,0);
+        selectTitleStatus(0);
+        selectJTitleStatus(0);
+        llMainScan.setVisibility(View.VISIBLE);
         tvUserMobile.setText(ADApplication.mSPUtils.getString(Api.MOBILE));
         initRecyclerView();
     }
@@ -326,6 +447,12 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         thirdQV = new QBadgeView(mActivity).bindTarget(tvThirdNum).setBadgeNumber(third).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
         fourthQV = new QBadgeView(mActivity).bindTarget(tvFourthNum).setBadgeNumber(fourth).setBadgeTextColor(Color.WHITE).setShowShadow(false);
         fifthQV = new QBadgeView(mActivity).bindTarget(tvFifthNum).setBadgeNumber(fifth).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
+    }
+
+    private void initJiaoChe(int first,int second,int third){
+        oneQV = new QBadgeView(mActivity).bindTarget(tvJFirstNum).setBadgeNumber(first).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
+        twoQV = new QBadgeView(mActivity).bindTarget(tvJThirdNum).setBadgeNumber(second).setShowShadow(false).setBadgeBackgroundColor(Color.TRANSPARENT);
+        threeQV = new QBadgeView(mActivity).bindTarget(tvJFifthNum).setBadgeNumber(third).setBadgeTextColor(Color.WHITE).setShowShadow(false);
     }
 
     private void selectTitleStatus(int position) {
@@ -418,9 +545,50 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
     }
 
+    private void selectJTitleStatus(int position) {
+        switch (position) {
+            case 0:
+                oneQV.setBadgeTextColor(selectColor);
+                twoQV.setBadgeTextColor(noSelectColor);
+                threeQV.setBadgeBackgroundColor(noSelectColor);
+                ivJFirst.setImageResource(R.drawable.weijieche_on);
+                tvJFirst.setTextColor(selectColor);
+                ivJThird.setImageResource(R.drawable.shenhezhong_off);
+                tvJThird.setTextColor(noSelectColor);
+                ivJFifth.setImageResource(R.drawable.shenhetuihui_off);
+                tvJFifth.setTextColor(noSelectColor);
+                break;
+            case 1:
+                oneQV.setBadgeTextColor(noSelectColor);
+                twoQV.setBadgeTextColor(selectColor);
+                threeQV.setBadgeBackgroundColor(noSelectColor);
+                ivJFirst.setImageResource(R.drawable.weijieche_off);
+                tvJFirst.setTextColor(noSelectColor);
+                ivJThird.setImageResource(R.drawable.shenhezhong_on);
+                tvJThird.setTextColor(selectColor);
+                ivJFifth.setImageResource(R.drawable.shenhetuihui_off);
+                tvJFifth.setTextColor(noSelectColor);
+                break;
+            case 2:
+                oneQV.setBadgeTextColor(noSelectColor);
+                twoQV.setBadgeTextColor(noSelectColor);
+                threeQV.setBadgeBackgroundColor(selectColor);
+                ivJFirst.setImageResource(R.drawable.weijieche_off);
+                tvJFirst.setTextColor(noSelectColor);
+                ivJThird.setImageResource(R.drawable.shenhezhong_off);
+                tvJThird.setTextColor(noSelectColor);
+                ivJFifth.setImageResource(R.drawable.shenhetuihui_on);
+                tvJFifth.setTextColor(selectColor);
+                break;
+        }
+    }
+
     private void initRecyclerView() {
         mSwipeRefreshLayout.setColorSchemeResources(R.color.red, R.color.green, R.color.blue);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        mJSwipeRefreshLayout.setColorSchemeResources(R.color.red, R.color.green, R.color.blue);
+        mJSwipeRefreshLayout.setOnRefreshListener(this);
+        JDatas = new ArrayList<>();
         datas = new ArrayList<>();
         mAdapter = new MainAdapter(mActivity, datas, true, this);
         mAdapter.setLoadingView(R.layout.load_loading_layout);
@@ -439,8 +607,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         mAdapter.setOnItemClickListener(new OnBaseItemClickListener<CarTakeTaskList.DataBean.CarTakeTaskListBean>() {
             @Override
             public void onItemClick(BaseHolder viewHolder, final CarTakeTaskList.DataBean.CarTakeTaskListBean data, final int position) {
-                switch (CURRENT_TYPE) {
-                    case WEIJIECHE:
+                    switch (CURRENT_TYPE) {
+                        case WEIJIECHE:
 //                        new AlertDialog.Builder(mActivity)
 //                                .setTitle("确认接车")
 //                                .setMessage("申请编号：" + data.getApplyCD() + "\r\n" + "客户姓名：" + data.getCustName() + "\r\n" +
@@ -464,41 +632,64 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 //                                    }
 //                                })
 //                                .create().show();
-                        break;
-                    case WEITIJIAO:
-                    case SHENHEZHON:
-                    case SHENHETONGUO:
-                        Intent intent = new Intent(mActivity, DetailActivity.class);
-                        intent.putExtra("CarTakeTaskListBean", data);
-                        intent.putExtra("Type", CURRENT_TYPE);
-                        startActivity(intent);
-                        break;
-                    case SHENHETUIHUI:
-                        new AlertDialog.Builder(mActivity)
-                                .setTitle("驳回原因")
-                                .setMessage(data.getReturnReason())
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(mActivity, DetailActivity.class);
-                                        intent.putExtra("CarTakeTaskListBean", data);
-                                        intent.putExtra("Type", CURRENT_TYPE);
-                                        startActivity(intent);
-                                    }
-                                })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                            break;
+                        case WEITIJIAO:
+                        case SHENHEZHON:
+                        case SHENHETONGUO:
+                            Intent intent = new Intent(mActivity, DetailActivity.class);
+                            intent.putExtra("CarTakeTaskListBean", data);
+                            intent.putExtra("Type", CURRENT_TYPE);
+                            startActivity(intent);
+                            break;
+                        case SHENHETUIHUI:
+                            new AlertDialog.Builder(mActivity)
+                                    .setTitle("驳回原因")
+                                    .setMessage(data.getReturnReason())
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent intent = new Intent(mActivity, DetailActivity.class);
+                                            intent.putExtra("CarTakeTaskListBean", data);
+                                            intent.putExtra("Type", CURRENT_TYPE);
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                })
-                                .create().show();
-                        break;
-                }
+                                        }
+                                    })
+                                    .create().show();
+                            break;
+                    }
             }
         });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
+
+        mJAdapter = new JMainAdapter(mActivity, JDatas, true, this);
+        mJAdapter.setLoadingView(R.layout.load_loading_layout);
+        mJAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(boolean isReload) {
+                if (mPageCount == mTempPageCount && !isReload) {
+                    return;
+                }
+                isLoadMore = true;
+                mPageCount = mTempPageCount;
+                mPresenter.loadJListByStatus(false, ADApplication.mSPUtils.getString(Api.USERID), mCustName,
+                        mLicensePlateNO, mCarBrandName, JIAOCHETYPE + "", mPageCount + "", PAGE_SIZE + "");
+            }
+        });
+        mJAdapter.setOnItemClickListener(new OnBaseItemClickListener<CarTakeTaskList.DataBean.CarTakeTaskListBean>() {
+            @Override
+            public void onItemClick(BaseHolder viewHolder, final CarTakeTaskList.DataBean.CarTakeTaskListBean data, final int position) {
+            }
+        });
+        mJRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mJRecyclerView.setAdapter(mJAdapter);
+
         onRefresh();
     }
 
@@ -514,11 +705,22 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         isLoadMore = false;
         mPageCount = 1;
         mTempPageCount = 2;
-        datas.clear();
-        mAdapter.setLoadingView(R.layout.load_loading_layout);
-        mAdapter.notifyDataSetChanged();
-        mPresenter.loadListByStatus(true, ADApplication.mSPUtils.getString(Api.USERID), mCustName,
-                mLicensePlateNO, mCarBrandName, CURRENT_TYPE + "", mPageCount + "", PAGE_SIZE + "");
+
+        if (BIGTYPE == JIECHE){
+            datas.clear();
+            mAdapter.setLoadingView(R.layout.load_loading_layout);
+            mAdapter.notifyDataSetChanged();
+            mPresenter.loadListByStatus(true, ADApplication.mSPUtils.getString(Api.USERID), mCustName,
+                    mLicensePlateNO, mCarBrandName, CURRENT_TYPE + "", mPageCount + "", PAGE_SIZE + "");
+        }else if (BIGTYPE == JIAOCHE){
+            JDatas.clear();
+            mJAdapter.setLoadingView(R.layout.load_loading_layout);
+            mJAdapter.notifyDataSetChanged();
+            mPresenter.loadJListByStatus(true, ADApplication.mSPUtils.getString(Api.USERID), mCustName,
+                    mLicensePlateNO, mCarBrandName, JIAOCHETYPE + "", mPageCount + "", PAGE_SIZE + "");
+        }else {
+
+        }
     }
 
     private void showPopSearch() {
@@ -597,10 +799,30 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     @Override
+    public void showJMainIndicator(final boolean active) {
+        mJSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mJSwipeRefreshLayout.setRefreshing(active);
+            }
+        });
+    }
+
+    @Override
     public void showMainError() {
         if (isLoadMore) {
             mAdapter.setLoadFailedView(R.layout.load_failed_layout);
         } else {
+            llSorry.setVisibility(View.VISIBLE);
+            llNoData.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showJMainError() {
+        if (isLoadMore){
+            mJAdapter.setLoadFailedView(R.layout.load_failed_layout);
+        }else {
             llSorry.setVisibility(View.VISIBLE);
             llNoData.setVisibility(View.GONE);
         }
@@ -617,6 +839,16 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     @Override
+    public void showJNoData() {
+        if (isLoadMore){
+            mJAdapter.setLoadEndView(R.layout.load_end_layout);
+        }else {
+            llNoData.setVisibility(View.VISIBLE);
+            llSorry.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     public void showMainTitle(CarTakeTaskList.DataBean dataBean) {
         firstQV.setBadgeNumber(dataBean.getNoTakeCarCount());
         secondQV.setBadgeNumber(dataBean.getNoCommitCount());
@@ -626,12 +858,26 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     @Override
+    public void showJMainTitle(CarTakeTaskList.DataBean dataBean) {
+        oneQV.setBadgeNumber(dataBean.getNoTakeCarCount());
+        twoQV.setBadgeNumber(dataBean.getCommitCount());
+        threeQV.setBadgeNumber(dataBean.getApproveCount());
+    }
+
+    @Override
     public void showMainTitleError() {
         firstQV.setBadgeNumber(0);
         secondQV.setBadgeNumber(0);
         thirdQV.setBadgeNumber(0);
         fourthQV.setBadgeNumber(0);
         fifthQV.setBadgeNumber(0);
+    }
+
+    @Override
+    public void showJMainTitleError() {
+        oneQV.setBadgeNumber(0);
+        twoQV.setBadgeNumber(0);
+        threeQV.setBadgeNumber(0);
     }
 
     @Override
@@ -646,6 +892,21 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
         if (carTakeTaskListBeanList.size() < PAGE_SIZE) {
             mAdapter.setLoadEndView(R.layout.load_end_layout);
+        }
+    }
+
+    @Override
+    public void showJMainSuccess(boolean isSuccess, ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> carTakeTaskListBeans) {
+        llSorry.setVisibility(View.GONE);
+        llNoData.setVisibility(View.GONE);
+        if (isLoadMore) {
+            mTempPageCount++;
+            mJAdapter.setLoadMoreData(carTakeTaskListBeans);
+        } else {
+            mJAdapter.setNewDataNoError(carTakeTaskListBeans);
+        }
+        if (carTakeTaskListBeans.size() < PAGE_SIZE) {
+            mJAdapter.setLoadEndView(R.layout.load_end_layout);
         }
     }
 

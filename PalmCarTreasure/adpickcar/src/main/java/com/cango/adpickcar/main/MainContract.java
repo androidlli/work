@@ -18,15 +18,27 @@ public interface MainContract {
 
         void showMainIndicator(boolean active);
 
+        void showJMainIndicator(boolean active);
+
         void showMainError();
+
+        void showJMainError();
 
         void showNoData();
 
+        void showJNoData();
+
         void showMainTitle(CarTakeTaskList.DataBean dataBean);
+
+        void showJMainTitle(CarTakeTaskList.DataBean dataBean);
 
         void showMainTitleError();
 
+        void showJMainTitleError();
+
         void showMainSuccess(boolean isSuccess, ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> carTakeTaskListBeanList);
+
+        void showJMainSuccess(boolean isSuccess,ArrayList<CarTakeTaskList.DataBean.CarTakeTaskListBean> carTakeTaskListBeans);
 
         void showLogout(boolean isSuccess, String message);
 
@@ -53,6 +65,9 @@ public interface MainContract {
          */
         void loadListByStatus(boolean showRefreshLoadingUI, String UserID, String CustName, String LicensePlateNO,
                               String CarBrandName, String QueryType, String PageIndex, String PageSize);
+
+        void loadJListByStatus(boolean showRefreshLoadingUI, String UserID, String CustName, String LicensePlateNO,
+                               String CarBrandName, String QueryType, String PageIndex, String PageSize);
 
         void logout(boolean showRefreshLoadingUI, String UserID);
 
